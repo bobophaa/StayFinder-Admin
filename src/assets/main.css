@@ -1,0 +1,40 @@
+
+
+body {
+  font-family: "Poppins", "Kantumruy Pro", sans-serif !important;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("@/assets/fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("@/assets/fonts/Poppins-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Kantumruy Pro - Khmer */
+@font-face {
+  font-family: "Kantumruy Pro";
+  src: url("@/assets/fonts/KantumruyPro-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Kantumruy Pro";
+  src: url("@/assets/fonts/KantumruyPro-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+:lang(en) {
+  font-family: "Poppins", sans-serif !important;
+}
+
+:lang(km) {
+  font-family: "Kantumruy Pro", sans-serif !important;
+}

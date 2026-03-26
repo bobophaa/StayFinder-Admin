@@ -1,0 +1,257 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* ===== MAIN COLOR (Navy) ===== */
+    --bs-main: #031424;
+    --bs-main-rgb: 3, 33, 66;
+    --bs-main-hover: #052d5a;
+    --bs-main-active: #02162b;
+
+    /* ===== ACCENT COLOR (Orange) ===== */
+    --bs-sub-main: #FF5F00;
+    --bs-sub-main-rgb: 255, 95, 0;
+    --bs-sub-main-hover: #ff7521;
+    --bs-sub-main-active: #e65600;
+
+    /* ===== BASE COLORS ===== */
+    --bs-color-dark: #111827;
+    --bs-color-light: #ffffff;
+    --bs-bg-soft: #f8f9fa;
+
+    /* ===== UI SETTINGS ===== */
+    --transition-fast: 0.2s ease-in-out;
+    --border-radius-main: 0.5rem;
+
+    /* ===== STATUS COLORS ===== */
+    --bs-cus-success: #dcfce7;
+    --bs-bor-success: #16a34a;
+    --bs-cus-danger: #fee2e2;
+    --bs-bor-danger: #dc2626;
+}
+
+body {
+    line-height: 1.6;
+    background-color: var(--bs-bg-soft) !important;
+    color: var(--bs-color-dark);
+   
+}
+
+/* Typography */
+:lang(en) { font-family: 'Poppins', sans-serif !important; }
+:lang(km) { font-family: 'Kantumruy Pro', sans-serif !important; }
+
+/* =========================
+        BUTTONS
+   ========================= */
+
+/* Main Filled Button */
+.btn-main {
+    background-color: var(--bs-sub-main) !important; /* Using your FF5F00 */
+    border: none !important;
+    color: var(--bs-color-light) !important;
+    
+    /* The Secret for the Pill Shape */
+    border-radius: 50px !important; 
+    
+    /* Padding: Top/Bottom 10px, Left/Right 30px for that wider look */
+    padding: 10px 30px !important; 
+    
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    transition: all var(--transition-fast) !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.btn-banner-main {
+    background-color: var( --bs-main) !important; /* Using your FF5F00 */
+    border: none !important;
+    color: var(--bs-color-light) !important;
+    
+    /* The Secret for the Pill Shape */
+    border-radius: 50px !important; 
+    
+    /* Padding: Top/Bottom 10px, Left/Right 30px for that wider look */
+    padding: 10px 30px !important; 
+    
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    transition: all var(--transition-fast) !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.btn-main:hover {
+    background-color: var(--bs-sub-main-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 95, 0, 0.35); 
+}
+
+.btn-banner-main:hover {
+    background-color: var(-bs-main-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 95, 0, 0.35); 
+}
+
+.btn-main:active {
+    transform: translateY(0);
+    background-color: var(--bs-sub-main-active) !important;
+}
+
+.btn-outline-main {
+    background-color: transparent !important;
+    
+    /* White border for visibility on Navy BG */
+    border: 2px solid #ffffff !important; 
+    color: #ffffff !important; 
+    
+    /* Matching the Sign Up Pill Shape */
+    border-radius: 50px !important; 
+    padding: 10px 35px !important; /* Slightly wider for better balance */
+    
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    transition: all var(--transition-fast) !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-outline-main:hover {
+    /* Fills with white and Navy text on hover */
+    background-color: #ffffff !important;
+    color: var(--bs-main) !important; 
+    
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.btn-outline-main:active {
+    transform: translateY(0);
+    opacity: 0.9;
+}
+/* Orange Accent Button (Book Now / Rent Now) */
+.btn-accent {
+    background-color: var(--bs-sub-main) !important;
+    color: white !important;
+    border-radius: var(--border-radius-main) !important;
+    transition: var(--transition-fast) !important;
+    border: none;
+    font-weight: bold;
+    padding: 8px 20px;
+}
+
+.btn-accent:hover {
+    background-color: var(--bs-sub-main-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 95, 0, 0.3);
+}
+
+/* ================= NAVBAR & NAVIGATION ================= */
+.custom-navbar {
+    background: rgba(3, 33, 66, 0.95) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px 0;
+}
+
+.nav-item .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 500;
+    transition: var(--transition-fast);
+}
+
+.nav-item .nav-link:hover,
+.nav-link.active {
+    color: var(--bs-sub-main) !important; /* Glow Orange on hover */
+}
+
+/* ================= CART & BADGES ================= */
+.cart-link { position: relative; }
+
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    background-color: var(--bs-sub-main);
+    color: white;
+    border-radius: 50px;
+    border: 2px solid var(--bs-main);
+}
+
+/* ================= DROPDOWN ANIMATION ================= */
+.navbar .dropdown .dropdown-menu {
+    display: block;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.navbar .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* ================= UTILITIES ================= */
+.room-card {
+    background: white;
+    border-radius: var(--border-radius-main);
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.room-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.clamp-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+}/* Add/Update these in your style.css */
+
+.bg-navy { 
+    background-color: var(--bs-main) !important; 
+}
+
+.text-orange { 
+    color: var(--bs-sub-main) !important; 
+}
+
+/* Specific fix for the Sign In button to have NO border per Figma */
+.btn-outline-main.border-0 {
+   color: #ffffff !important;
+  border: 1.5px solid #ffffff !important;
+  background-color: transparent !important;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-main.border-0:hover {
+ background-color: #ffffff !important;
+  color: #031424 !important; /* Changes text to navy on hover */
+}.btn,
+.btn-main,
+.btn-outline-main, .btn-banner-main{
+  text-decoration: none !important; /* Removes the underline */
+}
