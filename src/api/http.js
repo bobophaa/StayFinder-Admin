@@ -1,23 +1,22 @@
-import axios from 'axios';
+import axios from 'axios'
+const isDevelopment = import.meta.env.DEV
 
 const api = axios.create({
-  baseURL: 'https://bontubjoul2.csm.linkpc.net/api', 
-});
+  baseURL: isDevelopment ? '/api' : 'https://bontubjoul2.csm.linkpc.net/api',
+})
 
 api.interceptors.request.use(
   (config) => {
-   
-    const token = localStorage.getItem('token'); 
-    
+    const token = localStorage.getItem('token')
+
     if (token) {
-     
-      config.headers.Authorization = `Bearer ${token}`; 
+      config.headers.Authorization = `Bearer ${token}`
     }
-    return config;
+    return config
   },
   (error) => {
-    return Promise.reject(error);
-  }
-);
+    return Promise.reject(error)
+  },
+)
 
-export default api;
+export default api
