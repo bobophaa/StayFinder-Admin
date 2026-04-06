@@ -235,8 +235,14 @@ const approving = ref(null)
 const rejecting = ref(null)
 
 const setToken = () => {
-  const token = '140|aAmcTNSwiB9QntW8735RgTG8nU74fr6d5gba7uM4d1bc8912'
-  localStorage.setItem('token', token)
+  const token = localStorage.getItem('token')
+
+  // Set the Authorization header for all requests if token exists
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  } else {
+    delete api.defaults.headers.common['Authorization']
+  }
 }
 
 const totalPages = computed(() => Math.ceil(totalRequests.value / pageSize))
