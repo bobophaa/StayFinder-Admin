@@ -153,8 +153,21 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 95, 0, 0.3);
 }
+button.border-navy {
+    border: 1px solid var(--bs-main) !important;
+    background-color: transparent !important;
+    color: var(--bs-main) !important;
+    transition: all 0.3s ease !important;
+}
 
-/* ================= NAVBAR & NAVIGATION ================= */
+button.border-navy:hover {
+    border-color: var(--bs-sub-main) !important; 
+    color: var(--bs-sub-main) !important;       
+    background-color: rgba(255, 95, 0, 0.1) !important; 
+    transform: translateY(-1px);
+}
+
+
 .custom-navbar {
     background: rgba(3, 33, 66, 0.95) !important;
     backdrop-filter: blur(14px);
@@ -171,10 +184,9 @@ body {
 
 .nav-item .nav-link:hover,
 .nav-link.active {
-    color: var(--bs-sub-main) !important; /* Glow Orange on hover */
+    color: var(--bs-sub-main) !important; 
 }
 
-/* ================= CART & BADGES ================= */
 .cart-link { position: relative; }
 
 .cart-badge {
@@ -194,7 +206,6 @@ body {
     border: 2px solid var(--bs-main);
 }
 
-/* ================= DROPDOWN ANIMATION ================= */
 .navbar .dropdown .dropdown-menu {
     display: block;
     opacity: 0;
@@ -231,10 +242,14 @@ body {
     -webkit-line-clamp: 2;
 }/* Add/Update these in your style.css */
 
-.bg-navy { 
+.bg-navy{ 
+    color: #ffffff !important;
     background-color: var(--bs-main) !important; 
 }
-
+thead.table-light {
+    background-color: var(--bs-main) !important;
+    color: #ffffff !important;
+}
 .text-orange { 
     color: var(--bs-sub-main) !important; 
 }

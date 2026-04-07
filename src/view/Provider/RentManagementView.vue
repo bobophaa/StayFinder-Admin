@@ -338,6 +338,7 @@ const fetchRents = async () => {
         per_page: pageSize,
       },
     })
+    console.log(res.data)
 
     rents.value = res.data.data || []
     totalRequests.value = res.data.total || 0
