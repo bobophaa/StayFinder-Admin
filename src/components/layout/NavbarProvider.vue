@@ -1,5 +1,5 @@
 <template>
-  <nav class="top-navbar d-flex align-items-center justify-content-between px-4">
+  <nav class="top-navbar d-flex align-items-center justify-content-between px-5">
     <div class="page-title-area">
       <h4 class="mb-0 fw-bold text-navy">{{ formatPageName(route.name) }}</h4>
     </div>

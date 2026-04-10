@@ -235,7 +235,7 @@ const approving = ref(null)
 const rejecting = ref(null)
 
 const setToken = () => {
-  const token = '140|aAmcTNSwiB9QntW8735RgTG8nU74fr6d5gba7uM4d1bc8912'
+ const token = localStorage.getItem('token')
   localStorage.setItem('token', token)
 }
 
@@ -326,7 +326,7 @@ const fetchRents = async () => {
     loading.value = true
     error.value = null
 
-    const res = await api.get('/profile/rent', {
+    const res = await api.get('/profile/rent--check', {
       params: {
         page: currentPage.value,
         per_page: pageSize,
@@ -335,6 +335,9 @@ const fetchRents = async () => {
 
     rents.value = res.data.data || []
     totalRequests.value = res.data.total || 0
+    console.log(res.data);
+    
+    
   } catch (err) {
     error.value = err.response?.data?.message || 'Failed to fetch rents'
   } finally {
@@ -389,11 +392,13 @@ const rejectRent = async (id) => {
 }
 
 watch(currentPage, () => fetchRents())
-
 onMounted(() => {
   setToken()
   fetchRents()
+
+
 })
+
 </script>
 
 <style>

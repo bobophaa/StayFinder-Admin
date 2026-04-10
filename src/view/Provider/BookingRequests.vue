@@ -235,7 +235,7 @@ const approving = ref(null)
 const rejecting = ref(null)
 
 const setToken = () => {
-  const token = '140|aAmcTNSwiB9QntW8735RgTG8nU74fr6d5gba7uM4d1bc8912'
+const token = localStorage.getItem('token')
   localStorage.setItem('token', token)
 }
 
@@ -323,25 +323,16 @@ const updateBookingStatus = (id, status) => {
 
 const fetchBookings = async () => {
   try {
-    loading.value = true
-    error.value = null
-
-    const res = await api.get('/profile/booking-check?', {
-      params: {
-        page: currentPage.value,
-        per_page: pageSize,
-        // remove status filter so approved/rejected cards are also fetched
-      },
-    })
-
-    bookings.value = res.data.data || []
-    totalRequests.value = res.data.total || 0
-  } catch (err) {
-    error.value = err.response?.data?.message || 'Failed to fetch bookings'
-  } finally {
-    loading.value = false
+    const res = await api.get('/profile/booking-check') // your endpoint
+    bookings.value = res.data.data // check structure: maybe res.data instead of res.data.data
+  } catch (error) {
+    console.error('Fetch error:', error)
   }
 }
+
+onMounted(() => {
+  fetchBookings()
+})
 
 const getPaymentProofUrl = (booking) => {
   const file = booking?.transaction_file

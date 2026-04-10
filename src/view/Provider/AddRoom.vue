@@ -325,11 +325,6 @@ const handleSubmit = async () => {
   formData.append('size_room', form.size_room || 'N/A')
   formData.append('map_url', form.map_url || '')
 
-  // ✅ Only this — remove the JSON.stringify line entirely
-  // form.room_option_ids.forEach((id) => {
-  //   formData.append('room_option_ids[]', id)
-  // })
-
   try {
     const success = await roomStore.addRoom(formData)
     if (success) {
@@ -406,5 +401,9 @@ const handleSubmit = async () => {
 }
 .invalid-feedback {
   font-size: 0.85rem;
+}
+placeholder{
+color: #7a7a7a !important;
+
 }
 </style>

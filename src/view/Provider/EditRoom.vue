@@ -54,7 +54,7 @@
               <label class="form-label fw-bold">Description</label>
               <textarea
                 v-model="form.description"
-                class="form-control form-control-lg"
+                class="form-control form-control-lg text-muted"
                 rows="5"
                 placeholder="Describe your room..."
               ></textarea>
