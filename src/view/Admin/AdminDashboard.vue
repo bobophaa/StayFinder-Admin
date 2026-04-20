@@ -11,10 +11,10 @@
           <span class="text-muted small">{{ todayDate }}</span>
         </p>
       </div>
-      <button class="btn btn-orange px-4 fw-bold" @click="refreshAll" :disabled="loading">
+      <!-- <button class="btn btn-orange px-4 fw-bold" @click="refreshAll" :disabled="loading">
         <i class="bi me-2" :class="loading ? 'bi-arrow-repeat spin' : 'bi-arrow-clockwise'"></i>
         {{ loading ? 'Refreshing...' : 'Refresh' }}
-      </button>
+      </button> -->
     </div>
 
 
@@ -107,7 +107,7 @@
 
     <!-- ── Tables Row ── -->
     <div class="row g-3 mb-4">
-      <div class="col-lg-7">
+      <div class="col-lg-12">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
           <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
             <span class="fw-bold text-white"><i class="bi bi-house-door me-2"></i>Recent Rooms</span>
@@ -155,7 +155,7 @@
         </div>
       </div>
 
-      <div class="col-lg-5">
+      <!-- <div class="col-lg-5">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
           <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
             <span class="fw-bold text-white"><i class="bi bi-calendar-check me-2"></i>Recent Bookings</span>
@@ -189,7 +189,7 @@
             </table>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- ── District Breakdown ── -->
@@ -287,7 +287,7 @@
 
       <!-- System Status + Activity Feed -->
       <div class="col-lg-4">
-        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-navy text-white">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100  text-black">
           <h5 class="fw-bold mb-4">
             <i class="bi bi-hdd-network-fill me-2" style="color:#ff9a5c"></i>System Status
           </h5>
@@ -335,12 +335,7 @@
             </div>
           </div>
 
-          <div class="mt-4 pt-3" style="border-top:1px solid rgba(255,255,255,.08)">
-            <div class="d-flex justify-content-between">
-              <span class="small opacity-50">Last refresh</span>
-              <span class="small opacity-50">{{ lastRefresh || '–' }}</span>
-            </div>
-          </div>
+       
         </div>
       </div>
 

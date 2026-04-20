@@ -5,18 +5,20 @@
     </div>
 
     <div class="user-profile d-flex align-items-center gap-2">
-      <div class="pfp-container">
-        <img 
-          :src="auth.user?.profile_photo_url || defaultAvatar" 
-          alt="Profile" 
-          class="pfp-img"
-        />
-      </div>
+    <div class="pfp-container">
+ <router-link to="/provider/profile" class="pfp-container">
+  <img 
+    :src="auth.user?.avatar || defaultAvatar" 
+    alt="Profile" 
+    class="pfp-img"
+  />
+</router-link>
+</div>
 
       <div class="profile-text">
         <h6 class="profile-name mb-0">{{ auth.user?.name || 'Charming Views' }}</h6>
         <div class="role-area d-flex align-items-center">
-          <i class="bi bi-chevron-right me-1"></i>
+        
           <span class="profile-role">Provider</span>
         </div>
       </div>
@@ -27,12 +29,13 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-
+import { computed } from 'vue';
 const route = useRoute();
 const auth = useAuthStore();
 
-const defaultAvatar = "https://ui-avatars.com/api/?background=031c36&color=fff&name=CV";
-
+const defaultAvatar = computed(() => 
+  `https://ui-avatars.com/api/?background=031c36&color=fff&name=${encodeURIComponent(auth.user?.name || 'CV')}`
+);
 const formatPageName = (name) => {
   if (!name) return 'Dashboard';
   return name.toString()
@@ -72,6 +75,14 @@ const formatPageName = (name) => {
   border-radius: 50%; 
   overflow: hidden;
   border: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: border-color .2s, transform .2s;
+  display: block; 
+}
+
+.pfp-container:hover {
+  border-color: #ff5f00;
+  transform: scale(1.05);
 }
 
 .pfp-img {

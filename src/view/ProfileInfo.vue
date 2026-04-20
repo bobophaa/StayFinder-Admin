@@ -607,4 +607,4 @@ onMounted(fetchUser)
 
 .toast-slide-enter-active, .toast-slide-leave-active { transition: all .3s cubic-bezier(.4,0,.2,1); }
 .toast-slide-enter-from, .toast-slide-leave-to       { opacity: 0; transform: translateY(20px); }
-</style>
+</style> 

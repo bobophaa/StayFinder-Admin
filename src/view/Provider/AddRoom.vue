@@ -145,15 +145,28 @@
                       <div class="invalid-feedback">{{ errors.map_url }}</div>
                     </div>
 
-                    <div class="mb-0">
-                      <label class="form-label fw-bold">Description</label>
-                      <textarea
-                        v-model="form.description"
-                        class="form-control custom-input"
-                        rows="4"
-                        placeholder="describe detail the room..."
-                      ></textarea>
-                    </div>
+                 <div class="mb-0">
+  <label class="form-label fw-bold">Description</label>
+  <textarea
+    v-model="form.description"
+    class="form-control custom-input"
+    :class="{ 'is-invalid': errors.description }"
+    rows="4"
+    placeholder="Describe the room in detail (min. 20 characters)..."
+    maxlength="1000"
+  ></textarea>
+  <div class="d-flex justify-content-between mt-1">
+    <div class="invalid-feedback d-block" v-if="errors.description">
+      {{ errors.description }}
+    </div>
+    <small
+      class="ms-auto"
+      :class="form.description.length < 20 ? 'text-danger' : 'text-muted'"
+    >
+      {{ form.description.length }} / 1000
+    </small>
+  </div>
+</div>
                   </div>
                 </div>
 
@@ -299,11 +312,23 @@ const validate = () => {
     errors.image = 'Please upload at least one room photo.'
     isValid = false
   }
-  if (form.map_url && !form.map_url.startsWith('http')) {
-    errors.map_url = 'Map URL must start with http:// or https://'
+if (form.map_url) {
+  const url = form.map_url.trim()
+
+  const isValidGoogleMap =
+    /^https?:\/\/(www\.)?(google\.com\/maps|maps\.google\.com|maps\.app\.goo\.gl|goo\.gl\/maps)\/.+/i.test(url)
+
+  if (!isValidGoogleMap) {
+    errors.map_url =
+      'Please enter a valid Google Maps URL (e.g. https://maps.google.com/...)'
     isValid = false
   }
+}
 
+if (form.description && form.description.length < 20) {
+  errors.description = 'Description must be at least 20 characters.'
+  isValid = false
+}
   return isValid
 }
 

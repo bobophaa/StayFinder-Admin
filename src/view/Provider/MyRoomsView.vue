@@ -98,7 +98,7 @@
               <!-- Price -->
               <td>
                 <span class="fw-bold text-orange">${{ room.price }}</span>
-                <span class="text-muted small">/mo</span>
+                <span class="text-muted small">/month</span>
               </td>
 
               <!-- Beds / Size -->
@@ -173,9 +173,7 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         CARD DETAIL MODAL
-    ══════════════════════════════════════ -->
+
     <transition name="modal-fade">
       <div v-if="selectedRoom" class="detail-overlay" @click.self="selectedRoom = null">
         <div class="detail-modal">
@@ -491,9 +489,6 @@ async function executeDelete() {
 .room-thumb-modal     { width: 44px; height: 44px; border-radius: 10px; overflow: hidden; background: #f0f3f6; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .room-thumb-modal-img { width: 44px; height: 44px; object-fit: cover; }
 
-/* ══════════════════════════════════════
-   CARD DETAIL MODAL
-══════════════════════════════════════ */
 .detail-overlay {
   position: fixed; inset: 0;
   background: rgba(3,28,54,.55);

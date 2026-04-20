@@ -249,7 +249,7 @@ const statusLabel = computed(() => {
   if (statusKey.value === 'approved') return 'Approved'
   if (statusKey.value === 'rejected') return 'Rejected'
   return 'Pending'
-})
+}) 
 
 const genderText = (g) => {
   if (g === 1 || g === '1') return 'Male'

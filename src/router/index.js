@@ -24,6 +24,11 @@ import Providerprofile from '@/view/Provider/Providerprofile.vue'
 
 // ─── ROUTES ─────────────────────────────
 const routes = [
+    {
+    path: '/',
+    redirect: '/login',
+  },
+
   {
     path: '/login',
     name: 'login',
