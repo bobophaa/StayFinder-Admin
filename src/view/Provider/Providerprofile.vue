@@ -1,336 +1,157 @@
 <template>
-  <div class="pp-page">
+  <div class="container py-4">
 
+    <div class="row g-4">
 
-    <div class="hero-banner">
-      <div class="hero-geo hero-geo-1"></div>
-      <div class="hero-geo hero-geo-2"></div>
-      <div class="hero-dots"></div>
+      <!-- LEFT -->
+      <div class="col-lg-4">
 
-   
+        <!-- PROFILE CARD -->
+        <div class="card clean-card text-center p-4">
 
-      <div class="hero-text">
-        <h1 class="hero-name">{{ user?.name || 'Provider Name' }}</h1>
-        <p class="hero-role">{{ user?.current_job || 'Service Provider' }}</p>
-        <div class="hero-actions">
-          <button class="ha-btn" @click="enableEdit">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-            Edit profile
-          </button>
-          <button class="ha-btn ha-btn-outline" @click="showPassForm = !showPassForm">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-            Password
-          </button>
-          <button class="ha-btn ha-btn-ghost">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            My listings
-          </button>
+          <!-- AVATAR -->
+          <div class="avatar-wrapper mb-3" @click="triggerUpload">
+
+            <div class="avatar">
+              <img v-if="avatarPreview || user?.avatar" :src="avatarPreview || user.avatar" />
+              <span v-else>{{ user?.name?.charAt(0) }}</span>
+            </div>
+
+            <div class="avatar-icon">
+              <i class="bi bi-camera-fill"></i>
+            </div>
+
+            <!-- loading -->
+            <div v-if="uploadingAvatar" class="avatar-loading">
+              <div class="spinner-border spinner-border-sm text-white"></div>
+            </div>
+
+          </div>
+
+          <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
+
+          <h5 class="fw-bold mb-1">{{ user?.name }}</h5>
+          <p class="text-muted small mb-3">{{ user?.email }}</p>
+
+          <span class="badge badge-role">Service Provider</span>
         </div>
+
+        <!-- INFO -->
+        <div class="card clean-card mt-4 p-3">
+          <h6 class="section-title">Account Info</h6>
+
+          <div class="info-item">
+            <span>Email</span>
+            <strong>{{ user?.email }}</strong>
+          </div>
+
+          <div class="info-item">
+            <span>Phone</span>
+            <strong>{{ user?.phone || 'Not set' }}</strong>
+          </div>
+
+          <div class="info-item">
+            <span>Gender</span>
+            <strong>{{ user?.gender == 1 ? 'Male' : 'Female' }}</strong>
+          </div>
+
+          <div class="info-item">
+            <span>Job</span>
+            <strong>{{ user?.current_job || 'Not set' }}</strong>
+          </div>
+        </div>
+
       </div>
 
-      <div class="hero-avatar-wrap" @click="triggerUpload" title="Change photo">
-        <div class="hero-avatar">
-          <img v-if="avatarPreview || user?.avatar" :src="avatarPreview || user?.avatar" alt="avatar" />
-          <span v-else>{{ user?.name?.charAt(0)?.toUpperCase() || 'P' }}</span>
-          <div v-if="loading && uploadingAvatar" class="ava-loading"><span class="spin"></span></div>
-        </div>
-        <div class="ava-cam">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 13.2A3.2 3.2 0 0 1 8.8 12 3.2 3.2 0 0 1 12 8.8 3.2 3.2 0 0 1 15.2 12 3.2 3.2 0 0 1 12 15.2z"/></svg>
-        </div>
-      </div>
-      <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
-    </div>
+      <!-- RIGHT -->
+      <div class="col-lg-8">
 
-    <!-- ════════════════════════════════
-         IDENTITY ROW
-    ════════════════════════════════ -->
-    <div class="identity-row">
-      <div class="identity-left">
-        <h2 class="id-name">{{ user?.name || '—' }}</h2>
-        <p class="id-email">{{ user?.email || '—' }}</p>
-        <div class="id-meta">
-          <span class="id-tag">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-            Cambodia
-          </span>
-          <span class="id-dot">·</span>
-          <a href="#contact" class="id-tag id-tag-link">Contact info</a>
-          <span class="id-dot">·</span>
-          <span class="id-badge">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            Service Provider
-          </span>
-          <span class="id-badge id-badge-id">#{{ user?.id || '001' }}</span>
-        </div>
-      </div>
-
-      <div class="id-stats">
-        <div class="stat-box">
-          <span class="stat-n">142</span>
-          <span class="stat-l">Bookings</span>
-        </div>
-        <div class="stat-sep"></div>
-        <div class="stat-box">
-          <span class="stat-n">96%</span>
-          <span class="stat-l">Rating</span>
-        </div>
-        <div class="stat-sep"></div>
-        <div class="stat-box">
-          <span class="stat-n">3.8y</span>
-          <span class="stat-l">Tenure</span>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="body-wrap">
-
-      <!-- LEFT SIDEBAR -->
-      <aside class="body-aside">
-
-        <div class="pp-card">
-          <div class="pp-card-hd">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-            Account details
-          </div>
-          <div class="detail-rows">
-            <div class="drow">
-              <div class="drow-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-              <div><div class="drow-lbl">Email</div><div class="drow-val">{{ user?.email || '—' }}</div></div>
-            </div>
-            <div class="drow">
-              <div class="drow-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
-              <div><div class="drow-lbl">Phone</div><div class="drow-val">{{ user?.phone || 'Not set' }}</div></div>
-            </div>
-            <div class="drow">
-              <div class="drow-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zm0 12c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z"/></svg></div>
-              <div><div class="drow-lbl">Gender</div><div class="drow-val">{{ user?.gender == 1 ? 'Male' : user?.gender == 2 ? 'Female' : 'Not set' }}</div></div>
-            </div>
-            <div class="drow" style="border:none">
-              <div class="drow-ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-2.18c.07-.44.18-.86.18-1 0-2.21-1.79-4-4-4s-4 1.79-4 4c0 .14.11.56.18 1H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-3c1.1 0 2 .9 2 2 0 .14-.11.56-.18 1h-3.64c-.07-.44-.18-.86-.18-1 0-1.1.9-2 2-2z"/></svg></div>
-              <div><div class="drow-lbl">Job title</div><div class="drow-val">{{ user?.current_job || 'Not set' }}</div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="pp-card">
-          <div class="pp-card-hd">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
-            Quick links
-          </div>
-          <nav class="qnav">
-            <router-link v-for="lnk in quickLinks" :key="lnk.to" :to="lnk.to" class="qnav-item">
-              <span class="qnav-ico" :style="{ background: lnk.bg }"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" v-html="lnk.icon"></svg></span>
-              <span class="qnav-lbl">{{ lnk.label }}</span>
-              <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" style="opacity:.3"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
-            </router-link>
-          </nav>
-        </div>
-
-        <div class="pp-card">
-          <div class="pp-card-hd">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-            Profile photo
-          </div>
-          <div class="photo-row">
-            <div class="photo-thumb">
-              <img v-if="avatarPreview || user?.avatar" :src="avatarPreview || user?.avatar" alt="avatar" />
-              <span v-else>{{ user?.name?.charAt(0)?.toUpperCase() || 'P' }}</span>
-            </div>
-            <div><p class="photo-ttl">Update photo</p><p class="photo-sub">JPG/PNG · max 2 MB</p></div>
-          </div>
-          <div class="photo-btns">
-            <button class="btn-solid" @click="triggerUpload" :disabled="loading">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
-              Upload
+        <!-- PROFILE FORM -->
+        <div class="card clean-card p-4 mb-4">
+          <div class="d-flex justify-content-between mb-3">
+            <h6 class="section-title">Profile Information</h6>
+            <button class="btn btn-orange btn-sm" @click="enableEdit">
+              Edit
             </button>
-            <button v-if="user?.avatar" class="btn-danger" @click="removeAvatar" :disabled="loading">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-              Remove
+          </div>
+
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label>Full Name</label>
+              <input v-model="form.name" :readonly="!isEditing" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Email</label>
+              <input v-model="form.email" :readonly="!isEditing" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Phone</label>
+              <input v-model="form.phone" :readonly="!isEditing" />
+            </div>
+
+            <div class="col-md-6">
+              <label>Gender</label>
+              <select v-model="form.gender" :disabled="!isEditing">
+                <option :value="1">Male</option>
+                <option :value="2">Female</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label>Job</label>
+              <input v-model="form.current_job" :readonly="!isEditing" />
+            </div>
+
+          </div>
+
+          <div v-if="isEditing" class="text-end mt-3">
+            <button class="btn btn-orange" @click="updateProfile">
+              Save
             </button>
           </div>
         </div>
 
-      </aside>
+        <!-- PASSWORD -->
+        <div class="card clean-card p-4">
+          <div class="d-flex justify-content-between mb-3">
+            <h6 class="section-title">Change Password</h6>
+            <button class="btn btn-outline-secondary btn-sm" @click="showPassForm = !showPassForm">
+              {{ showPassForm ? 'Cancel' : 'Change' }}
+            </button>
+          </div>
 
-      <!-- RIGHT: FORMS -->
-      <section class="body-main">
+          <div v-if="showPassForm" class="row g-3">
 
-        <div class="pp-card form-card">
-          <div class="fcard-hd">
-            <div class="fcard-title">
-              <div class="fcard-ico">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-              </div>
-              Profile information
+            <div class="col-md-4">
+              <input v-model="passForm.old_pass" placeholder="Current password" />
             </div>
-            <div>
-              <button v-if="!isEditing" class="btn-ghost" @click="enableEdit">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                Edit
+
+            <div class="col-md-4">
+              <input v-model="passForm.new_pass" placeholder="New password" />
+            </div>
+
+            <div class="col-md-4">
+              <input v-model="passForm.new_pass_confirmation" placeholder="Confirm password" />
+            </div>
+
+            <div class="col-12">
+              <button class="btn btn-orange" @click="changePassword">
+                Update Password
               </button>
-              <button v-else class="btn-ghost" @click="cancelEdit">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                Cancel
-              </button>
             </div>
+
           </div>
 
-          <div v-if="isEditing" class="edit-notice">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-            Editing mode active — save your changes when ready
-          </div>
-
-          <form class="pp-form" @submit.prevent="updateProfile">
-            <div class="fg-grid">
-              <div class="fg" :class="{ 'fg-has-err': errors.name }">
-                <label class="fg-lbl">Full name</label>
-                <div class="fg-field" :class="{ 'fg-ro': !isEditing, 'fg-invalid': errors.name }">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                  <input v-model="form.name" :readonly="!isEditing" placeholder="Your full name" />
-                </div>
-                <p v-if="errors.name" class="fg-errmsg">{{ errors.name }}</p>
-              </div>
-
-              <div class="fg" :class="{ 'fg-has-err': errors.email }">
-                <label class="fg-lbl">Email address</label>
-                <div class="fg-field" :class="{ 'fg-ro': !isEditing, 'fg-invalid': errors.email }">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                  <input v-model="form.email" type="email" :readonly="!isEditing" placeholder="email@example.com" />
-                </div>
-                <p v-if="errors.email" class="fg-errmsg">{{ errors.email }}</p>
-              </div>
-
-              <div class="fg">
-                <label class="fg-lbl">Phone number</label>
-                <div class="fg-field" :class="{ 'fg-ro': !isEditing }">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                  <input v-model="form.phone" :readonly="!isEditing" placeholder="Phone number" />
-                </div>
-              </div>
-
-              <div class="fg">
-                <label class="fg-lbl">Gender</label>
-                <div class="fg-field" :class="{ 'fg-ro': !isEditing }">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zm0 12c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z"/></svg>
-                  <select v-model="form.gender" :disabled="!isEditing">
-                    <option :value="1">Male</option>
-                    <option :value="2">Female</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="fg fg-full">
-                <label class="fg-lbl">Job title / role</label>
-                <div class="fg-field" :class="{ 'fg-ro': !isEditing }">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-2.18c.07-.44.18-.86.18-1 0-2.21-1.79-4-4-4s-4 1.79-4 4c0 .14.11.56.18 1H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-3c1.1 0 2 .9 2 2 0 .14-.11.56-.18 1h-3.64c-.07-.44-.18-.86-.18-1 0-1.1.9-2 2-2z"/></svg>
-                  <input v-model="form.current_job" :readonly="!isEditing" placeholder="e.g. Property Manager" />
-                </div>
-              </div>
-            </div>
-
-            <Transition name="fade-up">
-              <div v-if="isEditing" class="form-foot">
-                <button type="button" class="btn-ghost" @click="cancelEdit">Discard</button>
-                <button type="submit" class="btn-solid" :disabled="loading">
-                  <span v-if="loading" class="spin"></span>
-                  <svg v-else width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                  Save changes
-                </button>
-              </div>
-            </Transition>
-          </form>
-        </div>
-
-        <div class="pp-card form-card">
-          <div class="fcard-hd">
-            <div class="fcard-title">
-              <div class="fcard-ico fcard-ico-amber">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-              </div>
-              Change password
-            </div>
-            <button class="btn-ghost" @click="showPassForm = !showPassForm">{{ showPassForm ? 'Cancel' : 'Update' }}</button>
-          </div>
-
-          <Transition name="expand">
-            <div v-if="showPassForm" class="pp-form" style="padding-top:0">
-              <div class="fg-grid fg-grid-3">
-                <div class="fg">
-                  <label class="fg-lbl">Current password</label>
-                  <div class="fg-field">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-                    <input v-model="passForm.old_pass" type="password" placeholder="Current password" />
-                  </div>
-                </div>
-                <div class="fg">
-                  <label class="fg-lbl">New password</label>
-                  <div class="fg-field">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-                    <input v-model="passForm.new_pass" type="password" placeholder="New password" />
-                  </div>
-                </div>
-                <div class="fg">
-                  <label class="fg-lbl">Confirm password</label>
-                  <div class="fg-field">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-                    <input v-model="passForm.new_pass_confirmation" type="password" placeholder="Confirm password" />
-                  </div>
-                </div>
-              </div>
-              <div class="pass-rules">
-                <span class="pr" v-for="r in passRules" :key="r">
-                  <svg width="7" height="7" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
-                  {{ r }}
-                </span>
-              </div>
-              <div class="form-foot">
-                <button class="btn-solid btn-amber" :disabled="passLoading" @click="changePassword">
-                  <span v-if="passLoading" class="spin"></span>
-                  <svg v-else width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                  Update password
-                </button>
-              </div>
-            </div>
-          </Transition>
-
-          <p v-if="!showPassForm" class="pass-hint">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-            Minimum 8 characters including uppercase letters, numbers and special symbols.
+          <p v-else class="text-muted small">
+            Use a strong password with at least 8 characters.
           </p>
         </div>
 
-      </section>
+      </div>
     </div>
-
-    <!-- MODAL -->
-    <Transition name="modal">
-      <div v-if="showConfirmModal" class="modal-veil" @click.self="showConfirmModal = false">
-        <div class="modal-box">
-          <div class="modal-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
-          <h3 class="modal-ttl">Confirm update</h3>
-          <p class="modal-sub">Save changes to your profile information?</p>
-          <div class="modal-foot">
-            <button class="btn-ghost" @click="showConfirmModal = false">Cancel</button>
-            <button class="btn-solid" @click="confirmUpdate" :disabled="loading">
-              <span v-if="loading" class="spin"></span>
-              <svg v-else width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-              Confirm
-            </button>
-          </div>
-        </div>
-      </div>
-    </Transition>
-
-    <!-- TOAST -->
-    <Transition name="toast">
-      <div v-if="toast.show" class="toast" :class="toast.type">
-        <svg v-if="toast.type==='success'" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-        {{ toast.message }}
-      </div>
-    </Transition>
-
   </div>
 </template>
 
@@ -338,90 +159,63 @@
 import { ref, reactive, onMounted } from 'vue'
 import api from '@/api/http'
 
-const user             = ref(null)
-const loading          = ref(false)
-const passLoading      = ref(false)
-const uploadingAvatar  = ref(false)
-const fileInput        = ref(null)
-const avatarPreview    = ref(null)
-const isEditing        = ref(false)
-const showPassForm     = ref(false)
-const showConfirmModal = ref(false)
+const user = ref(null)
+const loading = ref(false)
+const uploadingAvatar = ref(false)
+const fileInput = ref(null)
+const avatarPreview = ref(null)
+const isEditing = ref(false)
+const showPassForm = ref(false)
 
-const form     = reactive({ name:'', email:'', phone:'', gender:1, current_job:'' })
-const errors   = reactive({ name:'', email:'' })
-const passForm = reactive({ old_pass:'', new_pass:'', new_pass_confirmation:'' })
-const toast    = reactive({ show:false, message:'', type:'success' })
-const passRules = ['8+ characters','One uppercase','One number','Special symbol']
+const form = reactive({
+  name: '', email: '', phone: '', gender: 1, current_job: ''
+})
 
-const quickLinks = [
-  { to:'/provider',           label:'Dashboard',        bg:'rgba(83,74,183,.1)',  icon:'<path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>' },
-  { to:'/provider/my-rooms',  label:'My rooms',         bg:'rgba(13,148,136,.1)', icon:'<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>' },
-  { to:'/provider/add-room',  label:'Post new room',    bg:'rgba(37,99,235,.1)',  icon:'<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>' },
-  { to:'/provider/bookings',  label:'Booking requests', bg:'rgba(201,122,16,.1)', icon:'<path d="M19 3h-1V1h-2v2H8V1H6v2H5C3.9 3 3 3.9 3 5v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H5V8h14v11zM7 10h5v5H7z"/>' },
-]
+const passForm = reactive({
+  old_pass: '', new_pass: '', new_pass_confirmation: ''
+})
 
-const showToast = (msg, type='success') => {
-  toast.message=msg; toast.type=type; toast.show=true
-  setTimeout(()=>(toast.show=false),3500)
-}
+// fetch user
 const fetchUser = async () => {
-  try {
-    const res = await api.get('/me')
-    user.value = res.data?.data || res.data
-    Object.assign(form,{ name:user.value.name||'', email:user.value.email||'', phone:user.value.phone||'', gender:user.value.gender||1, current_job:user.value.current_job||'' })
-  } catch(e){ console.error(e) }
+  const res = await api.get('/me')
+  user.value = res.data?.data || res.data
+  Object.assign(form, user.value)
 }
-const enableEdit = () => { isEditing.value=true }
-const cancelEdit = () => {
-  isEditing.value=false; errors.name=errors.email=''
-  Object.assign(form,{ name:user.value.name||'', email:user.value.email||'', phone:user.value.phone||'', gender:user.value.gender||1, current_job:user.value.current_job||'' })
-}
-const validate = () => {
-  errors.name=errors.email=''; let ok=true
-  if(!form.name?.trim()){ errors.name='Full name is required'; ok=false }
-  if(!form.email){ errors.email='Email is required'; ok=false }
-  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)){ errors.email='Invalid email'; ok=false }
-  return ok
-}
-const updateProfile = () => { if(!validate()) return; showConfirmModal.value=true }
-const confirmUpdate = async () => {
-  showConfirmModal.value=false; loading.value=true
-  try {
-    await api.post('/profile/info',form); Object.assign(user.value,form); isEditing.value=false
-    showToast('Profile updated successfully')
-  } catch(e){ showToast(e.response?.data?.message||'Update failed','error') }
-  finally { loading.value=false }
-}
-const changePassword = async () => {
-  if(!passForm.old_pass||!passForm.new_pass||!passForm.new_pass_confirmation) return showToast('Fill in all password fields','error')
-  if(passForm.new_pass!==passForm.new_pass_confirmation) return showToast('Passwords do not match','error')
-  passLoading.value=true
-  try {
-    await api.put('/profile/pass',passForm); showToast('Password changed successfully')
-    Object.assign(passForm,{old_pass:'',new_pass:'',new_pass_confirmation:''}); showPassForm.value=false
-  } catch(e){ showToast(e.response?.data?.message||'Failed','error') }
-  finally { passLoading.value=false }
-}
-const triggerUpload = () => fileInput.value?.click()
+
+// avatar upload
+const triggerUpload = () => fileInput.value.click()
+
 const handleFileUpload = async (e) => {
-  const file=e.target.files[0]; if(!file) return
-  if(file.size>2*1024*1024) return showToast('Max 2 MB','error')
-  avatarPreview.value=URL.createObjectURL(file)
-  const fd=new FormData(); fd.append('image',file)
-  loading.value=true; uploadingAvatar.value=true
+  const file = e.target.files[0]
+  if (!file) return
+
+  avatarPreview.value = URL.createObjectURL(file)
+
+  const fd = new FormData()
+  fd.append('image', file)
+
+  uploadingAvatar.value = true
+
   try {
-    await api.post('/profile/image',fd,{headers:{'Content-Type':'multipart/form-data'}})
-    await fetchUser(); avatarPreview.value=null; showToast('Photo updated')
-  } catch(e){ avatarPreview.value=null; showToast(e.response?.data?.message||'Upload failed','error') }
-  finally { loading.value=false; uploadingAvatar.value=false; e.target.value='' }
+    await api.post('/profile/image', fd)
+    await fetchUser()
+  } finally {
+    uploadingAvatar.value = false
+  }
 }
-const removeAvatar = async () => {
-  if(!confirm('Remove profile photo?')) return; loading.value=true
-  try {
-    await api.delete('/profile/image'); user.value.avatar=null; avatarPreview.value=null; showToast('Photo removed')
-  } catch(e){ showToast(e.response?.data?.message||'Failed','error') }
-  finally { loading.value=false }
+
+// edit profile
+const enableEdit = () => isEditing.value = true
+
+const updateProfile = async () => {
+  await api.post('/profile/info', form)
+  isEditing.value = false
+}
+
+// change password
+const changePassword = async () => {
+  await api.put('/profile/pass', passForm)
+  showPassForm.value = false
 }
 onMounted(fetchUser)
 </script>
@@ -638,4 +432,111 @@ onMounted(fetchUser)
   .body-wrap{grid-template-columns:1fr;padding:1rem;}
   .fg-grid,.fg-grid-3{grid-template-columns:1fr;}
 }
+
+/* CARD */
+.clean-card {
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+/* AVATAR */
+.avatar-wrapper {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: auto;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #ff5f00;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ICON */
+.avatar-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  background: #ff5f00;
+  color: white;
+  border-radius: 50%;
+  border: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-wrapper:hover .avatar-icon {
+  transform: scale(1.1);
+}
+
+/* LOADING */
+.avatar-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* INPUT */
+input, select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+input:focus {
+  border-color: #ff5f00;
+  outline: none;
+}
+
+/* BUTTON */
+.btn-orange {
+  background: #ff5f00;
+  color: white;
+  border-radius: 8px;
+}
+
+.badge-role {
+  background: #fff3eb;
+  color: #ff5f00;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+/* INFO */
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.section-title {
+  font-weight: 600;
+}
+
 </style>
