@@ -152,41 +152,45 @@
     </div>
 
     <!-- Pagination -->
-    <div v-if="!loading && totalItems > pageSize" class="table-pagination">
+    <div v-if="!loading && effectiveTotalItems > pageSize" class="table-pagination">
       <p class="pagination-info">
         Showing
-        <strong>{{ (currentPage - 1) * pageSize + 1 }}</strong> –
-        <strong>{{ Math.min(currentPage * pageSize, totalItems) }}</strong>
-        of <strong>{{ totalItems }}</strong> entries
+        <strong>{{ (currentPage - 1) * pageSize + 1 }}</strong>–<strong>{{ Math.min(currentPage * pageSize, effectiveTotalItems) }}</strong>
+        of <strong>{{ effectiveTotalItems }}</strong> entries
       </p>
 
-      <div class="pagination-controls">
-        <button
-          class="page-btn"
-          :disabled="currentPage <= 1"
-          @click="$emit('update:currentPage', currentPage - 1)"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
+      <nav aria-label="Table pages">
+        <ul class="pg-list">
+          <!-- Prev -->
+          <li>
+            <button class="pg-btn" :disabled="currentPage <= 1"
+              @click="$emit('update:currentPage', currentPage - 1)">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+          </li>
 
-        <button
-          v-for="page in displayedPages"
-          :key="page"
-          class="page-btn"
-          :class="{ active: currentPage === page }"
-          @click="$emit('update:currentPage', page)"
-        >
-          {{ page }}
-        </button>
+          <!-- Page numbers with ellipsis -->
+          <template v-for="page in displayedPages" :key="page">
+            <li v-if="page === '...'">
+              <span class="pg-btn pg-ellipsis">…</span>
+            </li>
+            <li v-else>
+              <button class="pg-btn" :class="{ 'pg-active': currentPage === page }"
+                @click="$emit('update:currentPage', page)">
+                {{ page }}
+              </button>
+            </li>
+          </template>
 
-        <button
-          class="page-btn"
-          :disabled="currentPage >= totalPages"
-          @click="$emit('update:currentPage', currentPage + 1)"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </div>
+          <!-- Next -->
+          <li>
+            <button class="pg-btn" :disabled="currentPage >= totalPages"
+              @click="$emit('update:currentPage', currentPage + 1)">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </template>
@@ -276,19 +280,23 @@ const paginatedData = computed(() => {
   return filteredData.value
 })
 
-const totalPages = computed(() => Math.ceil(props.totalItems / props.pageSize))
+// Fallback to the loaded data length when the API doesn't return a total
+const effectiveTotalItems = computed(() =>
+  props.totalItems > 0 ? props.totalItems : filteredData.value.length
+)
+
+const totalPages = computed(() => Math.ceil(effectiveTotalItems.value / props.pageSize))
 
 const displayedPages = computed(() => {
   const total = totalPages.value
-  const current = props.currentPage
+  const cur   = props.currentPage
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
   const pages = []
-  const maxVisible = 5
-  let start = Math.max(1, current - Math.floor(maxVisible / 2))
-  let end = Math.min(total, start + maxVisible - 1)
-  if (end - start + 1 < maxVisible) {
-    start = Math.max(1, end - maxVisible + 1)
-  }
-  for (let i = start; i <= end; i++) pages.push(i)
+  pages.push(1)
+  if (cur > 3) pages.push('...')
+  for (let p = Math.max(2, cur - 1); p <= Math.min(total - 1, cur + 1); p++) pages.push(p)
+  if (cur < total - 2) pages.push('...')
+  pages.push(total)
   return pages
 })
 
@@ -690,56 +698,71 @@ const statusCategories = computed(() => {
   align-items: center;
   padding: 16px 0;
   margin-top: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .pagination-info {
   font-size: 0.85rem;
-  color: var(--clr-text-muted);
+  color: #64748b;
   margin: 0;
 }
 
-.pagination-info strong {
-  color: var(--clr-text);
-}
+.pagination-info strong { color: #031c36; }
 
-.pagination-controls {
+/* Nav list */
+.pg-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
+  align-items: center;
   gap: 4px;
 }
 
-.page-btn {
+/* Individual page button — matches MyRoomsView style */
+.pg-btn {
+  min-width: 32px;
+  height: 32px;
+  border: 1.5px solid #e8edf2;
+  border-radius: 8px;
+  background: #fff;
+  color: #031c36;
+  font-size: 0.78rem;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 36px;
-  height: 36px;
   padding: 0 8px;
-  border: 1.5px solid var(--clr-border);
-  border-radius: var(--radius-sm);
-  background: var(--clr-surface);
-  color: var(--clr-text-muted);
-  font-size: 0.85rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: all 0.18s;
+  line-height: 1;
+  text-decoration: none;
 }
 
-.page-btn:hover:not(:disabled):not(.active) {
-  border-color: var(--clr-primary);
-  color: var(--clr-primary);
-  background: var(--clr-primary-soft);
-}
-
-.page-btn.active {
-  background: var(--clr-primary);
-  border-color: var(--clr-primary);
+.pg-btn:hover:not(:disabled) {
+  background: #031c36;
   color: #fff;
-  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.35);
+  border-color: #031c36;
 }
 
-.page-btn:disabled {
+.pg-btn.pg-active {
+  background: #ff5f00 !important;
+  color: #fff !important;
+  border-color: #ff5f00 !important;
+  box-shadow: 0 2px 6px rgba(255, 95, 0, 0.35);
+}
+
+.pg-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.pg-ellipsis {
+  border: none;
+  background: transparent;
+  cursor: default;
+  pointer-events: none;
 }
 
 /* ===== Responsive ===== */

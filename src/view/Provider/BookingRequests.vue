@@ -57,7 +57,7 @@ const bookings = ref([])
 const loading = ref(false)
 const error = ref(null)
 const currentPage = ref(1)
-const pageSize = 12
+const pageSize = 8
 const totalRequests = ref(0)
 const approving = ref(null)
 const rejecting = ref(null)
@@ -89,7 +89,7 @@ const getPaymentProofUrl = (booking) => {
   if (base64) {
     const mime = file.type || file.mime || 'image/jpeg'
     return `data:${mime};base64,${base64}`
-  }
+  }n
   return null
 }
 
@@ -114,7 +114,11 @@ const fetchBookings = async () => {
       },
     })
     bookings.value = res.data.data || []
-    totalRequests.value = res.data.total || 0
+    totalRequests.value =
+      res.data.total ??
+      res.data.meta?.total ??
+      res.data.pagination?.total ??
+      bookings.value.length
   } catch (err) {
     error.value = err.response?.data?.message || 'Failed to fetch bookings'
   } finally {

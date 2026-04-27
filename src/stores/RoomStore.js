@@ -36,12 +36,12 @@ export const useRoomStore = defineStore('room', {
       }
     },
 
-    async fetchMyRooms() {
+    async fetchMyRooms(overrideUserId = null) {
       this.loading = true
       this.error = ''
       try {
-      
-        const user = safeParse('user')
+        // Prefer the passed-in userId, then fall back to localStorage
+        const user = overrideUserId ? { id: overrideUserId } : safeParse('user')
         const providerId = user?.id
 
         if (!providerId) {
@@ -54,25 +54,32 @@ export const useRoomStore = defineStore('room', {
         })
 
         const allRooms = res.data?.data?.data || res.data?.data || res.data || []
-
         this.rooms = allRooms
-        if (allRooms.length > 0) {
-          console.log('FULL room object:', JSON.stringify(allRooms[0], null, 2))
-        }
+
+        // Try every field the API might use to link a room to its owner
         this.myRooms = allRooms.filter((room) => {
-          const ownerId = room.creator?.id
-
-          console.log('Room creator id:', ownerId)
-
-          return String(ownerId) === String(providerId)
+          const candidates = [
+            room.creator?.id,
+            room.user_id,
+            room.user?.id,
+            room.owner_id,
+            room.owner?.id,
+          ]
+          const match = candidates.some(id => id != null && String(id) === String(providerId))
+          return match
         })
 
-        console.log('Provider ID:', providerId)
-        console.log('Total rooms fetched:', allRooms.length)
-        console.log('My rooms:', this.myRooms.length)
+        console.log('[fetchMyRooms] providerId:', providerId,
+          '| total:', allRooms.length,
+          '| mine:', this.myRooms.length)
+
         if (allRooms.length > 0) {
-          console.log('Sample room user_id:', allRooms[0].user_id, typeof allRooms[0].user_id)
-          console.log('Provider id type:', typeof providerId)
+          const sample = allRooms[0]
+          console.log('[fetchMyRooms] sample room owner fields →',
+            'creator.id:', sample.creator?.id,
+            'user_id:', sample.user_id,
+            'user.id:', sample.user?.id,
+            'owner_id:', sample.owner_id)
         }
       } catch (err) {
         this.error = err.response?.data?.message || 'Failed to load your rooms.'

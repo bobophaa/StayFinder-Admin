@@ -57,7 +57,7 @@ const rents = ref([])
 const loading = ref(false)
 const error = ref(null)
 const currentPage = ref(1)
-const pageSize = 12
+const pageSize = 8
 const totalRequests = ref(0)
 const approving = ref(null)
 const rejecting = ref(null)
@@ -114,8 +114,12 @@ const fetchRents = async () => {
       },
     })
     rents.value = res.data.data || []
-    totalRequests.value = res.data.total || 0
-    console.log(res.data);
+    totalRequests.value =
+      res.data.total ??
+      res.data.meta?.total ??
+      res.data.pagination?.total ??
+      rents.value.length
+    console.log('API response:', res.data, '| total:', totalRequests.value)
     
     
   } catch (err) {

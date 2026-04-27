@@ -42,12 +42,12 @@ const routes = [
     component: MainLayout,
     meta: { requiresAuth: true },
     children: [
-       {
-        path: 'profile',
-        name: 'profile',
-        component: () => import('@/view/ProfileInfo.vue'),
-        meta: { role: 'Service Provider' },
-      },
+{
+  path: 'profile',
+  name: 'profile',
+  component: () => import('@/view/Provider/Providerprofile.vue'),
+},
+   
       // ── Provider ──
       {
         path: 'provider/dashboard',

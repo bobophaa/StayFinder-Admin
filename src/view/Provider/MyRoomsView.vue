@@ -68,10 +68,10 @@
 
       
           <tbody>
-            <tr v-for="(room, idx) in roomStore.myRooms" :key="room.id" class="tbl-row">
+            <tr v-for="(room, idx) in paginatedRooms" :key="room.id" class="tbl-row">
 
              
-              <td class="ps-4 text-muted small fw-semibold">{{ idx + 1 }}</td>
+              <td class="ps-4 text-muted small fw-semibold">{{ (currentPage - 1) * perPage + idx + 1 }}</td>
 
               
               <td>
@@ -161,12 +161,46 @@
         </table>
       </div>
 
-      <!-- Table footer -->
-      <div class="tbl-footer px-4 py-3 d-flex justify-content-between align-items-center">
+      <!-- Table footer with pagination -->
+      <div class="tbl-footer px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
         <small class="text-muted">
-          Showing <strong>{{ roomStore.myRooms.length }}</strong>
+          Showing
+          <strong>{{ (currentPage - 1) * perPage + 1 }}–{{ Math.min(currentPage * perPage, roomStore.myRooms.length) }}</strong>
+          of <strong>{{ roomStore.myRooms.length }}</strong>
           room{{ roomStore.myRooms.length !== 1 ? 's' : '' }}
         </small>
+
+        <!-- Pagination controls -->
+        <nav v-if="totalPages > 1" aria-label="Room list pages">
+          <ul class="pagination pagination-sm mb-0 gap-1">
+            <!-- Prev -->
+            <li class="page-item" :class="{ disabled: currentPage === 1 }">
+              <button class="page-btn" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+            </li>
+
+            <!-- Page numbers -->
+            <template v-for="page in displayedPages" :key="page">
+              <li v-if="page === '...'" class="page-item disabled">
+                <span class="page-btn page-ellipsis">…</span>
+              </li>
+              <li v-else class="page-item">
+                <button class="page-btn" :class="{ 'page-btn-active': page === currentPage }" @click="goToPage(page)">
+                  {{ page }}
+                </button>
+              </li>
+            </template>
+
+            <!-- Next -->
+            <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+              <button class="page-btn" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
+
         <router-link to="/provider/add-room" class="btn btn-orange btn-sm fw-bold px-3">
           <i class="bi bi-plus-circle-fill me-1"></i>Add Room
         </router-link>
@@ -364,7 +398,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRoomStore } from '@/stores/RoomStore'
 import { useAuthStore } from '@/stores/auth'
 import { alertSuccess, alertError } from '@/Utils/alert'
@@ -376,9 +410,44 @@ const roomToDelete = ref(null)
 const selectedRoom = ref(null)   // card detail modal
 let deleteModalInstance = null
 
+// ── Pagination ─────────────────────────────────────────────
+const perPage     = ref(8)
+const currentPage = ref(1)
+
+const totalPages = computed(() =>
+  Math.ceil(roomStore.myRooms.length / perPage.value) || 1
+)
+
+const paginatedRooms = computed(() => {
+  const start = (currentPage.value - 1) * perPage.value
+  return roomStore.myRooms.slice(start, start + perPage.value)
+})
+
+/** Build an array like [1, 2, '...', 8, 9, 10] for the page buttons */
+const displayedPages = computed(() => {
+  const total = totalPages.value
+  const cur   = currentPage.value
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
+
+  const pages = []
+  pages.push(1)
+  if (cur > 3)               pages.push('...')
+  for (let p = Math.max(2, cur - 1); p <= Math.min(total - 1, cur + 1); p++) pages.push(p)
+  if (cur < total - 2)       pages.push('...')
+  pages.push(total)
+  return pages
+})
+
+function goToPage(page) {
+  if (page < 1 || page > totalPages.value) return
+  currentPage.value = page
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
 onMounted(async () => {
   if (!authStore.user) await authStore.fetchMe()
   await roomStore.fetchMyRooms()
+  currentPage.value = 1
   const { Modal } = await import('bootstrap')
   deleteModalInstance = new Modal(document.getElementById('deleteModal'))
 })
@@ -401,6 +470,10 @@ async function executeDelete() {
   if (success) {
     deleteModalInstance?.hide()
     alertSuccess('Room deleted successfully.')
+    // jump back if current page becomes empty after deletion
+    if (paginatedRooms.value.length === 0 && currentPage.value > 1) {
+      currentPage.value--
+    }
   } else {
     alertError('Failed to delete the room. Please try again.')
   }
@@ -425,6 +498,26 @@ async function executeDelete() {
 
 /* ── Table footer ── */
 .tbl-footer { background: #fafbfc; border-top: 1px solid #f0f0f0; }
+
+/* ── Pagination ── */
+.page-btn {
+  min-width: 32px; height: 32px;
+  border: 1.5px solid #e8edf2;
+  border-radius: 8px;
+  background: #fff;
+  color: #031c36;
+  font-size: .78rem; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 8px;
+  cursor: pointer;
+  transition: all .18s;
+  line-height: 1;
+}
+.page-btn:hover:not(:disabled) { background: #031c36; color: #fff; border-color: #031c36; }
+.page-btn-active { background: #ff5f00 !important; color: #fff !important; border-color: #ff5f00 !important; }
+.page-btn:disabled { opacity: .4; cursor: not-allowed; }
+.page-ellipsis { border: none; background: transparent; cursor: default; }
+.pagination { list-style: none; padding: 0; margin: 0; display: flex; align-items: center; }
 
 /* ── Thumbnail ── */
 .room-thumb {

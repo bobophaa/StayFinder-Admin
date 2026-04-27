@@ -19,7 +19,7 @@
         <h6 class="profile-name mb-0">{{ auth.user?.name || 'Charming Views' }}</h6>
         <div class="role-area d-flex align-items-center">
         
-          <span class="profile-role">Provider</span>
+          <span class="profile-role">{{ auth.user?.role }}</span>
         </div>
       </div>
     </div>
