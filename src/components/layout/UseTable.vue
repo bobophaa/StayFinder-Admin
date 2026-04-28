@@ -29,14 +29,15 @@
         </thead>
 
         <tbody v-if="!loading && filteredData.length > 0">
-          <tr
-            v-for="(row, index) in paginatedData"
-            :key="row.id || index"
-            class="table-row"
-          >
-            <td class="td-number">{{ (currentPage - 1) * pageSize + index + 1 }}</td>
+          <tr v-for="(row, index) in paginatedData" :key="row.id || index" class="table-row">
+            <td class="td-number" data-label="#">{{ (currentPage - 1) * pageSize + index + 1 }}</td>
 
-            <td v-for="col in columns" :key="col.key" :class="'td-' + col.key">
+            <td
+              v-for="col in columns"
+              :key="col.key"
+              :class="'td-' + col.key"
+              :data-label="col.label"
+            >
               <!-- Image column -->
               <template v-if="col.type === 'image'">
                 <div class="cell-image-wrapper">
@@ -47,10 +48,17 @@
                     alt=""
                   />
                   <div v-else class="cell-image-placeholder">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                      <circle cx="8.5" cy="8.5" r="1.5"/>
-                      <polyline points="21 15 16 10 5 21"/>
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
                     </svg>
                   </div>
                 </div>
@@ -58,7 +66,10 @@
 
               <!-- Status badge column -->
               <template v-else-if="col.type === 'status'">
-                <span class="status-badge" :class="'status-' + getStatusKey(getNestedValue(row, col.field))">
+                <span
+                  class="status-badge"
+                  :class="'status-' + getStatusKey(getNestedValue(row, col.field))"
+                >
                   {{ getStatusLabel(getNestedValue(row, col.field)) }}
                 </span>
               </template>
@@ -92,17 +103,23 @@
             </td>
 
             <!-- Action buttons -->
-            <td class="td-actions">
+            <td class="td-actions" data-label="Actions">
               <div class="action-group">
-                <button
-                  class="action-btn detail-btn"
-                  @click="$emit('view-detail', row)"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
+                <button class="action-btn detail-btn" @click="$emit('view-detail', row)">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
                   </svg>
-                  Detail
+                  <span class="btn-label">Detail</span>
                 </button>
                 <button
                   v-if="showActions"
@@ -110,10 +127,21 @@
                   :disabled="approvingId === row.id || !isPending(row.status)"
                   @click="$emit('approve', row.id)"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
                   </svg>
-                  {{ approvingId === row.id ? 'Approving…' : 'Approve' }}
+                  <span class="btn-label">{{
+                    approvingId === row.id ? 'Approving…' : 'Approve'
+                  }}</span>
                 </button>
                 <button
                   v-if="showActions"
@@ -121,11 +149,22 @@
                   :disabled="rejectingId === row.id || !isPending(row.status)"
                   @click="$emit('reject', row.id)"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
-                  {{ rejectingId === row.id ? 'Rejecting…' : 'Reject' }}
+                  <span class="btn-label">{{
+                    rejectingId === row.id ? 'Rejecting…' : 'Reject'
+                  }}</span>
                 </button>
               </div>
             </td>
@@ -143,9 +182,17 @@
 
       <!-- Empty state -->
       <div v-else-if="filteredData.length === 0" class="table-state">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4">
-          <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
-          <polyline points="13 2 13 9 20 9"/>
+        <svg
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          opacity="0.4"
+        >
+          <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+          <polyline points="13 2 13 9 20 9" />
         </svg>
         <p class="state-text">{{ emptyMessage }}</p>
       </div>
@@ -155,16 +202,20 @@
     <div v-if="!loading && effectiveTotalItems > pageSize" class="table-pagination">
       <p class="pagination-info">
         Showing
-        <strong>{{ (currentPage - 1) * pageSize + 1 }}</strong>–<strong>{{ Math.min(currentPage * pageSize, effectiveTotalItems) }}</strong>
-        of <strong>{{ effectiveTotalItems }}</strong> entries
+        <strong>{{ (currentPage - 1) * pageSize + 1 }}</strong
+        >–<strong>{{ Math.min(currentPage * pageSize, effectiveTotalItems) }}</strong> of
+        <strong>{{ effectiveTotalItems }}</strong> entries
       </p>
 
       <nav aria-label="Table pages">
         <ul class="pg-list">
           <!-- Prev -->
           <li>
-            <button class="pg-btn" :disabled="currentPage <= 1"
-              @click="$emit('update:currentPage', currentPage - 1)">
+            <button
+              class="pg-btn"
+              :disabled="currentPage <= 1"
+              @click="$emit('update:currentPage', currentPage - 1)"
+            >
               <i class="bi bi-chevron-left"></i>
             </button>
           </li>
@@ -175,8 +226,11 @@
               <span class="pg-btn pg-ellipsis">…</span>
             </li>
             <li v-else>
-              <button class="pg-btn" :class="{ 'pg-active': currentPage === page }"
-                @click="$emit('update:currentPage', page)">
+              <button
+                class="pg-btn"
+                :class="{ 'pg-active': currentPage === page }"
+                @click="$emit('update:currentPage', page)"
+              >
                 {{ page }}
               </button>
             </li>
@@ -184,8 +238,11 @@
 
           <!-- Next -->
           <li>
-            <button class="pg-btn" :disabled="currentPage >= totalPages"
-              @click="$emit('update:currentPage', currentPage + 1)">
+            <button
+              class="pg-btn"
+              :disabled="currentPage >= totalPages"
+              @click="$emit('update:currentPage', currentPage + 1)"
+            >
               <i class="bi bi-chevron-right"></i>
             </button>
           </li>
@@ -213,7 +270,14 @@ const props = defineProps({
   paymentUrlGetter: { type: Function, default: null },
 })
 
-defineEmits(['approve', 'reject', 'view-payment', 'view-detail', 'update:currentPage', 'update:activeFilter'])
+defineEmits([
+  'approve',
+  'reject',
+  'view-payment',
+  'view-detail',
+  'update:currentPage',
+  'update:activeFilter',
+])
 
 // --- Helpers ---
 const getNestedValue = (obj, path) => {
@@ -235,8 +299,12 @@ const getStatusLabel = (status) => {
 
 const isPending = (status) => {
   return !(
-    status === 2 || status === '2' || status === 'approved' ||
-    status === 3 || status === '3' || status === 'rejected'
+    status === 2 ||
+    status === '2' ||
+    status === 'approved' ||
+    status === 3 ||
+    status === '3' ||
+    status === 'rejected'
   )
 }
 
@@ -282,14 +350,14 @@ const paginatedData = computed(() => {
 
 // Fallback to the loaded data length when the API doesn't return a total
 const effectiveTotalItems = computed(() =>
-  props.totalItems > 0 ? props.totalItems : filteredData.value.length
+  props.totalItems > 0 ? props.totalItems : filteredData.value.length,
 )
 
 const totalPages = computed(() => Math.ceil(effectiveTotalItems.value / props.pageSize))
 
 const displayedPages = computed(() => {
   const total = totalPages.value
-  const cur   = props.currentPage
+  const cur = props.currentPage
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
   const pages = []
   pages.push(1)
@@ -335,11 +403,16 @@ const statusCategories = computed(() => {
   --clr-warning-border: #fde68a;
   --radius: 12px;
   --radius-sm: 8px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
   --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    'Segoe UI',
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 /* ===== Filter Tabs ===== */
@@ -378,7 +451,7 @@ const statusCategories = computed(() => {
 }
 
 .filter-tab.active .filter-count {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
   color: #fff;
 }
 
@@ -388,13 +461,21 @@ const statusCategories = computed(() => {
   border-radius: 50%;
   flex-shrink: 0;
 }
-.dot-all       { background: var(--clr-primary); }
-.dot-pending   { background: var(--clr-warning); }
-.dot-approved  { background: var(--clr-success); }
-.dot-rejected  { background: var(--clr-danger); }
+.dot-all {
+  background: var(--clr-primary);
+}
+.dot-pending {
+  background: var(--clr-warning);
+}
+.dot-approved {
+  background: var(--clr-success);
+}
+.dot-rejected {
+  background: var(--clr-danger);
+}
 
 .filter-tab.active .filter-dot {
-  background: rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .filter-count {
@@ -463,7 +544,8 @@ const statusCategories = computed(() => {
   border-bottom: none;
 }
 
-.th-number, .td-number {
+.th-number,
+.td-number {
   width: 50px;
   text-align: center;
   color: var(--clr-text-muted);
@@ -688,7 +770,9 @@ const statusCategories = computed(() => {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ===== Pagination ===== */
@@ -708,7 +792,9 @@ const statusCategories = computed(() => {
   margin: 0;
 }
 
-.pagination-info strong { color: #031c36; }
+.pagination-info strong {
+  color: #031c36;
+}
 
 /* Nav list */
 .pg-list {
@@ -740,17 +826,17 @@ const statusCategories = computed(() => {
   text-decoration: none;
 }
 
-.pg-btn:hover:not(:disabled) {
-  background: #031c36;
-  color: #fff;
-  border-color: #031c36;
+.page-btn:hover:not(:disabled):not(.active) {
+  border-color: var(--clr-primary);
+  color: var(--clr-primary);
+  background: var(--clr-primary-soft);
 }
 
-.pg-btn.pg-active {
-  background: #ff5f00 !important;
-  color: #fff !important;
-  border-color: #ff5f00 !important;
-  box-shadow: 0 2px 6px rgba(255, 95, 0, 0.35);
+.page-btn.active {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.35);
 }
 
 .pg-btn:disabled {
@@ -758,30 +844,270 @@ const statusCategories = computed(() => {
   cursor: not-allowed;
 }
 
-.pg-ellipsis {
-  border: none;
-  background: transparent;
-  cursor: default;
-  pointer-events: none;
+/* ===== Responsive: Large Tablet (≤1100px) ===== */
+@media (max-width: 1100px) {
+  .td-actions {
+    width: auto;
+  }
+
+  .action-btn {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 12px 10px;
+  }
 }
 
-/* ===== Responsive ===== */
+/* ===== Responsive: Tablet (≤900px) ===== */
+@media (max-width: 900px) {
+  .action-btn .btn-label {
+    display: none;
+  }
+
+  .action-btn {
+    padding: 8px;
+    gap: 0;
+    border-radius: 8px;
+  }
+
+  .action-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .td-actions {
+    width: auto;
+  }
+
+  .action-group {
+    gap: 6px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+
+  .filter-tab {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ===== Responsive: Mobile Card Layout (≤768px) ===== */
 @media (max-width: 768px) {
-  .table-wrapper {
-    overflow-x: auto;
-  }
-  .data-table {
-    min-width: 700px;
-  }
-  .table-pagination {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
+  /* Filter bar: horizontal scroll */
   .table-filter-bar {
     overflow-x: auto;
     flex-wrap: nowrap;
+    padding-bottom: 8px;
+    gap: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .table-filter-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-tab {
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+  }
+
+  /* Table → Card layout */
+  .table-wrapper {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .data-table {
+    min-width: 0;
+  }
+
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .data-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    gap: 0;
+    transition: box-shadow var(--transition);
+  }
+
+  .data-table tbody tr:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .data-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--clr-border-light);
+    font-size: 0.85rem;
+  }
+
+  .data-table td:last-child {
+    border-bottom: none;
     padding-bottom: 4px;
+  }
+
+  .data-table td:first-child {
+    padding-top: 0;
+  }
+
+  /* Data labels from data-label attr */
+  .data-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--clr-text-muted);
+    flex-shrink: 0;
+    margin-right: 16px;
+  }
+
+  /* Hide row number on mobile */
+  .td-number {
+    display: none;
+  }
+
+  /* Actions full width */
+  .td-actions {
+    width: auto;
+    flex-direction: column;
+    padding-top: 14px !important;
+  }
+
+  .td-actions::before {
+    display: none;
+  }
+
+  .action-group {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .action-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .action-btn .btn-label {
+    display: inline;
+  }
+
+  .action-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Status badge alignment */
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 4px 12px;
+  }
+
+  /* Cell image smaller */
+  .cell-image-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+
+  /* Pagination */
+  .table-pagination {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .pagination-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .page-btn {
+    min-width: 34px;
+    height: 34px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ===== Responsive: Small Mobile (≤480px) ===== */
+@media (max-width: 480px) {
+  .table-filter-bar {
+    gap: 4px;
+  }
+
+  .filter-tab {
+    padding: 5px 10px;
+    font-size: 0.72rem;
+    gap: 5px;
+  }
+
+  .filter-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .filter-count {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.68rem;
+    padding: 0 4px;
+  }
+
+  .data-table tbody tr {
+    padding: 12px;
+  }
+
+  .data-table td {
+    padding: 8px 0;
+    font-size: 0.8rem;
+  }
+
+  .data-table td::before {
+    font-size: 0.7rem;
+  }
+
+  .action-group {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .action-btn {
+    padding: 10px;
+    font-size: 0.78rem;
+  }
+
+  .pagination-info {
+    font-size: 0.78rem;
   }
 }
 </style>

@@ -34,9 +34,9 @@ const providerMenus = [
   { label: 'Dashboard', to: '/provider/dashboard', icon: 'bi bi-grid-fill' },
   { label: 'My Properties', to: '/provider/my-rooms', icon: 'bi bi-building' },
   { label: 'Post New Room', to: '/provider/add-room', icon: 'bi bi-plus-circle-fill' },
-  { label: 'Booking Requests', to: '/provider/booking-requests', icon: 'bi bi-calendar-event' },
+  { label: 'Manage Booking', to: '/provider/booking-requests', icon: 'bi bi-calendar-event' },
   { label: 'Manage Renters', to: '/provider/rent-management', icon: 'bi bi-house-gear-fill' },
-  { label: 'Profile info', to: '/profile', icon: 'bi bi-person-badge-fill' }, 
+  { label: 'Profile info', to: '/profile', icon: 'bi bi-person-badge-fill' },
 ]
 
 const adminMenus = [
@@ -44,7 +44,7 @@ const adminMenus = [
   { label: 'User Management', to: '/admin/Manage', icon: 'bi bi-people-fill' },
   { label: 'Location Settings', to: '/admin/locations', icon: 'bi bi-geo-alt-fill' },
   { label: 'Room Options', to: '/admin/room-options', icon: 'bi bi-list-stars' },
-  { label: 'Profile info', to: '/profile', icon: 'bi bi-person-badge-fill' }, 
+  { label: 'Profile info', to: '/profile', icon: 'bi bi-person-badge-fill' },
 ]
 
 const menuItems = computed(() => {
