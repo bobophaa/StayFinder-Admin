@@ -34,9 +34,9 @@
             :key="row.id || index"
             class="table-row"
           >
-            <td class="td-number">{{ (currentPage - 1) * pageSize + index + 1 }}</td>
+            <td class="td-number" data-label="#">{{ (currentPage - 1) * pageSize + index + 1 }}</td>
 
-            <td v-for="col in columns" :key="col.key" :class="'td-' + col.key">
+            <td v-for="col in columns" :key="col.key" :class="'td-' + col.key" :data-label="col.label">
               <!-- Image column -->
               <template v-if="col.type === 'image'">
                 <div class="cell-image-wrapper">
@@ -92,7 +92,7 @@
             </td>
 
             <!-- Action buttons -->
-            <td class="td-actions">
+            <td class="td-actions" data-label="Actions">
               <div class="action-group">
                 <button
                   class="action-btn detail-btn"
@@ -102,7 +102,7 @@
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                     <circle cx="12" cy="12" r="3"/>
                   </svg>
-                  Detail
+                  <span class="btn-label">Detail</span>
                 </button>
                 <button
                   v-if="showActions"
@@ -113,7 +113,7 @@
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
-                  {{ approvingId === row.id ? 'Approving…' : 'Approve' }}
+                  <span class="btn-label">{{ approvingId === row.id ? 'Approving…' : 'Approve' }}</span>
                 </button>
                 <button
                   v-if="showActions"
@@ -125,7 +125,7 @@
                     <line x1="18" y1="6" x2="6" y2="18"/>
                     <line x1="6" y1="6" x2="18" y2="18"/>
                   </svg>
-                  {{ rejectingId === row.id ? 'Rejecting…' : 'Reject' }}
+                  <span class="btn-label">{{ rejectingId === row.id ? 'Rejecting…' : 'Reject' }}</span>
                 </button>
               </div>
             </td>
@@ -742,23 +742,270 @@ const statusCategories = computed(() => {
   cursor: not-allowed;
 }
 
-/* ===== Responsive ===== */
+/* ===== Responsive: Large Tablet (≤1100px) ===== */
+@media (max-width: 1100px) {
+  .td-actions {
+    width: auto;
+  }
+
+  .action-btn {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 12px 10px;
+  }
+}
+
+/* ===== Responsive: Tablet (≤900px) ===== */
+@media (max-width: 900px) {
+  .action-btn .btn-label {
+    display: none;
+  }
+
+  .action-btn {
+    padding: 8px;
+    gap: 0;
+    border-radius: 8px;
+  }
+
+  .action-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .td-actions {
+    width: auto;
+  }
+
+  .action-group {
+    gap: 6px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+
+  .filter-tab {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ===== Responsive: Mobile Card Layout (≤768px) ===== */
 @media (max-width: 768px) {
-  .table-wrapper {
-    overflow-x: auto;
-  }
-  .data-table {
-    min-width: 700px;
-  }
-  .table-pagination {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
+  /* Filter bar: horizontal scroll */
   .table-filter-bar {
     overflow-x: auto;
     flex-wrap: nowrap;
+    padding-bottom: 8px;
+    gap: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .table-filter-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-tab {
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+  }
+
+  /* Table → Card layout */
+  .table-wrapper {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .data-table {
+    min-width: 0;
+  }
+
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .data-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    gap: 0;
+    transition: box-shadow var(--transition);
+  }
+
+  .data-table tbody tr:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .data-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--clr-border-light);
+    font-size: 0.85rem;
+  }
+
+  .data-table td:last-child {
+    border-bottom: none;
     padding-bottom: 4px;
+  }
+
+  .data-table td:first-child {
+    padding-top: 0;
+  }
+
+  /* Data labels from data-label attr */
+  .data-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--clr-text-muted);
+    flex-shrink: 0;
+    margin-right: 16px;
+  }
+
+  /* Hide row number on mobile */
+  .td-number {
+    display: none;
+  }
+
+  /* Actions full width */
+  .td-actions {
+    width: auto;
+    flex-direction: column;
+    padding-top: 14px !important;
+  }
+
+  .td-actions::before {
+    display: none;
+  }
+
+  .action-group {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .action-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .action-btn .btn-label {
+    display: inline;
+  }
+
+  .action-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Status badge alignment */
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 4px 12px;
+  }
+
+  /* Cell image smaller */
+  .cell-image-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+
+  /* Pagination */
+  .table-pagination {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .pagination-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .page-btn {
+    min-width: 34px;
+    height: 34px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ===== Responsive: Small Mobile (≤480px) ===== */
+@media (max-width: 480px) {
+  .table-filter-bar {
+    gap: 4px;
+  }
+
+  .filter-tab {
+    padding: 5px 10px;
+    font-size: 0.72rem;
+    gap: 5px;
+  }
+
+  .filter-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .filter-count {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.68rem;
+    padding: 0 4px;
+  }
+
+  .data-table tbody tr {
+    padding: 12px;
+  }
+
+  .data-table td {
+    padding: 8px 0;
+    font-size: 0.8rem;
+  }
+
+  .data-table td::before {
+    font-size: 0.7rem;
+  }
+
+  .action-group {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .action-btn {
+    padding: 10px;
+    font-size: 0.78rem;
+  }
+
+  .pagination-info {
+    font-size: 0.78rem;
   }
 }
 </style>

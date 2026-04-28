@@ -12,19 +12,38 @@
               </span>
             </div>
             <button class="close-btn" @click="$emit('close')">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
           </div>
 
           <!-- Scrollable Body -->
           <div class="modal-body-scroll">
-
             <!-- ===== Guest Info ===== -->
             <div class="info-section">
               <div class="section-label">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
                 Guest Information
               </div>
               <div class="profile-card">
@@ -61,7 +80,17 @@
             <!-- ===== Room Details ===== -->
             <div class="info-section">
               <div class="section-label">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
                 Room Details
               </div>
               <div class="room-hero" v-if="item.room?.image">
@@ -112,7 +141,9 @@
                   </div>
                   <div v-if="item.room?.percent_promotion > 0" class="pricing-row promo">
                     <span>Promotion</span>
-                    <span class="pricing-amount promo-text">-{{ item.room.percent_promotion }}%</span>
+                    <span class="pricing-amount promo-text"
+                      >-{{ item.room.percent_promotion }}%</span
+                    >
                   </div>
                   <div class="pricing-divider"></div>
                   <div class="pricing-row total">
@@ -142,7 +173,18 @@
               <div v-if="item.room?.map_url" class="info-item" style="margin-top: 8px">
                 <span class="info-label">Map</span>
                 <a :href="item.room.map_url" target="_blank" class="map-link">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
                   Open in Maps
                 </a>
               </div>
@@ -151,7 +193,19 @@
             <!-- ===== Booking / Rent Info ===== -->
             <div class="info-section">
               <div class="section-label">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
                 {{ title }} Info
               </div>
               <div class="info-grid">
@@ -169,16 +223,24 @@
                 </div>
                 <div class="info-item">
                   <span class="info-label">Status</span>
-                  <span class="status-pill small" :class="'pill-' + statusKey">{{ statusLabel }}</span>
+                  <span class="status-pill small" :class="'pill-' + statusKey">{{
+                    statusLabel
+                  }}</span>
                 </div>
               </div>
 
               <!-- Payment proof -->
               <div class="payment-section">
                 <span class="info-label">Payment Proof</span>
-                <div v-if="paymentUrl" class="payment-preview-box" @click="showPaymentFull = !showPaymentFull">
+                <div
+                  v-if="paymentUrl"
+                  class="payment-preview-box"
+                  @click="showPaymentFull = !showPaymentFull"
+                >
                   <img :src="paymentUrl" class="payment-preview-img" alt="Payment proof" />
-                  <span class="payment-hint">Click to {{ showPaymentFull ? 'collapse' : 'enlarge' }}</span>
+                  <span class="payment-hint"
+                    >Click to {{ showPaymentFull ? 'collapse' : 'enlarge' }}</span
+                  >
                 </div>
                 <Transition name="expand">
                   <div v-if="showPaymentFull && paymentUrl" class="payment-full">
@@ -192,7 +254,19 @@
             <!-- ===== Seller / Owner Info ===== -->
             <div class="info-section" v-if="item.seller">
               <div class="section-label">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="8.5" cy="7" r="4" />
+                  <line x1="20" y1="8" x2="20" y2="14" />
+                  <line x1="23" y1="11" x2="17" y2="11" />
+                </svg>
                 Room Owner
               </div>
               <div class="profile-card compact">
@@ -260,7 +334,12 @@ const genderText = (g) => {
 const formatDate = (dateString) => {
   if (!dateString) return 'N/A'
   const d = new Date(dateString)
-  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
+  return d.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 const formatTime = (dateString) => {
@@ -322,7 +401,9 @@ const estimatedTotal = computed(() => {
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.05);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.18),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 }
 
@@ -371,22 +452,48 @@ const estimatedTotal = computed(() => {
 }
 
 /* ===== Status Pill ===== */
+.info-item .status-pill {
+  align-self: flex-start;
+}
 .status-pill {
   display: inline-flex;
   align-items: center;
-  padding: 4px 14px;
-  border-radius: 50px;
-  font-size: 0.78rem;
+  padding: 2px 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.info-item .status-pill {
+  align-self: flex-start;
+}
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px; 
+  font-size: 0.7rem; 
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 .status-pill.small {
-  padding: 3px 10px;
-  font-size: 0.72rem;
+  padding: 1px 8px; 
+  font-size: 0.65rem; 
 }
-.pill-pending  { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
-.pill-approved { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
-.pill-rejected { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.pill-pending {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+.pill-approved {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+.pill-rejected {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
 
 /* ===== Scrollable Body ===== */
 .modal-body-scroll {
@@ -515,7 +622,7 @@ const estimatedTotal = computed(() => {
   left: 0;
   right: 0;
   padding: 16px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
   color: #fff;
 }
 
@@ -666,7 +773,9 @@ const estimatedTotal = computed(() => {
   object-fit: cover;
   border-radius: 10px;
   border: 2px solid #e2e8f0;
-  transition: border-color 0.2s, transform 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
 }
 .payment-preview-box:hover .payment-preview-img {
   border-color: #6366f1;
@@ -703,7 +812,9 @@ const estimatedTotal = computed(() => {
 }
 .modal-enter-active .detail-modal,
 .modal-leave-active .detail-modal {
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
 }
 .modal-enter-from,
 .modal-leave-to {
