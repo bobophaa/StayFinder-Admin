@@ -1,637 +1,1129 @@
 <template>
-  <div class="pg">
-
-    <!-- Page heading -->
-    <div class="pg-heading">
-      <h1 class="pg-title">
-        {{ isAdmin ? 'Admin' : 'Provider' }}<span class="title-dot">.</span>profile
-      </h1>
-      <span class="role-chip" :class="isAdmin ? 'chip-admin' : 'chip-provider'">
-        {{ isAdmin ? 'Administrator' : 'Service Provider' }}
-      </span>
+  <div class="container-fluid py-3 px-md-4">
+    <!-- ── Header ── -->
+    <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+      <div>
+        <h2 class="fw-bold text-navy mb-1">
+          Welcome back, {{ authStore.user?.name?.split(' ')[0] || 'Provider' }}
+        </h2>
+        <p class="text-muted mb-0">
+          Manage your listings on <span class="fw-bold text-navy">StayFinder</span> —
+          <span class="small">{{ todayDate }}</span>
+        </p>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <router-link to="/provider/add-room" class="btn btn-orange fw-bold px-4">
+          <i class="bi bi-plus-circle-fill me-2"></i>Post New Room
+        </router-link>
+        <!-- <button class="btn btn-outline-navy fw-bold px-3" @click="refreshAll" :disabled="loading">
+          <i class="bi me-1" :class="loading ? 'bi-arrow-repeat spin' : 'bi-arrow-clockwise'"></i>
+          Refresh
+        </button> -->
+      </div>
     </div>
 
-    <div class="pg-grid">
-
-      <!-- LEFT: Profile Card -->
-      <div class="left-col">
-        <div class="profile-card">
-
-          <div class="card-banner" :class="isAdmin ? 'banner-admin' : 'banner-provider'">
-            <div class="banner-lines"></div>
+    <!-- ── Stat Cards ── -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-lg-3">
+        <div class="stat-card card border-0 shadow-sm rounded-4 p-3 h-100">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-shape bg-orange-light"><i class="bi bi-house-door-fill"></i></div>
+            <span class="trend-badge trend-up"><i class="bi bi-arrow-up me-1"></i>8%</span>
           </div>
-
-          <div class="avatar-wrap" @click="triggerUpload">
-            <div class="avatar-ring">
-              <img v-if="avatarPreview || user?.avatar" :src="avatarPreview || user.avatar" class="av-img" />
-              <span v-else class="av-letter" :class="isAdmin ? 'letter-admin' : 'letter-provider'">
-                {{ user?.name?.charAt(0)?.toUpperCase() }}
-              </span>
-            </div>
-            <div class="avatar-cam" :class="isAdmin ? 'cam-admin' : 'cam-provider'">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                <circle cx="12" cy="13" r="4"/>
-              </svg>
-            </div>
-            <div v-if="uploadingAvatar" class="av-loading">
-              <div class="spinner"></div>
-            </div>
+          <div v-if="loading">
+            <div class="skel-line" style="width: 60px; height: 28px; border-radius: 8px"></div>
           </div>
-          <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
-
-          <div class="card-body">
-            <div class="card-name">{{ user?.name }}</div>
-            <div class="card-email">{{ user?.email }}</div>
-            <span class="role-chip-sm" :class="isAdmin ? 'chip-admin' : 'chip-provider'">
-              {{ isAdmin ? 'Administrator' : 'Service Provider' }}
+          <template v-else>
+            <h3 class="fw-bold mb-0 text-navy">{{ myRooms.length }}</h3>
+            <small class="text-muted fw-semibold stat-label">My Rooms</small>
+          </template>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card card border-0 shadow-sm rounded-4 p-3 h-100">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-shape bg-primary-light"><i class="bi bi-calendar-check-fill"></i></div>
+            <span class="trend-badge trend-up"><i class="bi bi-arrow-up me-1"></i>5%</span>
+          </div>
+          <div v-if="loading">
+            <div class="skel-line" style="width: 60px; height: 28px; border-radius: 8px"></div>
+          </div>
+          <template v-else>
+            <h3 class="fw-bold mb-0 text-navy">{{ bookings.length }}</h3>
+            <small class="text-muted fw-semibold stat-label">Total Bookings</small>
+          </template>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card card border-0 shadow-sm rounded-4 p-3 h-100">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-shape bg-success-light"><i class="bi bi-house-check-fill"></i></div>
+            <span class="trend-badge trend-up"><i class="bi bi-arrow-up me-1"></i>3%</span>
+          </div>
+          <div v-if="loading">
+            <div class="skel-line" style="width: 60px; height: 28px; border-radius: 8px"></div>
+          </div>
+          <template v-else>
+            <h3 class="fw-bold mb-0 text-navy">{{ approvedRents }}</h3>
+            <small class="text-muted fw-semibold stat-label">Rented Rooms</small>
+          </template>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card card border-0 shadow-sm rounded-4 p-3 h-100">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-shape bg-purple-light"><i class="bi bi-hourglass-split"></i></div>
+            <span
+              class="trend-badge"
+              :class="pendingBookings + pendingRents > 0 ? 'trend-warn' : 'trend-up'"
+            >
+              <i class="bi bi-clock me-1"></i>{{ pendingBookings + pendingRents }}
             </span>
           </div>
+          <div v-if="loading">
+            <div class="skel-line" style="width: 60px; height: 28px; border-radius: 8px"></div>
+          </div>
+          <template v-else>
+            <h3 class="fw-bold mb-0 text-navy">{{ pendingBookings + pendingRents }}</h3>
+            <small class="text-muted fw-semibold stat-label">Needs Action</small>
+          </template>
+        </div>
+      </div>
+    </div>
 
-          <div class="info-block">
-            <div class="info-row">
-              <span class="info-key">Email</span>
-              <span class="info-val">{{ user?.email }}</span>
+    <!-- ── Overview bars + Room donut ── -->
+    <div class="row g-3 mb-4">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+          <h5 class="fw-bold text-navy mb-4">
+            <i class="bi bi-bar-chart-fill me-2 text-orange"></i>Booking & Rent Overview
+          </h5>
+          <div v-if="loading">
+            <div
+              v-for="i in 4"
+              :key="i"
+              class="skel-line mb-3"
+              style="height: 36px; border-radius: 10px"
+            ></div>
+          </div>
+          <div v-else class="d-flex flex-column gap-3">
+            <div>
+              <div class="d-flex justify-content-between mb-1">
+                <span class="small fw-semibold text-navy"
+                  ><i class="bi bi-clock-fill me-2 text-warning"></i>Pending Bookings</span
+                >
+                <span class="small fw-bold text-navy">{{ pendingBookings }}</span>
+              </div>
+              <div class="progress" style="height: 8px; border-radius: 10px; background: #f0f2f5">
+                <div
+                  class="progress-bar"
+                  style="background: #f59e0b; border-radius: 10px"
+                  :style="{ width: barPct(pendingBookings, bookings.length) + '%' }"
+                ></div>
+              </div>
             </div>
-            <div class="info-row">
-              <span class="info-key">Phone</span>
-              <span class="info-val">{{ user?.phone || '—' }}</span>
+            <div>
+              <div class="d-flex justify-content-between mb-1">
+                <span class="small fw-semibold text-navy"
+                  ><i class="bi bi-check-circle-fill me-2 text-success"></i>Approved Bookings</span
+                >
+                <span class="small fw-bold text-navy">{{ approvedBookings }}</span>
+              </div>
+              <div class="progress" style="height: 8px; border-radius: 10px; background: #f0f2f5">
+                <div
+                  class="progress-bar bg-success"
+                  style="border-radius: 10px"
+                  :style="{ width: barPct(approvedBookings, bookings.length) + '%' }"
+                ></div>
+              </div>
             </div>
-            <div class="info-row">
-              <span class="info-key">Gender</span>
-              <span class="info-val">{{ user?.gender == 1 ? 'Male' : 'Female' }}</span>
+            <div>
+              <div class="d-flex justify-content-between mb-1">
+                <span class="small fw-semibold text-navy"
+                  ><i class="bi bi-clock-fill me-2" style="color: #8b5cf6"></i>Pending Rents</span
+                >
+                <span class="small fw-bold text-navy">{{ pendingRents }}</span>
+              </div>
+              <div class="progress" style="height: 8px; border-radius: 10px; background: #f0f2f5">
+                <div
+                  class="progress-bar"
+                  style="background: #8b5cf6; border-radius: 10px"
+                  :style="{ width: barPct(pendingRents, rents.length) + '%' }"
+                ></div>
+              </div>
             </div>
-            <!-- Admin-only field -->
-            <div v-if="isAdmin" class="info-row">
-              <span class="info-key">Department</span>
-              <span class="info-val">{{ user?.department || '—' }}</span>
-            </div>
-            <!-- Provider-only field -->
-            <div v-if="!isAdmin" class="info-row">
-              <span class="info-key">Job</span>
-              <span class="info-val">{{ user?.current_job || '—' }}</span>
-            </div>
-            <div class="info-row last">
-              <span class="info-key">Role</span>
-              <span class="info-val">{{ isAdmin ? 'Administrator' : 'Service Provider' }}</span>
+            <div>
+              <div class="d-flex justify-content-between mb-1">
+                <span class="small fw-semibold text-navy"
+                  ><i class="bi bi-house-check-fill me-2 text-info"></i>Approved Rents</span
+                >
+                <span class="small fw-bold text-navy">{{ approvedRents }}</span>
+              </div>
+              <div class="progress" style="height: 8px; border-radius: 10px; background: #f0f2f5">
+                <div
+                  class="progress-bar bg-info"
+                  style="border-radius: 10px"
+                  :style="{ width: barPct(approvedRents, rents.length) + '%' }"
+                ></div>
+              </div>
             </div>
           </div>
-
+          <div class="row g-2 mt-4">
+            <div class="col-4">
+              <div class="summary-chip">
+                <div class="fw-bold text-navy">{{ bookings.length }}</div>
+                <div class="text-muted" style="font-size: 0.7rem">Total Bookings</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="summary-chip">
+                <div class="fw-bold text-navy">{{ rents.length }}</div>
+                <div class="text-muted" style="font-size: 0.7rem">Total Rents</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="summary-chip">
+                <div class="fw-bold text-orange">{{ pendingBookings + pendingRents }}</div>
+                <div class="text-muted" style="font-size: 0.7rem">Needs Action</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- RIGHT -->
-      <div class="right-col">
-
-        <!-- Profile Form -->
-        <div class="section-card">
-          <div class="section-head">
-            <span class="section-label">Profile information</span>
-            <div class="action-row">
-              <button class="btn-ghost" @click="toggleEdit">
-                {{ isEditing ? 'Cancel' : 'Edit' }}
-              </button>
-              <button
-                v-if="isEditing"
-                class="btn-primary"
-                :class="isAdmin ? 'btn-admin' : 'btn-provider'"
-                @click="updateProfile"
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+          <h5 class="fw-bold text-navy mb-4">
+            <i class="bi bi-pie-chart-fill me-2 text-orange"></i>Room Split
+          </h5>
+          <div class="d-flex justify-content-center mb-3">
+            <div class="donut-wrap position-relative">
+              <svg viewBox="0 0 36 36" class="donut-svg">
+                <circle class="donut-ring" cx="18" cy="18" r="15.9" />
+                <circle
+                  class="donut-segment seg-active"
+                  cx="18"
+                  cy="18"
+                  r="15.9"
+                  :stroke-dasharray="`${roomStats.active} ${100 - roomStats.active}`"
+                  stroke-dashoffset="25"
+                />
+                <circle
+                  class="donut-segment seg-promo"
+                  cx="18"
+                  cy="18"
+                  r="15.9"
+                  :stroke-dasharray="`${roomStats.promo} ${100 - roomStats.promo}`"
+                  :stroke-dashoffset="`${125 - roomStats.active}`"
+                />
+              </svg>
+              <div class="donut-center">
+                <div class="fw-bold text-navy" style="font-size: 1.1rem">{{ myRooms.length }}</div>
+                <div class="text-muted" style="font-size: 0.65rem">Total</div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-column gap-2 mb-4">
+            <div class="d-flex justify-content-between">
+              <span class="d-flex align-items-center gap-2 small"
+                ><span class="legend-dot" style="background: #198754"></span>Active</span
               >
-                Save changes
-              </button>
+              <span class="fw-bold text-navy small">{{ roomStats.active }}%</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="d-flex align-items-center gap-2 small"
+                ><span class="legend-dot" style="background: #ff5f00"></span>On Promo</span
+              >
+              <span class="fw-bold text-navy small">{{ roomStats.promo }}%</span>
             </div>
           </div>
-
-          <div class="form-body">
-            <div class="field-pair">
-              <div class="field">
-                <label>Full name</label>
-                <input v-model="form.name" :class="['finput', { active: isEditing }]" :readonly="!isEditing" />
-              </div>
-              <div class="field">
-                <label>Email</label>
-                <input v-model="form.email" :class="['finput', { active: isEditing }]" :readonly="!isEditing" />
-              </div>
-            </div>
-
-            <div class="field-pair">
-              <div class="field">
-                <label>Phone</label>
-                <input v-model="form.phone" :class="['finput', { active: isEditing }]" :readonly="!isEditing" placeholder="Add phone" />
-              </div>
-              <div class="field">
-                <label>Gender</label>
-                <select v-model="form.gender" :class="['finput', { active: isEditing }]" :disabled="!isEditing">
-                  <option :value="1">Male</option>
-                  <option :value="2">Female</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- Admin-only field -->
-            <div v-if="isAdmin" class="field">
-              <label>Department</label>
-              <input v-model="form.department" :class="['finput', { active: isEditing }]" :readonly="!isEditing" placeholder="e.g. Operations" />
-            </div>
-
-            <!-- Provider-only field -->
-            <div v-if="!isAdmin" class="field">
-              <label>Current job</label>
-              <input v-model="form.current_job" :class="['finput', { active: isEditing }]" :readonly="!isEditing" placeholder="e.g. UX/UI Designer" />
-            </div>
+          <div class="avg-price-box">
+            <div class="text-muted small mb-1">Average Room Price</div>
+            <div class="fw-bold text-orange" style="font-size: 1.4rem">{{ avgPrice }}</div>
+            <div class="text-muted" style="font-size: 0.72rem">per month</div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Admin-only: Permissions block -->
-        <div v-if="isAdmin" class="section-card">
-          <div class="section-head">
-            <span class="section-label">Admin permissions</span>
-            <span class="perm-badge">Read only</span>
-          </div>
-          <div class="perm-list">
-            <div class="perm-row" v-for="perm in adminPermissions" :key="perm.label">
-              <span class="perm-label">{{ perm.label }}</span>
-              <span class="perm-status" :class="perm.granted ? 'granted' : 'denied'">
-                {{ perm.granted ? 'Granted' : 'Denied' }}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Provider-only: Business info -->
-        <div v-if="!isAdmin" class="section-card">
-          <div class="section-head">
-            <span class="section-label">Business information</span>
-            <button class="btn-ghost" @click="toggleBizEdit">
-              {{ isBizEditing ? 'Cancel' : 'Edit' }}
-            </button>
-          </div>
-          <div class="form-body">
-            <div class="field-pair">
-              <div class="field">
-                <label>Business name</label>
-                <input v-model="bizForm.business_name" :class="['finput', { active: isBizEditing }]" :readonly="!isBizEditing" placeholder="Your business name" />
-              </div>
-              <div class="field">
-                <label>Business type</label>
-                <input v-model="bizForm.business_type" :class="['finput', { active: isBizEditing }]" :readonly="!isBizEditing" placeholder="e.g. Rental, Hotel" />
-              </div>
-            </div>
-            <div class="field">
-              <label>Address</label>
-              <input v-model="bizForm.address" :class="['finput', { active: isBizEditing }]" :readonly="!isBizEditing" placeholder="Business address" />
-            </div>
-            <button v-if="isBizEditing" class="btn-primary btn-provider mt-sm" @click="saveBizInfo">
-              Save business info
-            </button>
-          </div>
-        </div>
-
-        <!-- Change Password (shared) -->
-        <div class="section-card">
-          <div class="section-head">
-            <span class="section-label">Change password</span>
-            <button class="btn-ghost" @click="showPassForm = !showPassForm">
-              {{ showPassForm ? 'Cancel' : 'Change' }}
-            </button>
-          </div>
-
-          <div v-if="showPassForm" class="form-body">
-            <div class="field-pair three">
-              <div class="field">
-                <label>Current password</label>
-                <input type="password" v-model="passForm.old_pass" class="finput active" placeholder="••••••••" />
-              </div>
-              <div class="field">
-                <label>New password</label>
-                <input type="password" v-model="passForm.new_pass" class="finput active" placeholder="••••••••" />
-              </div>
-              <div class="field">
-                <label>Confirm password</label>
-                <input type="password" v-model="passForm.new_pass_confirmation" class="finput active" placeholder="••••••••" />
-              </div>
-            </div>
-            <button
-              class="btn-primary mt-sm"
-              :class="isAdmin ? 'btn-admin' : 'btn-provider'"
-              @click="changePassword"
+    <!-- ── Recent Bookings + Rents ── -->
+    <div class="row g-3 mb-4">
+      <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+          <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
+            <span class="fw-bold text-white"
+              ><i class="bi bi-calendar-check me-2"></i>Recent Bookings</span
             >
-              Update password
-            </button>
+            <div class="d-flex gap-2 align-items-center">
+              <span v-if="pendingBookings > 0" class="badge-count"
+                >{{ pendingBookings }} pending</span
+              >
+              <router-link to="/provider/booking-check" class="btn btn-xs btn-outline-light"
+                >View All</router-link
+              >
+            </div>
           </div>
+          <div v-if="loading" class="p-4">
+            <div v-for="i in 4" :key="i" class="skel-line mb-3"></div>
+          </div>
+          <div class="table-responsive" v-else>
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th class="ps-4 small fw-bold text-muted">Room / Tenant</th>
+                  <th class="small fw-bold text-muted">Date</th>
+                  <th class="small fw-bold text-muted">Status</th>
+                  <th class="small fw-bold text-muted">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="b in recentBookings" :key="b.id">
+                  <td class="ps-4">
+                    <div class="fw-semibold small text-navy text-truncate" style="max-width: 120px">
+                      {{ b.room?.title || '–' }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.72rem">
+                      {{ b.buyer?.name || b.user?.name || '–' }}
+                    </div>
+                  </td>
+                  <td class="small text-muted">{{ formatDate(b.created_at) }}</td>
+                  <td>
+                    <span :class="['status-pill', statusClass(b.status)]">{{
+                      statusLabel(b.status)
+                    }}</span>
+                  </td>
+                  <td>
+                    <div class="d-flex gap-1" v-if="isPending(b.status)">
+                      <button
+                        class="btn-action approve"
+                        @click="approveBooking(b.id)"
+                        :disabled="actionId === b.id"
+                        title="Approve"
+                      >
+                        <i class="bi bi-check-lg"></i>
+                      </button>
+                      <button
+                        class="btn-action reject"
+                        @click="rejectBooking(b.id)"
+                        :disabled="actionId === b.id"
+                        title="Reject"
+                      >
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                    <span v-else class="text-muted small">–</span>
+                  </td>
+                </tr>
+                <tr v-if="recentBookings.length === 0">
+                  <td colspan="4" class="text-center py-5">
+                    <i
+                      class="bi bi-calendar-x d-block mb-2"
+                      style="font-size: 1.8rem; opacity: 0.2"
+                    ></i>
+                    <span class="text-muted small">No bookings yet</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-          <p v-else class="pass-hint">Use a strong password — at least 8 characters with letters and numbers.</p>
+      <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+          <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
+            <span class="fw-bold text-white"
+              ><i class="bi bi-house-check me-2"></i>Recent Rents</span
+            >
+            <div class="d-flex gap-2 align-items-center">
+              <span v-if="pendingRents > 0" class="badge-count">{{ pendingRents }} pending</span>
+              <router-link to="/provider/rent-check" class="btn btn-xs btn-outline-light"
+                >View All</router-link
+              >
+            </div>
+          </div>
+          <div v-if="loading" class="p-4">
+            <div v-for="i in 4" :key="i" class="skel-line mb-3"></div>
+          </div>
+          <div class="table-responsive" v-else>
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th class="ps-4 small fw-bold text-muted">Room / Tenant</th>
+                  <th class="small fw-bold text-muted">Date</th>
+                  <th class="small fw-bold text-muted">Status</th>
+                  <th class="small fw-bold text-muted">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="r in recentRents" :key="r.id">
+                  <td class="ps-4">
+                    <div class="fw-semibold small text-navy text-truncate" style="max-width: 120px">
+                      {{ r.room?.title || '–' }}
+                    </div>
+                    <div class="text-muted" style="font-size: 0.72rem">
+                      {{ r.buyer?.name || r.user?.name || '–' }}
+                    </div>
+                  </td>
+                  <td class="small text-muted">{{ formatDate(r.created_at) }}</td>
+                  <td>
+                    <span :class="['status-pill', statusClass(r.status)]">{{
+                      statusLabel(r.status)
+                    }}</span>
+                  </td>
+                  <td>
+                    <div class="d-flex gap-1" v-if="isPending(r.status)">
+                      <button
+                        class="btn-action approve"
+                        @click="approveRent(r.id)"
+                        :disabled="actionId === r.id"
+                        title="Approve"
+                      >
+                        <i class="bi bi-check-lg"></i>
+                      </button>
+                      <button
+                        class="btn-action reject"
+                        @click="rejectRent(r.id)"
+                        :disabled="actionId === r.id"
+                        title="Reject"
+                      >
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                    <span v-else class="text-muted small">–</span>
+                  </td>
+                </tr>
+                <tr v-if="recentRents.length === 0">
+                  <td colspan="4" class="text-center py-5">
+                    <i
+                      class="bi bi-house-slash d-block mb-2"
+                      style="font-size: 1.8rem; opacity: 0.2"
+                    ></i>
+                    <span class="text-muted small">No rent requests yet</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── My Rooms + Quick Actions ── -->
+    <div class="row g-3">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
+            <span class="fw-bold text-white"><i class="bi bi-house-door me-2"></i>My Rooms</span>
+            <router-link to="/provider/my-rooms" class="btn btn-xs btn-outline-light"
+              >View All</router-link
+            >
+          </div>
+          <div v-if="loading" class="p-4">
+            <div v-for="i in 4" :key="i" class="skel-line mb-3"></div>
+          </div>
+          <div class="table-responsive" v-else>
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th class="ps-4 small fw-bold text-muted">Room</th>
+                  <th class="small fw-bold text-muted">District</th>
+                  <th class="small fw-bold text-muted">Price</th>
+                  <th class="small fw-bold text-muted">Status</th>
+                  <th class="small fw-bold text-muted">Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="room in myRooms.slice(0, 6)" :key="room.id">
+                  <td class="ps-4">
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="room-thumb">
+                        <img v-if="room.image" :src="room.image" class="room-thumb-img" />
+                        <i v-else class="bi bi-building text-muted" style="font-size: 0.8rem"></i>
+                      </div>
+                      <span
+                        class="fw-semibold small text-navy text-truncate"
+                        style="max-width: 120px"
+                        >{{ room.title }}</span
+                      >
+                    </div>
+                  </td>
+                  <td class="small text-muted">{{ room.district?.name || '–' }}</td>
+                  <td class="fw-bold small text-orange">${{ room.price }}</td>
+                  <td>
+                    <span v-if="room.percent_promotion > 0" class="status-pill pill-promo"
+                      >-{{ room.percent_promotion }}%</span
+                    >
+                    <span v-else class="status-pill pill-active">Active</span>
+                  </td>
+                  <td>
+                    <router-link
+                      :to="`/provider/edit-room/${room.id}`"
+                      class="btn-action edit"
+                      title="Edit"
+                    >
+                      <i class="bi bi-pencil-fill"></i>
+                    </router-link>
+                  </td>
+                </tr>
+                <tr v-if="myRooms.length === 0">
+                  <td colspan="5" class="text-center py-5">
+                    <i
+                      class="bi bi-house-slash d-block mb-2"
+                      style="font-size: 1.8rem; opacity: 0.2"
+                    ></i>
+                    <span class="text-muted small">No rooms posted yet</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 d-flex flex-column gap-3">
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+          <h5 class="fw-bold text-navy mb-3">
+            <i class="bi bi-lightning-fill me-2 text-orange"></i>Quick Actions
+          </h5>
+          <div class="d-flex flex-column gap-2">
+            <router-link
+              v-for="a in quickActions"
+              :key="a.to"
+              :to="a.to"
+              class="action-box text-decoration-none"
+            >
+              <div :class="['action-icon', a.bg]">
+                <i :class="['bi', a.icon]" :style="{ color: a.color }"></i>
+              </div>
+              <div>
+                <div class="fw-bold small text-navy">{{ a.title }}</div>
+                <div class="text-muted" style="font-size: 0.72rem">{{ a.sub }}</div>
+              </div>
+              <i class="bi bi-chevron-right ms-auto text-muted small"></i>
+            </router-link>
+          </div>
         </div>
 
+        <div
+          class="card border-0 shadow-sm rounded-4 p-4 flex-fill"
+          style="border: 1.5px solid #eee"
+        >
+          <h5 class="fw-bold text-navy mb-4">
+            <i class="bi bi-hdd-network-fill me-2 text-orange"></i>Account Status
+          </h5>
+          <div class="d-flex justify-content-between mb-3">
+            <span class="small text-muted">Role</span>
+            <span
+              class="badge"
+              style="
+                background: rgba(255, 95, 0, 0.12);
+                color: #ff5f00;
+                font-size: 0.7rem;
+                font-weight: 800;
+              "
+              >Service Provider</span
+            >
+          </div>
+          <div class="d-flex justify-content-between mb-3">
+            <span class="small text-muted">My Rooms</span>
+            <span class="fw-bold text-navy">{{ myRooms.length }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3">
+            <span class="small text-muted">Avg. Price</span>
+            <span class="fw-bold text-navy">{{ avgPrice }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3">
+            <span class="small text-muted">Pending Actions</span>
+            <span class="fw-bold" style="color: #f59e0b">{{ pendingBookings + pendingRents }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-4">
+            <span class="small text-muted">Total Approved</span>
+            <span class="fw-bold text-success">{{ approvedBookings + approvedRents }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Toast -->
+  <transition name="toast-slide">
+    <div v-if="toast.show" class="provider-toast" :class="toast.type">
+      <i
+        class="bi me-2"
+        :class="toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"
+      ></i>
+      {{ toast.message }}
+    </div>
+  </transition>
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, reactive } from 'vue'
+import { useRoomStore } from '@/stores/RoomStore'
+import { useAuthStore } from '@/stores/auth'
 import api from '@/api/http'
 
-const user = ref(null)
-const uploadingAvatar = ref(false)
-const fileInput = ref(null)
-const avatarPreview = ref(null)
-const isEditing = ref(false)
-const isBizEditing = ref(false)
-const showPassForm = ref(false)
+const roomStore = useRoomStore()
+const authStore = useAuthStore()
+const loading = ref(false)
+const actionId = ref(null)
+const lastRefresh = ref('')
+const bookings = ref([])
+const rents = ref([])
+const toast = reactive({ show: false, message: '', type: 'success' })
 
-// Derive role from user object — adjust field name to match your API
-const isAdmin = computed(() => user.value?.role === 'admin')
-
-const form = reactive({ name: '', email: '', phone: '', gender: 1, current_job: '', department: '' })
-const bizForm = reactive({ business_name: '', business_type: '', address: '' })
-const passForm = reactive({ old_pass: '', new_pass: '', new_pass_confirmation: '' })
-
-// Admin permissions (example — replace with real data from API)
-const adminPermissions = ref([
-  { label: 'Manage users', granted: true },
-  { label: 'Manage providers', granted: true },
-  { label: 'View reports', granted: true },
-  { label: 'Edit system settings', granted: false },
-  { label: 'Delete records', granted: false },
-])
-
-const fetchUser = async () => {
-  const res = await api.get('/me')
-  user.value = res.data?.data || res.data
-  Object.assign(form, user.value)
-  if (user.value?.business) {
-    Object.assign(bizForm, user.value.business)
-  }
+const showToast = (msg, type = 'success') => {
+  toast.message = msg
+  toast.type = type
+  toast.show = true
+  setTimeout(() => (toast.show = false), 3000)
 }
 
-const triggerUpload = () => fileInput.value.click()
+// ── My rooms — delegate to the store which filters by creator.id ──
+const myRooms = computed(() => roomStore.myRooms)
 
-const handleFileUpload = async (e) => {
-  const file = e.target.files[0]
-  if (!file) return
-  avatarPreview.value = URL.createObjectURL(file)
-  const fd = new FormData()
-  fd.append('image', file)
-  uploadingAvatar.value = true
+const promoRooms = computed(() => myRooms.value.filter((r) => r.percent_promotion > 0))
+
+const avgPrice = computed(() => {
+  if (!myRooms.value.length) return '$0'
+  const avg = myRooms.value.reduce((s, r) => s + Number(r.price || 0), 0) / myRooms.value.length
+  return '$' + Math.round(avg)
+})
+
+const roomStats = computed(() => {
+  const total = myRooms.value.length || 1
+  const promo = promoRooms.value.length
+  const promoP = Math.round((promo / total) * 100)
+  return { active: Math.max(0, 100 - promoP), promo: promoP }
+})
+
+// ── Status helpers ─────────────────────────────────────────
+const getStatusKey = (s) => {
+  if (s == 2 || s === 'approved') return 'approved'
+  if (s == 3 || s === 'rejected') return 'rejected'
+  return 'pending'
+}
+
+const pendingBookings = computed(
+  () => bookings.value.filter((b) => getStatusKey(b.status) === 'pending').length,
+)
+const approvedBookings = computed(
+  () => bookings.value.filter((b) => getStatusKey(b.status) === 'approved').length,
+)
+const pendingRents = computed(
+  () => rents.value.filter((r) => getStatusKey(r.status) === 'pending').length,
+)
+const approvedRents = computed(
+  () => rents.value.filter((r) => getStatusKey(r.status) === 'approved').length,
+)
+
+const recentBookings = computed(() => bookings.value.slice(0, 6))
+const recentRents = computed(() => rents.value.slice(0, 6))
+
+const isPending = (s) => getStatusKey(s) === 'pending'
+const barPct = (val, total) => (total ? Math.round((val / total) * 100) : 0)
+const statusClass = (s) =>
+  ({ pending: 'pill-pending', approved: 'pill-approved', rejected: 'pill-rejected' })[
+    getStatusKey(s)
+  ]
+const statusLabel = (s) =>
+  ({ pending: 'Pending', approved: 'Approved', rejected: 'Rejected' })[getStatusKey(s)]
+
+const todayDate = new Date().toLocaleDateString('en-US', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+})
+
+const formatDate = (dt) => {
+  if (!dt) return '–'
+  return new Date(dt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+const quickActions = [
+  {
+    to: '/provider/my-rooms',
+    title: 'My Rooms',
+    sub: 'View & manage listings',
+    icon: 'bi-house-door-fill',
+    bg: 'bg-orange-light',
+    color: '#ff5f00',
+  },
+  {
+    to: '/provider/add-room',
+    title: 'Post New Room',
+    sub: 'Add a listing',
+    icon: 'bi-plus-circle-fill',
+    bg: 'bg-success-light',
+    color: '#198754',
+  },
+  {
+    to: '/provider/booking-check',
+    title: 'Booking Requests',
+    sub: 'Approve or reject',
+    icon: 'bi-calendar-check-fill',
+    bg: 'bg-primary-light',
+    color: '#0d6efd',
+  },
+  {
+    to: '/provider/rent-check',
+    title: 'Rent Requests',
+    sub: 'Approve or reject',
+    icon: 'bi-house-check-fill',
+    bg: 'bg-purple-light',
+    color: '#8b5cf6',
+  },
+  {
+    to: '/provider/profile',
+    title: 'My Profile',
+    sub: 'Edit account info',
+    icon: 'bi-person-fill',
+    bg: 'bg-navy-light',
+    color: '#031c36',
+  },
+]
+
+// ── Actions (same as BookingCheckingList / RentCheckingList) ──
+const approveBooking = async (id) => {
+  actionId.value = id
   try {
-    await api.post('/profile/image', fd)
-    await fetchUser()
+    await api.put(`/books/approve/${id}`)
+    const b = bookings.value.find((x) => x.id === id)
+    if (b) b.status = 2
+    showToast('Booking approved!')
+  } catch (e) {
+    showToast(e.response?.data?.message || 'Failed', 'error')
   } finally {
-    uploadingAvatar.value = false
+    actionId.value = null
   }
 }
 
-const toggleEdit = () => {
-  if (isEditing.value) Object.assign(form, user.value)
-  isEditing.value = !isEditing.value
+const rejectBooking = async (id) => {
+  actionId.value = id
+  try {
+    await api.put(`/books/reject/${id}`)
+    const b = bookings.value.find((x) => x.id === id)
+    if (b) b.status = 3
+    showToast('Booking rejected.')
+  } catch (e) {
+    showToast(e.response?.data?.message || 'Failed', 'error')
+  } finally {
+    actionId.value = null
+  }
 }
 
-const updateProfile = async () => {
-  await api.post('/profile/info', form)
-  isEditing.value = false
-  await fetchUser()
+const approveRent = async (id) => {
+  actionId.value = id
+  try {
+    await api.put(`/rents/approve/${id}`)
+    const r = rents.value.find((x) => x.id === id)
+    if (r) r.status = 2
+    showToast('Rent approved!')
+  } catch (e) {
+    showToast(e.response?.data?.message || 'Failed', 'error')
+  } finally {
+    actionId.value = null
+  }
 }
 
-const toggleBizEdit = () => {
-  if (isBizEditing.value && user.value?.business) Object.assign(bizForm, user.value.business)
-  isBizEditing.value = !isBizEditing.value
+const rejectRent = async (id) => {
+  actionId.value = id
+  try {
+    await api.put(`/rents/reject/${id}`)
+    const r = rents.value.find((x) => x.id === id)
+    if (r) r.status = 3
+    showToast('Rent rejected.')
+  } catch (e) {
+    showToast(e.response?.data?.message || 'Failed', 'error')
+  } finally {
+    actionId.value = null
+  }
 }
 
-const saveBizInfo = async () => {
-  await api.post('/profile/business', bizForm)
-  isBizEditing.value = false
-  await fetchUser()
+// ── Fetch — mirrors exact API calls from your related pages ──
+async function refreshAll() {
+  loading.value = true
+  try {
+    if (!authStore.user) await authStore.fetchMe()
+
+    // Fetch MY rooms (filters by creator.id inside the store)
+    await roomStore.fetchMyRooms()
+
+    // BookingCheckingList.vue uses:  GET /profile/booking-check
+    // RentCheckingList.vue uses:     GET /profile/rent-check
+    // Dashboard mirrors the same endpoints
+    const [bookRes, rentRes] = await Promise.all([
+      api.get('/profile/booking-check', { params: { page: 1, per_page: 50 } }),
+      api.get('/profile/rent-check', { params: { page: 1, per_page: 50 } }),
+    ])
+
+    // Match exact response parsing from your BookingCheckingList:
+    // bookings.value = res.data.data || []
+    bookings.value = bookRes.data?.data || bookRes.data || []
+    rents.value = rentRes.data?.data || rentRes.data || []
+
+    lastRefresh.value = new Date().toLocaleTimeString()
+  } catch (err) {
+    console.error('Dashboard refresh error:', err)
+    showToast('Failed to load some data', 'error')
+  } finally {
+    loading.value = false
+  }
 }
 
-const changePassword = async () => {
-  await api.put('/profile/pass', passForm)
-  showPassForm.value = false
-  Object.assign(passForm, { old_pass: '', new_pass: '', new_pass_confirmation: '' })
-}
-
-onMounted(fetchUser)
+onMounted(refreshAll)
 </script>
 
 <style scoped>
-.pg {
-  padding: 2rem 2.5rem;
-  background: #f0efec;
-  min-height: 100vh;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: #1c1c1c;
+.text-navy {
+  color: #031c36;
+}
+.text-orange {
+  color: #ff5f00;
+}
+.card-header-navy {
+  background: #031c36;
+  border-bottom: 3px solid #ff5f00;
 }
 
-/* Heading */
-.pg-heading {
+.btn-orange {
+  background: #ff5f00;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 8px 18px;
+  transition:
+    background 0.2s,
+    transform 0.15s;
+}
+.btn-orange:hover {
+  background: #e65600;
+  color: #fff;
+  transform: translateY(-1px);
+}
+.btn-outline-navy {
+  border: 1.5px solid #031c36;
+  color: #031c36;
+  border-radius: 10px;
+  background: transparent;
+  font-weight: 600;
+  padding: 8px 14px;
+  transition: all 0.2s;
+}
+.btn-outline-navy:hover {
+  background: #031c36;
+  color: #fff;
+}
+.btn-xs {
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.stat-card {
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
+  border-top: 3px solid transparent;
+}
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(3, 28, 54, 0.12) !important;
+  border-top-color: #ff5f00;
+}
+.stat-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.icon-shape {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.bg-orange-light {
+  background: #fff4ed;
+  color: #ff5f00;
+}
+.bg-primary-light {
+  background: #e7f1ff;
+  color: #0d6efd;
+}
+.bg-success-light {
+  background: #e9faf1;
+  color: #198754;
+}
+.bg-purple-light {
+  background: #f3e8ff;
+  color: #8b5cf6;
+}
+.bg-navy-light {
+  background: rgba(3, 28, 54, 0.08);
+  color: #031c36;
+}
+.trend-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+.trend-up {
+  background: #e9faf1;
+  color: #198754;
+}
+.trend-down {
+  background: #ffebee;
+  color: #e53935;
+}
+.trend-warn {
+  background: #fff8e1;
+  color: #f59e0b;
+}
+
+.summary-chip {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #eee;
+}
+.avg-price-box {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  border: 1px solid #eee;
+}
+
+.donut-wrap {
+  width: 130px;
+  height: 130px;
+}
+.donut-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.donut-ring {
+  fill: none;
+  stroke: #f0f2f5;
+  stroke-width: 3.8;
+}
+.donut-segment {
+  fill: none;
+  stroke-width: 3.8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s;
+}
+.seg-active {
+  stroke: #198754;
+}
+.seg-promo {
+  stroke: #ff5f00;
+}
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.room-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f0f3f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.room-thumb-img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+}
+
+.status-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.pill-pending {
+  background: #fff8e1;
+  color: #f59e0b;
+}
+.pill-approved {
+  background: #e9faf1;
+  color: #198754;
+}
+.pill-rejected {
+  background: #ffebee;
+  color: #e53935;
+}
+.pill-active {
+  background: #e9faf1;
+  color: #198754;
+}
+.pill-promo {
+  background: #fff4ed;
+  color: #ff5f00;
+}
+
+.badge-count {
+  background: rgba(255, 95, 0, 0.2);
+  color: #ff9a5c;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.btn-action {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.btn-action.approve {
+  background: #e9faf1;
+  color: #198754;
+}
+.btn-action.approve:hover:not(:disabled) {
+  background: #198754;
+  color: #fff;
+}
+.btn-action.reject {
+  background: #ffebee;
+  color: #e53935;
+}
+.btn-action.reject:hover:not(:disabled) {
+  background: #e53935;
+  color: #fff;
+}
+.btn-action.edit {
+  background: #e7f1ff;
+  color: #0d6efd;
+}
+.btn-action.edit:hover {
+  background: #0d6efd;
+  color: #fff;
+}
+.btn-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-box {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 1.75rem;
+  padding: 10px 14px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  color: #031c36;
+  border: 1.5px solid transparent;
+  transition: all 0.2s;
 }
-
-.pg-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: #1a2236;
-  letter-spacing: -0.3px;
-}
-
-.title-dot { color: #f97316; }
-
-/* Role chips */
-.role-chip {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 20px;
-}
-
-.chip-admin {
-  background: #eef2ff;
-  color: #3730a3;
-  border: 1px solid #c7d2fe;
-}
-
-.chip-provider {
-  background: #fff4ed;
-  color: #c2520a;
-  border: 1px solid #fcd5b3;
-}
-
-/* Grid */
-.pg-grid {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 1.25rem;
-  align-items: start;
-}
-
-.right-col { display: flex; flex-direction: column; gap: 1.25rem; }
-
-/* Profile card */
-.profile-card {
+.action-box:hover {
   background: #fff;
-  border-radius: 16px;
-  border: 1px solid rgba(0,0,0,0.07);
-  overflow: hidden;
+  border-color: #ff5f00;
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(255, 95, 0, 0.1);
+  color: #031c36;
 }
-
-.card-banner {
-  height: 80px;
-  position: relative;
-}
-
-.banner-admin  { background: #1e1b4b; }
-.banner-provider { background: #1a2236; }
-
-.banner-lines {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 14px,
-    rgba(255,255,255,0.04) 14px,
-    rgba(255,255,255,0.04) 15px
-  );
-}
-
-/* Avatar */
-.avatar-wrap {
-  width: 76px;
-  height: 76px;
-  margin: -38px auto 0;
-  position: relative;
-  cursor: pointer;
-}
-
-.avatar-ring {
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  border: 3px solid #fff;
-  background: #1a2236;
+.action-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  transition: filter 0.2s;
+  font-size: 0.9rem;
+  flex-shrink: 0;
 }
 
-.avatar-wrap:hover .avatar-ring { filter: brightness(0.88); }
-.av-img { width: 100%; height: 100%; object-fit: cover; }
-
-.av-letter {
-  font-size: 28px;
-  font-weight: 700;
-  font-family: Georgia, serif;
+.skel-line {
+  display: block;
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
-.letter-admin   { color: #818cf8; }
-.letter-provider { color: #f97316; }
-
-.avatar-cam {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-}
-
-.cam-admin    { background: #4f46e5; }
-.cam-provider { background: #f97316; }
-
-.av-loading {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.spinner {
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
+.spin {
   animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.card-body { padding: 12px 1.25rem 1rem; text-align: center; }
-.card-name { font-size: 15px; font-weight: 700; color: #1a2236; margin-bottom: 2px; }
-.card-email { font-size: 12px; color: #999; margin-bottom: 10px; }
-
-.role-chip-sm {
   display: inline-block;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 3px 12px;
-  border-radius: 20px;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Info block */
-.info-block {
-  border-top: 1px solid rgba(0,0,0,0.06);
-  padding: 0.25rem 1.25rem 1rem;
-}
-
-.info-row {
+.provider-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-  font-size: 12.5px;
-  gap: 8px;
-}
-
-.info-row.last { border-bottom: none; }
-.info-key { color: #aaa; flex-shrink: 0; }
-.info-val { font-weight: 500; text-align: right; color: #1c1c1c; word-break: break-all; }
-
-/* Section card */
-.section-card {
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid rgba(0,0,0,0.07);
-  overflow: hidden;
-}
-
-.section-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.1rem 1.5rem;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-}
-
-.section-label { font-size: 14px; font-weight: 700; color: #1a2236; }
-.action-row { display: flex; gap: 8px; align-items: center; }
-
-/* Buttons */
-.btn-ghost {
-  font-size: 12px;
-  font-weight: 500;
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(0,0,0,0.15);
-  background: transparent;
-  color: #555;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s;
-}
-
-.btn-ghost:hover { background: #f5f4f1; }
-
-.btn-primary {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 6px 16px;
-  border-radius: 8px;
-  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.85rem;
   color: #fff;
-  cursor: pointer;
-  font-family: inherit;
-  transition: opacity 0.15s;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-left: 4px solid rgba(255, 255, 255, 0.3);
 }
-
-.btn-primary:hover { opacity: 0.88; }
-.btn-admin    { background: #4f46e5; }
-.btn-provider { background: #f97316; }
-
-/* Form */
-.form-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 14px; }
-
-.field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.field-pair.three { grid-template-columns: 1fr 1fr 1fr; }
-.field { display: flex; flex-direction: column; gap: 5px; }
-
-.field label {
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: #bbb;
+.provider-toast.success {
+  background: #031c36;
 }
-
-.finput {
-  font-family: inherit;
-  font-size: 13px;
-  padding: 9px 12px;
-  border-radius: 9px;
-  border: 1px solid rgba(0,0,0,0.10);
-  background: #f7f6f3;
-  color: #1c1c1c;
-  width: 100%;
-  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+.provider-toast.error {
+  background: #dc3545;
 }
-
-.finput.active { background: #fff; border-color: rgba(0,0,0,0.18); }
-.finput.active:focus { outline: none; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.12); }
-.finput[readonly], .finput[disabled] { opacity: 0.6; cursor: default; }
-
-/* Permissions */
-.perm-badge {
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: #f1f5f9;
-  color: #64748b;
-  border: 1px solid #e2e8f0;
+.toast-slide-enter-active,
+.toast-slide-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-.perm-list { padding: 0.25rem 1.5rem 1rem; }
-
-.perm-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-  font-size: 13px;
-}
-
-.perm-row:last-child { border-bottom: none; }
-.perm-label { color: #555; }
-
-.perm-status {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 10px;
-  border-radius: 20px;
-}
-
-.granted { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
-.denied  { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
-
-/* Password */
-.pass-hint { font-size: 12.5px; color: #bbb; padding: 0.9rem 1.5rem 1.1rem; line-height: 1.6; }
-.mt-sm { margin-top: 4px; align-self: flex-start; }
-
-/* Responsive */
-@media (max-width: 700px) {
-  .pg { padding: 1.25rem; }
-  .pg-grid { grid-template-columns: 1fr; }
-  .field-pair, .field-pair.three { grid-template-columns: 1fr; }
+.toast-slide-enter-from,
+.toast-slide-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
 }
 </style>
