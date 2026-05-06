@@ -7,11 +7,11 @@
         <div>
           <h4 class="fw-bold mb-0 text-white">My Room Listings</h4>
           <small class="opacity-75 text-white">
-            {{ roomStore.myRooms.length }} room{{ roomStore.myRooms.length !== 1 ? 's' : '' }} posted by you
+            {{ roomStore.myRooms.length }} បន្ទប់ {{ roomStore.myRooms.length !== 1 ? 's' : '' }} បង្ហោះដោយ
           </small>
         </div>
         <router-link to="/provider/add-room" class="btn btn-orange fw-bold px-4">
-          <i class="bi bi-plus-circle-fill me-2"></i>Post New Room
+          <i class="bi bi-plus-circle-fill me-2"></i>បន្ថែមបន្ទប់ថ្មី
         </router-link>
       </div>
     </div>
@@ -41,10 +41,10 @@
   
     <div v-else-if="roomStore.myRooms.length === 0" class="empty-state text-center py-5 mt-4">
       <div class="empty-icon mb-4"><i class="bi bi-house-slash"></i></div>
-      <h5 class="fw-bold text-navy mb-2">No rooms posted yet</h5>
-      <p class="text-muted mb-4">Start earning by listing your first room today.</p>
+      <h5 class="fw-bold text-navy mb-2">គ្មានបន្ទប់ដែលបានបង្ហោះទេ</h5>
+      <p class="text-muted mb-4">សូមបន្ថែមបន្ទប់ថ្មីដើម្បីចាប់ផ្តើម.</p>
       <router-link to="/provider/add-room" class="btn btn-orange px-5 py-2 fw-bold">
-        <i class="bi bi-plus-circle-fill me-2"></i>Post Your First Room
+        <i class="bi bi-plus-circle-fill me-2"></i>បន្ថែមបន្ទប់ថ្មី
       </router-link>
     </div>
 
@@ -56,13 +56,13 @@
           <thead>
             <tr class="tbl-head">
               <th class="ps-4 py-3 small fw-bold">#</th>
-              <th class="py-3 small fw-bold">Room</th>
-              <th class="py-3 small fw-bold d-none d-md-table-cell">District</th>
-              <th class="py-3 small fw-bold">Price</th>
-              <th class="py-3 small fw-bold d-none d-lg-table-cell">Beds / Size</th>
-              <th class="py-3 small fw-bold d-none d-lg-table-cell">Bills</th>
-              <th class="py-3 small fw-bold">Status</th>
-              <th class="py-3 small fw-bold pe-4 text-end">Actions</th>
+              <th class="py-3 small fw-bold">បន្ទប់</th>
+              <th class="py-3 small fw-bold d-none d-md-table-cell">ខណ្ឌ</th>
+              <th class="py-3 small fw-bold">តម្លៃ</th>
+              <th class="py-3 small fw-bold d-none d-lg-table-cell">គ្រែ / ទំហំ</th>
+              <th class="py-3 small fw-bold d-none d-lg-table-cell">ចំណាយ</th>
+              <th class="py-3 small fw-bold">ស្ថានភាព</th>
+              <th class="py-3 small fw-bold pe-4 text-end">សកម្មភាព</th>
             </tr>
           </thead>
 
@@ -98,7 +98,7 @@
               <!-- Price -->
               <td>
                 <span class="fw-bold text-orange">${{ room.price }}</span>
-                <span class="text-muted small">/month</span>
+                <span class="text-muted small">/ក្នុងមួយខែ</span>
               </td>
 
               <!-- Beds / Size -->
@@ -133,7 +133,7 @@
                   <i class="bi bi-tag-fill me-1"></i>-{{ room.percent_promotion }}%
                 </span>
                 <span v-else class="status-pill pill-active">
-                  <i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i>Active
+                  <i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i>សកម្ម
                 </span>
               </td>
 
@@ -202,7 +202,7 @@
         </nav>
 
         <router-link to="/provider/add-room" class="btn btn-orange btn-sm fw-bold px-3">
-          <i class="bi bi-plus-circle-fill me-1"></i>Add Room
+          <i class="bi bi-plus-circle-fill me-1"></i>បន្ថែមបន្ទប់ថ្មី
         </router-link>
       </div>
     </div>
@@ -217,7 +217,7 @@
             <div class="flex-fill overflow-hidden">
               <h5 class="fw-bold text-white mb-0 text-truncate">{{ selectedRoom.title }}</h5>
               <small class="opacity-75 text-white">
-                <i class="bi bi-geo-alt me-1"></i>{{ selectedRoom.district?.name || '–' }}, Phnom Penh
+                <i class="bi bi-geo-alt me-1"></i>{{ selectedRoom.district?.name || '–' }}, ភ្នំពេញ
               </small>
             </div>
             <button class="detail-close" @click="selectedRoom = null">
@@ -235,7 +235,7 @@
                 <i class="bi bi-building" style="font-size:3rem;color:#ccc"></i>
               </div>
               <span v-if="selectedRoom.percent_promotion > 0" class="detail-promo-badge">
-                <i class="bi bi-tag-fill me-1"></i>-{{ selectedRoom.percent_promotion }}% OFF
+                <i class="bi bi-tag-fill me-1"></i>-{{ selectedRoom.percent_promotion }}បញ្ចុះតម្លៃ%
               </span>
             </div>
 
@@ -243,10 +243,10 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
               <div>
                 <span class="detail-price">${{ selectedRoom.price }}</span>
-                <span class="text-muted small"> /month</span>
+                <span class="text-muted small"> /ក្នុងមួយខែ</span>
               </div>
               <span class="status-pill pill-active">
-                <i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i>Active
+                <i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i>សកម្ម
               </span>
             </div>
 
@@ -255,28 +255,28 @@
               <div class="col-6">
                 <div class="info-card">
                   <i class="bi bi-geo-alt-fill text-orange mb-1 d-block"></i>
-                  <div class="info-label">District</div>
+                  <div class="info-label">ខណ្ឌ</div>
                   <div class="info-value">{{ selectedRoom.district?.name || '–' }}</div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="info-card">
                   <i class="bi bi-person-fill text-orange mb-1 d-block"></i>
-                  <div class="info-label">Beds</div>
+                  <div class="info-label">គ្រែ</div>
                   <div class="info-value">{{ selectedRoom.bed || '–' }}</div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="info-card">
                   <i class="bi bi-aspect-ratio text-orange mb-1 d-block"></i>
-                  <div class="info-label">Room Size</div>
+                  <div class="info-label">ទំហំបន្ទប់</div>
                   <div class="info-value">{{ selectedRoom.size_room || '–' }}</div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="info-card">
                   <i class="bi bi-tag-fill text-orange mb-1 d-block"></i>
-                  <div class="info-label">Promotion</div>
+                  <div class="info-label">ការបញ្ចុះតម្លៃ</div>
                   <div class="info-value">
                     {{ selectedRoom.percent_promotion > 0 ? `-${selectedRoom.percent_promotion}%` : 'None' }}
                   </div>
@@ -287,23 +287,23 @@
             <!-- Bills -->
             <div class="detail-section mb-4">
               <div class="section-title">
-                <i class="bi bi-receipt me-2 text-orange"></i>Monthly Bills
+                <i class="bi bi-receipt me-2 text-orange"></i>ចំណាយប្រចាំខែ
               </div>
               <div class="bills-card">
                 <div class="bill-row">
-                  <span><i class="bi bi-droplet-fill text-info me-2"></i>Water</span>
+                  <span><i class="bi bi-droplet-fill text-info me-2"></i>ទឹក</span>
                   <strong>${{ selectedRoom.pay_water || '0' }}</strong>
                 </div>
                 <div class="bill-row">
-                  <span><i class="bi bi-lightning-fill text-warning me-2"></i>Electric</span>
+                  <span><i class="bi bi-lightning-fill text-warning me-2"></i>អគ្គីសនី</span>
                   <strong>${{ selectedRoom.pay_electric || '0' }}</strong>
                 </div>
                 <div class="bill-row">
-                  <span><i class="bi bi-trash3-fill text-success me-2"></i>Trash</span>
+                  <span><i class="bi bi-trash3-fill text-success me-2"></i>សំរាម</span>
                   <strong>{{ selectedRoom.pay_trash ? '$' + selectedRoom.pay_trash : 'Free' }}</strong>
                 </div>
                 <div class="bill-row border-0">
-                  <span><i class="bi bi-car-front-fill text-secondary me-2"></i>Parking</span>
+                  <span><i class="bi bi-car-front-fill text-secondary me-2"></i>ចំណត</span>
                   <strong>{{ selectedRoom.pay_parking ? '$' + selectedRoom.pay_parking : 'Free' }}</strong>
                 </div>
               </div>
@@ -312,7 +312,7 @@
             <!-- Amenities -->
             <div class="detail-section mb-4" v-if="selectedRoom.room_options?.length">
               <div class="section-title">
-                <i class="bi bi-check-circle-fill me-2 text-orange"></i>Amenities
+                <i class="bi bi-check-circle-fill me-2 text-orange"></i>សេវាកម្ម និង បរិក្ខារ
               </div>
               <div class="d-flex flex-wrap gap-2 mt-2">
                 <span class="amenity-tag" v-for="opt in selectedRoom.room_options" :key="opt.id">
@@ -324,7 +324,7 @@
             <!-- Description -->
             <div class="detail-section mb-4" v-if="selectedRoom.description">
               <div class="section-title">
-                <i class="bi bi-file-text me-2 text-orange"></i>Description
+                <i class="bi bi-file-text me-2 text-orange"></i>ការពិពណ៌នា
               </div>
               <p class="text-muted small mt-2 mb-0" style="line-height:1.7">
                 {{ selectedRoom.description }}
@@ -335,7 +335,7 @@
             <div v-if="selectedRoom.map_url">
               <a :href="selectedRoom.map_url" target="_blank"
                 class="btn btn-outline-navy btn-sm w-100">
-                <i class="bi bi-geo-alt-fill me-2"></i>View on Google Maps
+                <i class="bi bi-geo-alt-fill me-2"></i>មើលទីតាំងលើផែនទី
               </a>
             </div>
 
@@ -343,10 +343,10 @@
 
           <!-- Modal footer -->
           <div class="detail-footer">
-            <button class="btn btn-light rounded-3 px-4" @click="selectedRoom = null">Close</button>
+            <button class="btn btn-light rounded-3 px-4" @click="selectedRoom = null">បិទ</button>
             <router-link :to="`/provider/edit-room/${selectedRoom.id}`"
               class="btn btn-orange px-4 fw-bold">
-              <i class="bi bi-pencil-fill me-2"></i>Edit This Room
+              <i class="bi bi-pencil-fill me-2"></i>កែសម្រួលបន្ទប់
             </router-link>
           </div>
 
@@ -360,12 +360,12 @@
         <div class="modal-content border-0 rounded-4 overflow-hidden">
           <div class="modal-header" style="background:#031c36;border-bottom:3px solid #ff5f00">
             <h5 class="modal-title fw-bold" style="color:#F4A25A">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>Delete Room
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>លុបបន្ទប់
             </h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body p-4" v-if="roomToDelete">
-            <p class="mb-1 text-muted small">You are about to permanently delete:</p>
+            <p class="mb-1 text-muted small">លុបបន្ទប់:</p>
             <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-3"
               style="background:#f8f9fa;border:1.5px solid #e9ecef">
               <div class="room-thumb">
@@ -374,20 +374,20 @@
               </div>
               <div>
                 <div class="fw-bold text-navy small">{{ roomToDelete.title }}</div>
-                <div class="text-orange fw-bold">${{ roomToDelete.price }}/month</div>
+                <div class="text-orange fw-bold">${{ roomToDelete.price }}/ក្នុងមួយខែ</div>
               </div>
             </div>
             <div class="alert alert-warning py-2 small rounded-3">
               <i class="bi bi-exclamation-circle-fill me-2"></i>
-              This action <strong>cannot be undone</strong>.
+              សកម្មភាពនេះ <strong>មិនអាចបានត្រឡប់វិញ</strong>.
             </div>
           </div>
           <div class="modal-footer border-0 px-4 pb-4 pt-0 gap-2">
-            <button class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Cancel</button>
+            <button class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">ត្រលប់</button>
             <button class="btn btn-danger rounded-3 px-4 fw-bold" @click="executeDelete"
               :disabled="deletingId !== null">
               <span v-if="deletingId !== null" class="spinner-border spinner-border-sm me-2"></span>
-              <i v-else class="bi bi-trash3-fill me-2"></i>Yes, Delete
+              <i v-else class="bi bi-trash3-fill me-2"></i>បាទ,ចាស លុបបន្ទប់នេះ
             </button>
           </div>
         </div>
@@ -469,13 +469,13 @@ async function executeDelete() {
   const success = await roomStore.deleteRoom(roomToDelete.value.id)
   if (success) {
     deleteModalInstance?.hide()
-    alertSuccess('Room deleted successfully.')
+    alertSuccess('បន្ទប់ត្រូវបានលុបដោយជោគជ័យ.')
     // jump back if current page becomes empty after deletion
     if (paginatedRooms.value.length === 0 && currentPage.value > 1) {
       currentPage.value--
     }
   } else {
-    alertError('Failed to delete the room. Please try again.')
+    alertError('ការលុបបន្ទប់បានបរាជ័យ.')
   }
   deletingId.value  = null
   roomToDelete.value = null
