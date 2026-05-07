@@ -19,10 +19,10 @@ export const useAuthStore = defineStore('auth', {
         }
 
         if (userData.status !== 'active') { 
-           throw new Error('គណនីរបស់អ្នកកំពុងរង់ចាំការអនុម័តដោយអ្នកគ្រប់គ្រង។ សូមរង់ចាំឬទំនាក់ទំនងអ្នកគ្រប់គ្រងសម្រាប់ព័ត៌មានបន្ថែម។');
-        }
+              throw new Error('គណនីរបស់អ្នកកំពុងរង់ចាំការអនុម័តដោយ');
+            }
 
-        
+            
         this.user = userData;
         this.token = response.data.token;
         localStorage.setItem('token', this.token);

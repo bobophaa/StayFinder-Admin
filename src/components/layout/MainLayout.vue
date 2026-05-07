@@ -17,6 +17,7 @@ import NavbarProvider from './NavbarProvider.vue';
 
 <style scoped>
 .layout-wrapper {
+  display: flex; 
   min-height: 100vh;
 }
 
@@ -24,5 +25,10 @@ import NavbarProvider from './NavbarProvider.vue';
   margin-left: 260px; 
   background-color: #f8fafb;
   min-height: 100vh;
+  transition: all 0.3s; 
+}
+
+.page-content {
+  padding: 1.5rem;
 }
 </style>

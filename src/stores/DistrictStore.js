@@ -19,6 +19,24 @@ export const useDistrictStore = defineStore('district', {
       } finally {
         this.loading = false;
       }
+    },
+    async addDistrict(name) {
+      try {
+        const response = await api.post('/districts', { name });
+        return response.data.result;
+      } catch (error) { return false; }
+    },
+    async updateDistrict(id, name) {
+      try {
+        const response = await api.put(`/districts/${id}`, { name });
+        return response.data.result;
+      } catch (error) { return false; }
+    },
+    async deleteDistrict(id) {
+      try {
+        const response = await api.delete(`/districts/${id}`);
+        return response.data.result;
+      } catch (error) { return false; }
     }
   }
 });
