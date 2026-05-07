@@ -8,8 +8,8 @@
       <div class="container py-5">
         <!-- Header -->
         <div class="mb-4">
-          <h2 class="fw-bold text-dark">Rent Checking List</h2>
-          <p class="text-muted">Manage and verify room rent requests by category</p>
+          <h2 class="fw-bold text-dark">ពិនិត្យ​សេវា​ជួល</h2>
+          <p class="text-muted">គ្រប់គ្រង​ និង​ផ្ទៀងផ្ទាត់​សេវា​ជួល</p>
         </div>
 
         <!-- Table -->
@@ -66,9 +66,9 @@ const showDetailModal = ref(false)
 const selectedItem = ref({})
 
 const tableColumns = [
-  { key: 'image', label: 'Room', field: 'room.image', type: 'image' },
-  { key: 'name', label: 'Renter Name', field: 'buyer.name' },
-  { key: 'status', label: 'Status', field: 'status', type: 'status' },
+  { key: 'image', label: 'បន្ទប់', field: 'room.image', type: 'image' },
+  { key: 'name', label: 'ឈ្មោះអ្នកជួល', field: 'buyer.name' },
+  { key: 'status', label: 'ស្ថានភាព', field: 'status', type: 'status' },
 ]
 
 const setToken = () => {

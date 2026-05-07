@@ -4,7 +4,7 @@
 
     <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
       <div>
-        <h2 class="fw-bold text-navy mb-1">Welcome back, {{ user?.name || 'Admin' }}</h2>
+        <h2 class="fw-bold text-navy mb-1">ស្វាគមន៍ការត្រឡប់មកវិញ, អ្នកគ្រប់គ្រង!</h2>
         <p class="text-muted mb-0">
           Here's what's happening with
           <span class="fw-bold text-navy">StayFinder</span> today —
