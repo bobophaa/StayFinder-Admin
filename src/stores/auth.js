@@ -15,11 +15,11 @@ export const useAuthStore = defineStore('auth', {
 
      
         if (userData.role !== 'provider') {
-           throw new Error('Access Denied: You are not a Provider.');
+           throw new Error('មិនអនុញ្ញាតឱ្យចូលប្រើប្រាស់៖ អ្នកមិនមែនជាម្ចាស់ផ្ទះជួលទេ។');
         }
 
         if (userData.status !== 'active') { 
-           throw new Error('Your account is pending Admin approval.');
+           throw new Error('គណនីរបស់អ្នកកំពុងរង់ចាំការអនុម័តដោយអ្នកគ្រប់គ្រង។ សូមរង់ចាំឬទំនាក់ទំនងអ្នកគ្រប់គ្រងសម្រាប់ព័ត៌មានបន្ថែម។');
         }
 
         

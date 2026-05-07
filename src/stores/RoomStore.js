@@ -17,7 +17,7 @@ export const useRoomStore = defineStore('room', {
         this.rooms = response.data.data
         this.myRooms = res.data.data || []
       } catch (err) {
-        this.error = 'Erro'
+        this.error = 'មានបញ្ហាក្នុងការទាញយកព័ត៌មានបន្ទប់។ សូមព្យាយាមម្តងទៀត។'
         console.error(err)
       } finally {
         this.loading = false
@@ -32,7 +32,7 @@ export const useRoomStore = defineStore('room', {
 
         this.room = res.data.data
       } catch (err) {
-        this.error = 'Could not find room details.'
+        this.error = 'មិនអាចទាញយកព័ត៌មានបន្ទប់បាន។ សូមព្យាយាមម្តងទៀត។'
         console.error(err)
       } finally {
         this.loading = false
@@ -46,10 +46,10 @@ export const useRoomStore = defineStore('room', {
           return true
         }
 
-        console.error('API Error Details:', res.data)
+        console.error('ព័ត៌មានលម្អិតអំពីកំហុស API', res.data)
         return false
       } catch (err) {
-        console.error('Submission failed:', err.response?.data)
+        console.error('មានបញ្ហាក្នុងការបញ្ជូនទិន្នន័យ', err.response?.data)
         return false
       } finally {
         this.loading = false
@@ -61,7 +61,7 @@ export const useRoomStore = defineStore('room', {
         const res = await api.get('api/provider/rooms')
         this.myRooms = res.data.data
       } catch (error) {
-        console.error('Failed to fetch your rooms', error)
+        console.error('មានបញ្ហាក្នុងការទាញយកបន្ទប់របស់អ្នក', error)
       } finally {
         this.loading = false
       }
