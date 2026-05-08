@@ -1,12 +1,12 @@
 import axios from 'axios'
- 
+
 const api = axios.create({
-  baseURL: 'https://bontubjoul2.csm.linkpc.net/api',
+  baseURL: 'https://api-bontubjoul.g2.ant.com.kh/api',
   headers: {
     Accept: 'application/json',
   },
 })
- 
+
 // Attach token to every request automatically
 api.interceptors.request.use(
   (config) => {
@@ -18,7 +18,7 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error),
 )
- 
+
 // If token expires (401), clear storage automatically
 api.interceptors.response.use(
   (response) => response,
@@ -29,6 +29,5 @@ api.interceptors.response.use(
     return Promise.reject(error)
   },
 )
- 
+
 export default api
- 
