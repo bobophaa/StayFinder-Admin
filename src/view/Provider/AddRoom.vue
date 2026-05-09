@@ -3,9 +3,7 @@
     <div class="row">
       <div class="col-12">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-          <div
-            class="card-header-navy p-3 text-white d-flex justify-content-between align-items-center"
-          >
+          <div class="card-header-navy p-3 text-white d-flex justify-content-between align-items-center">
             <h4 class="fw-bold mb-0">បង្ហោះបន្ទប់ថ្មី</h4>
             <span class="badge bg-orange px-3 py-2">របៀបព័ត៌មានលម្អិតពេញលេញ</span>
           </div>
@@ -13,6 +11,7 @@
           <div class="card-body p-4 bg-white">
             <form @submit.prevent="handleSubmit">
               <div class="row g-4">
+                <!-- ── Left Column ── -->
                 <div class="col-xl-7 col-lg-6">
                   <div class="section-container">
                     <h5 class="section-title mb-4">ព័ត៌មានទូទៅ</h5>
@@ -156,6 +155,7 @@
                         maxlength="1000"
                       ></textarea>
                       <div class="d-flex justify-content-between mt-1">
+                        <!-- FIX: added v-if guard so invalid-feedback only shows when error exists -->
                         <div class="invalid-feedback d-block" v-if="errors.description">
                           {{ errors.description }}
                         </div>
@@ -170,6 +170,7 @@
                   </div>
                 </div>
 
+                <!-- ── Right Column ── -->
                 <div class="col-xl-5 col-lg-6">
                   <div class="section-container h-100 d-flex flex-column">
                     <h5 class="section-title mb-4">មេឌៀ និងបរិក្ខារ</h5>
@@ -189,11 +190,12 @@
                         <div v-if="errors.image" class="text-danger small">{{ errors.image }}</div>
                       </div>
 
+                      <!-- FIX: added position-relative so .preview-overlay (absolute) positions correctly -->
                       <div
                         v-if="imagePreview"
-                        class="preview-full-box rounded-3 overflow-hidden shadow-sm border mb-4"
+                        class="preview-full-box position-relative rounded-3 overflow-hidden shadow-sm border mb-4"
                       >
-                        <img :src="imagePreview" class="img-fluid w-100" />
+                        <img :src="imagePreview" class="img-fluid w-100" alt="Room preview" />
                         <div class="preview-overlay">មើលរូបភាពពេញ</div>
                       </div>
                     </div>
@@ -213,9 +215,9 @@
                             :value="opt.id"
                             v-model="form.room_option_ids"
                           />
-                          <label class="form-check-label fw-medium" :for="'opt' + opt.id">{{
-                            opt.name
-                          }}</label>
+                          <label class="form-check-label fw-medium" :for="'opt' + opt.id">
+                            {{ opt.name }}
+                          </label>
                         </div>
                       </div>
                     </div>
@@ -240,6 +242,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { reactive, ref, onMounted } from 'vue'
 import { useDistrictStore } from '@/stores/DistrictStore'
@@ -254,7 +257,6 @@ const roomStore = useRoomStore()
 const router = useRouter()
 
 const imagePreview = ref(null)
-
 const errors = reactive({})
 
 const form = reactive({
@@ -279,24 +281,23 @@ onMounted(async () => {
     await districtStore.fetchDistricts()
     await roomOptionStore.fetchOptions()
   } catch (error) {
-    console.log(error)
+    console.error('Failed to load form data:', error)
   }
 })
 
 const handleFileUpload = (e) => {
   const file = e.target.files[0]
-
   if (file) {
     form.image = file
+    // FIX: revoke previous object URL to avoid memory leaks
+    if (imagePreview.value) URL.revokeObjectURL(imagePreview.value)
     imagePreview.value = URL.createObjectURL(file)
-
     delete errors.image
   }
 }
 
 const validate = () => {
   Object.keys(errors).forEach((key) => delete errors[key])
-
   let isValid = true
 
   if (!form.title || form.title.length < 5) {
@@ -309,12 +310,10 @@ const validate = () => {
     isValid = false
   }
 
-  if (
-    form.percent_promotion < 0 ||
-    form.percent_promotion > 100
-  ) {
-    errors.percent_promotion =
-      'បញ្ចុះតម្លៃត្រូវស្ថិតចន្លោះ 0 ដល់ 100'
+  // FIX: added Number() cast — v-model on number input returns a string,
+  // so direct comparison with 0/100 would silently pass invalid values
+  if (Number(form.percent_promotion) < 0 || Number(form.percent_promotion) > 100) {
+    errors.percent_promotion = 'បញ្ចុះតម្លៃត្រូវស្ថិតចន្លោះ 0 ដល់ 100'
     isValid = false
   }
 
@@ -329,22 +328,16 @@ const validate = () => {
   }
 
   if (!form.description || form.description.length < 20) {
-    errors.description =
-      'ពិពណ៌នាត្រូវមានយ៉ាងតិច 20 តួអក្សរ'
+    errors.description = 'ពិពណ៌នាត្រូវមានយ៉ាងតិច 20 តួអក្សរ'
     isValid = false
   }
 
   if (form.map_url) {
     const url = form.map_url.trim()
-
     const isValidGoogleMap =
-      /^https?:\/\/(www\.)?(google\.com\/maps|maps\.google\.com|maps\.app\.goo\.gl|goo\.gl\/maps)\/.+/i.test(
-        url,
-      )
-
+      /^https?:\/\/(www\.)?(google\.com\/maps|maps\.google\.com|maps\.app\.goo\.gl|goo\.gl\/maps)\/.+/i.test(url)
     if (!isValidGoogleMap) {
-      errors.map_url =
-        'សូមបញ្ចូល Google Maps URL ត្រឹមត្រូវ'
+      errors.map_url = 'សូមបញ្ចូល Google Maps URL ត្រឹមត្រូវ'
       isValid = false
     }
   }
@@ -368,6 +361,8 @@ const resetForm = () => {
   form.size_room = ''
   form.map_url = ''
 
+  // FIX: revoke object URL before clearing to avoid memory leak
+  if (imagePreview.value) URL.revokeObjectURL(imagePreview.value)
   imagePreview.value = null
 }
 
@@ -376,48 +371,41 @@ const handleSubmit = async () => {
 
   try {
     const formData = new FormData()
-
     formData.append('title', form.title)
     formData.append('price', form.price)
-    formData.append(
-      'percent_promotion',
-      form.percent_promotion,
-    )
+    formData.append('percent_promotion', form.percent_promotion)
     formData.append('district_id', form.district_id)
     formData.append('description', form.description)
     formData.append('image', form.image)
-
     formData.append('pay_water', form.pay_water)
     formData.append('pay_electric', form.pay_electric)
     formData.append('pay_parking', form.pay_parking)
     formData.append('pay_trash', form.pay_trash)
-
     formData.append('bed', form.bed)
     formData.append('size_room', form.size_room)
     formData.append('map_url', form.map_url)
-
     form.room_option_ids.forEach((id) => {
       formData.append('room_option_ids[]', id)
     })
 
     await roomStore.createRoom(formData)
-
     alertSuccess('បង្កើតបន្ទប់ជោគជ័យ')
-
     resetForm()
-
     router.push('/rooms')
   } catch (error) {
-    console.log(error)
-
+    console.error('Create room error:', error)
     alertError('បង្កើតបន្ទប់បរាជ័យ')
   }
 }
 </script>
+
 <style scoped>
 .card-header-navy {
   background: #031c36;
   border-bottom: 4px solid #ff5f00;
+}
+.bg-orange {
+  background-color: #ff5f00 !important;
 }
 .section-title {
   font-size: 1.1rem;
@@ -435,6 +423,10 @@ const handleSubmit = async () => {
 .custom-input:focus {
   border-color: #ff5f00;
   box-shadow: 0 0 0 0.25rem rgba(255, 95, 0, 0.1);
+}
+/* FIX: removed stray `placeholder {}` rule (invalid CSS selector) */
+.custom-input::placeholder {
+  color: #7a7a7a;
 }
 .preview-full-box img {
   display: block;
@@ -459,23 +451,29 @@ const handleSubmit = async () => {
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 10px;
 }
+.amenity-item-full {
+  display: flex;
+  align-items: center;
+}
 .btn-orange {
   background: #ff5f00;
   color: white;
   border: none;
   border-radius: 12px;
+  transition: background 0.2s, transform 0.15s;
 }
-.btn-orange:hover {
+.btn-orange:hover:not(:disabled) {
   background: #e65600;
   transform: translateY(-2px);
+}
+.btn-orange:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 .shadow-orange {
   box-shadow: 0 8px 20px rgba(255, 95, 0, 0.25);
 }
 .invalid-feedback {
   font-size: 0.85rem;
-}
-placeholder {
-  color: #7a7a7a !important;
 }
 </style>

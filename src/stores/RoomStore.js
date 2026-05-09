@@ -26,7 +26,6 @@ export const useRoomStore = defineStore('room', {
       this.error = ''
       try {
         const res = await api.get(`/rooms?${query}`)
-
         this.rooms = res.data?.data?.data || res.data?.data || res.data || []
       } catch (err) {
         this.error = err.response?.data?.message || 'ផ្ទុកបន្ទប់បរាជ័យ។'
@@ -40,7 +39,6 @@ export const useRoomStore = defineStore('room', {
       this.loading = true
       this.error = ''
       try {
-        // Prefer the passed-in userId, then fall back to localStorage
         const user = overrideUserId ? { id: overrideUserId } : safeParse('user')
         const providerId = user?.id
 
@@ -56,7 +54,6 @@ export const useRoomStore = defineStore('room', {
         const allRooms = res.data?.data?.data || res.data?.data || res.data || []
         this.rooms = allRooms
 
-        // Try every field the API might use to link a room to its owner
         this.myRooms = allRooms.filter((room) => {
           const candidates = [
             room.creator?.id,
@@ -65,21 +62,24 @@ export const useRoomStore = defineStore('room', {
             room.owner_id,
             room.owner?.id,
           ]
-          const match = candidates.some(id => id != null && String(id) === String(providerId))
-          return match
+          return candidates.some((id) => id != null && String(id) === String(providerId))
         })
 
-        console.log('[fetchMyRooms] providerId:', providerId,
+        console.log(
+          '[fetchMyRooms] providerId:', providerId,
           '| total:', allRooms.length,
-          '| mine:', this.myRooms.length)
+          '| mine:', this.myRooms.length,
+        )
 
         if (allRooms.length > 0) {
           const sample = allRooms[0]
-          console.log('[fetchMyRooms] sample room owner fields →',
+          console.log(
+            '[fetchMyRooms] sample room owner fields →',
             'creator.id:', sample.creator?.id,
             'user_id:', sample.user_id,
             'user.id:', sample.user?.id,
-            'owner_id:', sample.owner_id)
+            'owner_id:', sample.owner_id,
+          )
         }
       } catch (err) {
         this.error = err.response?.data?.message || 'ផ្ទុកបន្ទប់របស់អ្នកបរាជ័យ។'
@@ -104,11 +104,12 @@ export const useRoomStore = defineStore('room', {
       }
     },
 
-    async addRoom(formData) {
+    // FIX: renamed addRoom → createRoom to match AddRoom.vue call
+    async createRoom(formData) {
       this.loading = true
       try {
         const res = await api.post('/rooms', formData)
-        if (res.data.result === true) {
+        if (res.data?.result === true) {
           const newRoom = res.data.data
           if (newRoom) {
             this.rooms.unshift(newRoom)
@@ -119,14 +120,39 @@ export const useRoomStore = defineStore('room', {
         console.error('API returned false result:', res.data)
         return false
       } catch (err) {
-        console.error('Add room failed:', err.response?.data)
+        console.error('Create room failed:', err.response?.data)
         return false
       } finally {
         this.loading = false
       }
     },
 
-    //Delete room 
+    // FIX: _method=POST → _method=PUT (Laravel needs PUT for update, POST spoofing did nothing)
+    // FIX: added null guard before assigning updated room to avoid overwriting with undefined
+    async updateRoom(id, formData) {
+      this.loading = true
+      try {
+        const res = await api.post(`/rooms/${id}?_method=PUT`, formData)
+        if (res.data) {
+          const updated = res.data?.data
+          if (updated) {
+            const idx = this.rooms.findIndex((r) => r.id === id)
+            if (idx !== -1) this.rooms[idx] = updated
+
+            const myIdx = this.myRooms.findIndex((r) => r.id === id)
+            if (myIdx !== -1) this.myRooms[myIdx] = updated
+          }
+          return true
+        }
+        return false
+      } catch (err) {
+        console.error('Update room failed:', err.response?.data)
+        return false
+      } finally {
+        this.loading = false
+      }
+    },
+
     async deleteRoom(roomId) {
       try {
         await api.delete(`/rooms/${roomId}`)
@@ -139,28 +165,5 @@ export const useRoomStore = defineStore('room', {
         return false
       }
     },
-
-async updateRoom(id, formData) {
-  this.loading = true
-  try {
-    const res = await api.post(`/rooms/${id}?_method=POST`, formData)
-    if (res.data) {
-      const updated = res.data.data
-      const idx = this.rooms.findIndex((r) => r.id === id)
-      if (idx !== -1) this.rooms[idx] = updated
-      const myIdx = this.myRooms.findIndex((r) => r.id === id)
-      if (myIdx !== -1) this.myRooms[myIdx] = updated
-      return true
-    }
-    return false
-  } catch (err) {
-    console.error('Update failed:', err.response?.data)
-    return false
-  } finally {
-    this.loading = false
-  }
-}
-
-
   },
 })
