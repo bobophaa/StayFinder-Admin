@@ -19,7 +19,7 @@
         <h6 class="profile-name mb-0">{{ auth.user?.name || 'Charming Views' }}</h6>
         <div class="role-area d-flex align-items-center">
         
-          <span class="profile-role">Provider</span>
+          <span class="profile-role">ម្ចាស់អចលនទ្រព្យ</span>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@ const defaultAvatar = computed(() =>
   `https://ui-avatars.com/api/?background=031c36&color=fff&name=${encodeURIComponent(auth.user?.name || 'CV')}`
 );
 const formatPageName = (name) => {
-  if (!name) return 'Dashboard';
+  if (!name) return 'ផ្ទាំងគ្រប់គ្រង';
   return name.toString()
     .replace(/([A-Z])/g, ' $1')
     .replace(/^./, (str) => str.toUpperCase())

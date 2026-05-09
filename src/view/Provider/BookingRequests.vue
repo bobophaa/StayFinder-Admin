@@ -8,8 +8,8 @@
       <div class="container py-5">
         <!-- Header -->
         <div class="mb-4">
-          <h2 class="fw-bold text-dark">Booking Checking List</h2>
-          <p class="text-muted">Manage and verify room reservation requests by category</p>
+          <h2 class="fw-bold text-dark">បញ្ជីពិនិត្យការកក់</h2>
+          <p class="text-muted">គ្រប់គ្រង និងផ្ទៀងផ្ទាត់សំណើកក់បន្ទប់តាមប្រភេទ</p>
         </div>
 
         <!-- Table -->
@@ -24,7 +24,7 @@
           :page-size="pageSize"
           :total-items="totalRequests"
           :active-filter="activeFilter"
-          :empty-message="'No booking requests found'"
+          :empty-message="'មិនមានសំណើកក់'"
           :payment-url-getter="getPaymentProofUrl"
           @approve="approveBooking"
           @reject="rejectBooking"
@@ -37,7 +37,7 @@
         <DetailModal
           :show="showDetailModal"
           :item="selectedItem"
-          title="Booking"
+          title="ការកក់"
           :payment-url-getter="getPaymentProofUrl"
           @close="showDetailModal = false"
         />
@@ -66,9 +66,9 @@ const showDetailModal = ref(false)
 const selectedItem = ref({})
 
 const tableColumns = [
-  { key: 'image', label: 'Room', field: 'room.image', type: 'image' },
-  { key: 'name', label: 'Guest Name', field: 'buyer.name' },
-  { key: 'status', label: 'Status', field: 'status', type: 'status' },
+  { key: 'image', label: 'បន្ទប់', field: 'room.image', type: 'image' },
+  { key: 'name', label: 'ឈ្មោះភ្ញៀវ', field: 'buyer.name' },
+  { key: 'status', label: 'ស្ថានភាព', field: 'status', type: 'status' },
 ]
 
 const setToken = () => {
@@ -116,7 +116,7 @@ const fetchBookings = async () => {
     bookings.value = res.data.data || []
     totalRequests.value = res.data.total || 0
   } catch (err) {
-    error.value = err.response?.data?.message || 'Failed to fetch bookings'
+    error.value = err.response?.data?.message || 'ផ្ទុកសំណើកក់បរាជ័យ'
   } finally {
     loading.value = false
   }

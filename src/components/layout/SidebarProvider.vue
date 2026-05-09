@@ -14,7 +14,7 @@
     <div class="bottom-area pb-4">
       <button class="logout-btn px-4" @click="handleLogout">
         <i class="bi bi-box-arrow-left"></i>
-        <span>Log Out</span>
+        <span>ចាកចេញ</span>
       </button>
     </div>
   </aside>
@@ -31,20 +31,20 @@ import { RouterLink } from 'vue-router'
 const router = useRouter()
 
 const providerMenus = [
-  { label: 'Dashboard', to: '/provider/dashboard', icon: 'bi bi-grid-fill' },
-  { label: 'My Properties', to: '/provider/my-rooms', icon: 'bi bi-building' },
-  { label: 'Post New Room', to: '/provider/add-room', icon: 'bi bi-plus-circle-fill' },
-  { label: 'Booking Requests', to: '/provider/booking-requests', icon: 'bi bi-calendar-event' },
-  { label: 'Manage Renters', to: '/provider/rent-management', icon: 'bi bi-house-gear-fill' },
-  { label: 'Profile info', to: '/provider/profile', icon: 'bi bi-person-badge-fill' },
+  { label: 'ផ្ទាំងគ្រប់គ្រង', to: '/provider/dashboard', icon: 'bi bi-grid-fill' },
+  { label: 'បន្ទប់របស់ខ្ញុំ', to: '/provider/my-rooms', icon: 'bi bi-building' },
+  { label: 'បង្ហោះបន្ទប់ថ្មី', to: '/provider/add-room', icon: 'bi bi-plus-circle-fill' },
+  { label: 'សំណើកក់បន្ទប់', to: '/provider/booking-requests', icon: 'bi bi-calendar-event' },
+  { label: 'គ្រប់គ្រងអ្នកជួល', to: '/provider/rent-management', icon: 'bi bi-house-gear-fill' },
+  { label: 'ព័ត៌មានប្រវត្តិរូប', to: '/provider/profile', icon: 'bi bi-person-badge-fill' },
 ]
 
 const adminMenus = [
-  { label: 'Admin Dashboard', to: '/admin/dashboard', icon: 'bi bi-speedometer2' },
-  { label: 'User Management', to: '/admin/Manage', icon: 'bi bi-people-fill' },
-  { label: 'Location Settings', to: '/admin/locations', icon: 'bi bi-geo-alt-fill' },
-  { label: 'Room Options', to: '/admin/room-options', icon: 'bi bi-list-stars' },
-  { label: 'Profile info', to: '/admin/profile', icon: 'bi bi-person-badge-fill' },
+  { label: 'ផ្ទាំងគ្រប់គ្រង', to: '/admin/dashboard', icon: 'bi bi-speedometer2' },
+  { label: 'គ្រប់គ្រងអ្នកប្រើប្រាស់', to: '/admin/Manage', icon: 'bi bi-people-fill' },
+  { label: 'ការកំណត់ទីតាំង', to: '/admin/locations', icon: 'bi bi-geo-alt-fill' },
+  { label: 'ជម្រើសបន្ទប់', to: '/admin/room-options', icon: 'bi bi-list-stars' },
+  { label: 'ព័ត៌មានប្រវត្តិរូប', to: '/admin/profile', icon: 'bi bi-person-badge-fill' },
 ]
 
 const menuItems = computed(() => {
@@ -60,13 +60,13 @@ const menuItems = computed(() => {
 
 const handleLogout = async () => {
   const result = await Swal.fire({
-    title: 'Are you sure?',
-    text: 'You will be logged out of your account.',
+    title: 'តើអ្នកប្រាកដទេ?',
+    text: 'អ្នកនឹងត្រូវបានចាកចេញពីគណនីរបស់អ្នក។',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: 'green',
     cancelButtonColor: 'red',
-    confirmButtonText: 'Yes, log out',
+    confirmButtonText: 'បាទ/ចាស ចាកចេញ',
   })
 
   if (result.isConfirmed) {
@@ -74,7 +74,7 @@ const handleLogout = async () => {
 
     await Swal.fire({
       icon: 'success',
-      title: 'Logged out!',
+      title: 'បានចាកចេញហើយ!',
       timer: 1500,
       showConfirmButton: false,
     })

@@ -32,7 +32,7 @@ export const useAuthStore = defineStore('auth', {
   actions: {
   async login() {
   if (!this.emailOrPhone || !this.password) {
-    this.error = 'Please enter your email and password.'
+    this.error = 'សូមបញ្ចូលអ៊ីមែល និងពាក្យសម្ងាត់របស់អ្នក។'
     return { success: false }
   }
 
@@ -50,14 +50,14 @@ export const useAuthStore = defineStore('auth', {
     const user = data
 
     if (!token) {
-      this.error = 'Token not found.'
+      this.error = 'រកមិនឃើញថូខិន។'
       return { success: false }
     }
 
     const role = user?.roles?.[0]?.name
 
     if (role !== 'System Admin' && role !== 'Service Provider') {
-      this.error = 'Access denied.'
+      this.error = 'មិនមានសិទ្ធិចូលប្រើ។'
       return { success: false }
     }
 
@@ -73,7 +73,7 @@ export const useAuthStore = defineStore('auth', {
     }
 
   } catch (err) {
-    this.error = err.response?.data?.message || 'Login failed.'
+    this.error = err.response?.data?.message || 'ចូលគណនីបរាជ័យ។'
     return { success: false }
   } finally {
     this.loading = false

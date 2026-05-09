@@ -5,19 +5,19 @@
         <!-- Card -->
         <div class="card shadow-lg rounded-4 p-5 border-0">
           <!-- Header -->
-          <h3 class="fw-bold text-navy mb-4 text-center">Edit Room Listing</h3>
+          <h3 class="fw-bold text-navy mb-4 text-center">កែសម្រួលបញ្ជីបន្ទប់</h3>
 
           <!-- Loading -->
           <div v-if="loadingFetch" class="text-center py-5">
             <div class="spinner-border text-orange" role="status"></div>
-            <p class="mt-3 text-muted">Fetching room details...</p>
+            <p class="mt-3 text-muted">កំពុងទាញព័ត៌មានបន្ទប់...</p>
           </div>
 
           <!-- Form -->
           <form v-else @submit.prevent="handleUpdate">
-            <!-- Room Title -->
+            <!-- ចំណងជើងបន្ទប់ -->
             <div class="mb-4">
-              <label class="form-label fw-bold">Room Title</label>
+              <label class="form-label fw-bold">ចំណងជើងបន្ទប់</label>
               <input
                 v-model="form.title"
                 type="text"
@@ -30,7 +30,7 @@
             <!-- Price & Size -->
             <div class="row mb-4">
               <div class="col-md-6 mb-3 mb-md-0">
-                <label class="form-label fw-bold">Price ($/mo)</label>
+                <label class="form-label fw-bold">តម្លៃ ($/ខែ)</label>
                 <input
                   v-model="form.price"
                   type="number"
@@ -39,7 +39,7 @@
                 />
               </div>
               <div class="col-md-6">
-                <label class="form-label fw-bold">Room Size</label>
+                <label class="form-label fw-bold">ទំហំបន្ទប់</label>
                 <input
                   v-model="form.size_room"
                   type="text"
@@ -49,20 +49,20 @@
               </div>
             </div>
 
-            <!-- Description -->
+            <!-- ពិពណ៌នា -->
             <div class="mb-4">
-              <label class="form-label fw-bold">Description</label>
+              <label class="form-label fw-bold">ពិពណ៌នា</label>
               <textarea
                 v-model="form.description"
                 class="form-control form-control-lg text-muted"
                 rows="5"
-                placeholder="Describe your room..."
+                placeholder="ពិពណ៌នាបន្ទប់របស់អ្នក..."
               ></textarea>
             </div>
 
             <!-- Image Upload -->
             <div class="mb-4">
-              <label class="form-label fw-bold">Room Image</label>
+              <label class="form-label fw-bold">រូបភាពបន្ទប់</label>
               <div v-if="imagePreview" class="mb-3 d-flex justify-content-center">
                 <img
                   :src="imagePreview"
@@ -72,7 +72,7 @@
                 />
               </div>
               <input type="file" @change="onFileChange" class="form-control" accept="image/*" />
-              <small class="text-muted">Leave empty to keep current image.</small>
+              <small class="text-muted">ទុកចោលដើម្បីរក្សារូបភាពបច្ចុប្បន្ន។</small>
             </div>
 
             <!-- Buttons -->
@@ -82,7 +82,7 @@
                 @click="$router.back()"
                 class="btn btn-light px-4 rounded-pill shadow-sm"
               >
-                Cancel
+                បោះបង់
               </button>
               <button
                 type="submit"
@@ -90,7 +90,7 @@
                 :disabled="loadingSubmit"
               >
                 <span v-if="loadingSubmit" class="spinner-border spinner-border-sm me-2"></span>
-                Save Changes
+                រក្សាទុកការកែប្រែ
               </button>
             </div>
           </form>
@@ -139,7 +139,7 @@ const fetchRoomDetail = async () => {
     }
   } catch (err) {
     console.error(err)
-    alert('Could not load room data.')
+    alert('មិនអាចផ្ទុកទិន្នន័យបន្ទប់។')
   } finally {
     loadingFetch.value = false
   }
@@ -170,14 +170,14 @@ const handleUpdate = async () => {
 
     const success = await roomStore.updateRoom(roomId, formData)
     if (success) {
-      alert('Room updated successfully!')
+      alert('បានកែសម្រួលបន្ទប់ជោគជ័យ!')
       router.push('/provider/my-rooms')
     } else {
-      alert('Update failed!')
+      alert('កែសម្រួលបរាជ័យ!')
     }
   } catch (err) {
     console.error(err)
-    alert('An error occurred.')
+    alert('មានបញ្ហាកើតឡើង។')
   } finally {
     loadingSubmit.value = false
   }

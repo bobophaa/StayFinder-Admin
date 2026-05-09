@@ -2,17 +2,17 @@
   <div class="room-option-management p-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h2 class="fw-bold text-navy">Room Options</h2>
-        <p class="text-muted small">Manage amenities like WiFi, CCTV, and Bathrooms</p>
+        <h2 class="fw-bold text-navy">ជម្រើសបន្ទប់</h2>
+        <p class="text-muted small">គ្រប់គ្រងបរិក្ខារដូចជា WiFi, CCTV និងបន្ទប់ទឹក</p>
       </div>
       <button @click="openModal()" class="btn btn-main px-4 py-2 shadow-orange">
-        <i class="bi bi-plus-circle me-2"></i>Add New Option
+        <i class="bi bi-plus-circle me-2"></i>បន្ថែមជម្រើសថ្មី
       </button>
     </div>
 
     <div v-if="roomOptionStore.loading" class="text-center py-5">
       <div class="spinner-border text-orange" role="status"></div>
-      <p class="mt-2 text-muted">Loading options...</p>
+      <p class="mt-2 text-muted">កំពុងផ្ទុកជម្រើស...</p>
     </div>
 
     <div v-else class="card border-0 shadow-sm rounded-4">
@@ -21,8 +21,8 @@
           <thead class="bg-navy-header">
             <tr>
               <th width="100">ID</th>
-              <th>Option Name</th>
-              <th width="200" class="text-center">Actions</th>
+              <th>ឈ្មោះជម្រើស</th>
+              <th width="200" class="text-center">សកម្មភាព</th>
             </tr>
           </thead>
           <tbody>
@@ -37,10 +37,10 @@
               <td>
                 <div class="d-flex justify-content-center gap-2">
                   <button @click="openModal(option)" class="btn btn-sm btn-outline-navy rounded-pill px-3">
-                    Edit
+                    កែសម្រួល
                   </button>
-                  <button @click="handleDelete(option.id)" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                    Delete
+                  <button @click="handleលុប(option.id)" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                    លុប
                   </button>
                 </div>
               </td>
@@ -52,10 +52,10 @@
 
     <div v-if="showModal" class="modal-backdrop">
       <div class="modal-content p-4 shadow-lg border-0">
-        <h4 class="fw-bold mb-3 text-navy">{{ isEdit ? 'Update Option' : 'Add New Option' }}</h4>
+        <h4 class="fw-bold mb-3 text-navy">{{ isកែសម្រួល ? 'Update Option' : 'បន្ថែមជម្រើសថ្មី' }}</h4>
         
         <div class="mb-4">
-          <label class="form-label fw-semibold">Option Name</label>
+          <label class="form-label fw-semibold">ឈ្មោះជម្រើស</label>
           <input 
             v-model="optionName" 
             type="text" 
@@ -66,10 +66,10 @@
         </div>
 
         <div class="d-flex gap-2">
-          <button @click="showModal = false" class="btn btn-light flex-grow-1 py-2 rounded-3">Cancel</button>
+          <button @click="showModal = false" class="btn btn-light flex-grow-1 py-2 rounded-3">បោះបង់</button>
           <button @click="handleSubmit" :disabled="isSaving" class="btn btn-orange flex-grow-1 py-2 rounded-3">
             <span v-if="isSaving" class="spinner-border spinner-border-sm me-2"></span>
-            {{ isEdit ? 'Save Changes' : 'Create Option' }}
+            {{ isកែសម្រួល ? 'រក្សាទុកការកែប្រែ' : 'បង្កើតជម្រើស' }}
           </button>
         </div>
       </div>
@@ -84,7 +84,7 @@ import { useRoomOptionStore } from '@/stores/RoomOptionStore'
 const roomOptionStore = useRoomOptionStore()
 
 const showModal = ref(false)
-const isEdit = ref(false)
+const isកែសម្រួល = ref(false)
 const isSaving = ref(false)
 const optionName = ref('')
 const selectedId = ref(null)
@@ -95,47 +95,47 @@ onMounted(() => {
 
 const openModal = (option = null) => {
   if (option) {
-    isEdit.value = true
+    isកែសម្រួល.value = true
     selectedId.value = option.id
     optionName.value = option.name
   } else {
-    isEdit.value = false
+    isកែសម្រួល.value = false
     optionName.value = ''
   }
   showModal.value = true
 }
 
 const handleSubmit = async () => {
-  if (!optionName.value.trim()) return alertError('Please enter an option name')
+  if (!optionName.value.trim()) return alertError('សូមបញ្ចូលឈ្មោះជម្រើស')
   
   isSaving.value = true
   let success = false
 
-  if (isEdit.value) {
+  if (isកែសម្រួល.value) {
     success = await roomOptionStore.updateOption(selectedId.value, optionName.value)
   } else {
     success = await roomOptionStore.addOption(optionName.value)
   }
 
   if (success) {
-    alertSuccess(isEdit.value ? 'Option updated!' : 'Option created!')
+    alertSuccess(isកែសម្រួល.value ? 'បានកែសម្រួលជម្រើស!' : 'បានបង្កើតជម្រើស!')
     showModal.value = false
     roomOptionStore.fetchOptions()
   } else {
-    alertError('Something went wrong.')
+    alertError('មានបញ្ហាមួយកើតឡើង។')
   }
   isSaving.value = false
 }
 
-const handleDelete = async (id) => {
-  const confirmed = await confirmDelete('Remove this option?')
+const handleលុប = async (id) => {
+  const confirmed = await confirmលុប('លុបជម្រើសនេះឬ?')
   if (confirmed) {
     const success = await roomOptionStore.deleteOption(id)
     if (success) {
-      alertSuccess('Option deleted successfully')
+      alertSuccess('លុបជម្រើសបានជោគជ័យ')
       roomOptionStore.fetchOptions()
     } else {
-      alertError('Could not delete option')
+      alertError('មិនអាចលុបជម្រើសបានទេ')
     }
   }
 }

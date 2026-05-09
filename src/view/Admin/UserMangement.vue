@@ -1,8 +1,8 @@
 <template>
   <div class="user-management">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="fw-bold text-navy">User Management</h2>
-      <span class="badge btn-main px-3 py-2">{{ users.length }} Total Users</span>
+      <h2 class="fw-bold text-navy">គ្រប់គ្រងអ្នកប្រើប្រាស់</h2>
+      <span class="badge btn-main px-3 py-2">{{ users.length }} អ្នកប្រើសរុប</span>
     </div>
 
     <div class="card border-0 shadow-sm rounded-4">
@@ -11,11 +11,11 @@
           <thead class="table-light">
             <tr>
               <th>ID</th>
-              <th>User Info</th>
-              <th>Current Job</th>
-              <th>Role</th>
-              <th>Created At</th>
-              <th class="text-center">Action</th>
+              <th>ព័ត៌មានអ្នកប្រើ</th>
+              <th>មុខរបរបច្ចុប្បន្ន</th>
+              <th>តួនាទី</th>
+              <th>បានបង្កើតនៅ</th>
+              <th class="text-center">សកម្មភាព</th>
             </tr>
           </thead>
           <tbody>
@@ -36,10 +36,10 @@
                   </div>
                 </div>
               </td>
-              <td>{{ user.current_job || 'N/A' }}</td>
+              <td>{{ user.current_job || 'មិនមាន' }}</td>
               <td>
-                <span :class="getRoleBadge(user.roles[0]?.name)">
-                  {{ user.roles[0]?.name || 'No Role' }}
+                <span :class="getតួនាទីBadge(user.roles[0]?.name)">
+                  {{ user.roles[0]?.name || 'No តួនាទី' }}
                 </span>
               </td>
               <td class="small">
@@ -55,10 +55,10 @@
               </td>
               <td class="text-center">
                 <button
-                  @click="openSetRoleModal(user)"
+                  @click="openSetតួនាទីModal(user)"
                   class="btn btn-sm border-navy rounded-pill px-3 text-navy"
                 >
-                  Set Role
+                  Set តួនាទី
                 </button>
               </td>
             </tr>
@@ -70,31 +70,31 @@
   <div class="user-management p-4">
     <div v-if="showModal" class="modal-backdrop">
       <div class="modal-content p-4 shadow-lg border-0">
-        <h4 class="fw-bold mb-3 text-navy">Change User Role</h4>
+        <h4 class="fw-bold mb-3 text-navy">Change អ្នកប្រើ តួនាទី</h4>
         <p class="text-muted">
-          Updating role for: <strong class="text-navy">{{ selectedUser?.name }}</strong>
+          កំពុងធ្វើបច្ចុប្បន្នភាពតួនាទីសម្រាប់៖ <strong class="text-navy">{{ selectedអ្នកប្រើ?.name }}</strong>
         </p>
 
         <div class="mb-4">
-          <label class="form-label fw-semibold">Select New Role</label>
-          <select v-model="newRoleId" class="form-select form-select-lg rounded-3">
-            <option value="1">User</option>
-            <option value="2">Provider (Owner)</option>
+          <label class="form-label fw-semibold">Select New តួនាទី</label>
+          <select v-model="newតួនាទីId" class="form-select form-select-lg rounded-3">
+            <option value="1">អ្នកប្រើ</option>
+            <option value="2">ម្ចាស់អចលនទ្រព្យ</option>
             <option value="3">System Admin</option>
           </select>
         </div>
 
         <div class="d-flex gap-2">
           <button @click="showModal = false" class="btn btn-light flex-grow-1 py-2 rounded-3">
-            Cancel
+            បោះបង់
           </button>
           <button
-            @click="handleSetRole"
+            @click="handleSetតួនាទី"
             :disabled="isUpdating"
             class="btn btn-primary flex-grow-1 py-2 rounded-3"
           >
             <span v-if="isUpdating" class="spinner-border spinner-border-sm me-2"></span>
-            Update Role Now
+            Update តួនាទី Now
           </button>
         </div>
       </div>
@@ -109,11 +109,11 @@ import Swal from 'sweetalert2'
 import api from '@/api/http'
 const users = ref([])
 const showModal = ref(false)
-const selectedUser = ref(null)
-const newRoleId = ref('')
+const selectedអ្នកប្រើ = ref(null)
+const newតួនាទីId = ref('')
 const isUpdating = ref(false)
 
-const fetchUsers = async () => {
+const fetchអ្នកប្រើs = async () => {
   try {
     const response = await api.get('/users?page=1&per_page=30')
     if (response.data.result) {
@@ -124,7 +124,7 @@ const fetchUsers = async () => {
   }
 }
 
-const getRoleBadge = (roleName) => {
+const getតួនាទីBadge = (roleName) => {
   if (!roleName) return 'badge bg-secondary-subtle text-secondary px-3'
   const role = roleName.toLowerCase()
   if (role.includes('admin')) return 'badge bg-danger-subtle text-danger px-3'
@@ -132,34 +132,34 @@ const getRoleBadge = (roleName) => {
   return 'badge bg-secondary-subtle text-secondary px-3'
 }
 
-const openSetRoleModal = (user) => {
-  selectedUser.value = user
-  newRoleId.value = user.roles[0]?.id || '1'
+const openSetតួនាទីModal = (user) => {
+  selectedអ្នកប្រើ.value = user
+  newតួនាទីId.value = user.roles[0]?.id || '1'
   showModal.value = true
 }
 
-const handleSetRole = async () => {
+const handleSetតួនាទី = async () => {
   isUpdating.value = true
   try {
-    const response = await api.put(`/users/set-role/${selectedUser.value.id}`, { 
-      role_id: newRoleId.value 
+    const response = await api.put(`/users/set-role/${selectedអ្នកប្រើ.value.id}`, { 
+      role_id: newតួនាទីId.value 
     })
 
     if (response.data.result) {
       showModal.value = false
-      Swal.fire('Success!', 'User role has been updated.', 'success')
-      fetchUsers()
+      Swal.fire('Success!', 'អ្នកប្រើ role has been updated.', 'success')
+      fetchអ្នកប្រើs()
     }
   } catch (error) {
-    console.error('Set Role Error:', error)
-    Swal.fire('Error!', 'Failed to update role.', 'error')
+    console.error('Set តួនាទី Error:', error)
+    Swal.fire('បរាជ័យ!', 'ធ្វើបច្ចុប្បន្នភាពតួនាទីបរាជ័យ។', 'error')
   } finally {
     isUpdating.value = false
   }
 }
 
 onMounted(() => {
-  fetchUsers()
+  fetchអ្នកប្រើs()
 })
 </script>
 

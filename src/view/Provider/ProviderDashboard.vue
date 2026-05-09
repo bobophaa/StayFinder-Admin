@@ -5,16 +5,16 @@
     <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
       <div>
         <h2 class="fw-bold text-navy mb-1">
-          Welcome back, {{ authStore.user?.name?.split(' ')[0] || 'Provider' }} 
+          សូមស្វាគមន៍មកវិញ, {{ authStore.user?.name?.split(' ')[0] || 'Provider' }} 
         </h2>
         <p class="text-muted mb-0">
           Manage your listings on <span class="fw-bold text-navy">StayFinder</span> —
-          <span class="small">{{ todayDate }}</span>
+          <span class="small">{{ new Date().toLocaleDateString() }}</span>
         </p>
       </div>
       <div class="d-flex gap-2 flex-wrap">
         <router-link to="/provider/add-room" class="btn btn-orange fw-bold px-4">
-          <i class="bi bi-plus-circle-fill me-2"></i>Post New Room
+          <i class="bi bi-plus-circle-fill me-2"></i>បង្ហោះបន្ទប់ថ្មី
         </router-link>
         <!-- <button class="btn btn-outline-navy fw-bold px-3" @click="refreshAll" :disabled="loading">
           <i class="bi me-1" :class="loading ? 'bi-arrow-repeat spin' : 'bi-arrow-clockwise'"></i>
@@ -34,7 +34,7 @@
           <div v-if="loading"><div class="skel-line" style="width:60px;height:28px;border-radius:8px"></div></div>
           <template v-else>
             <h3 class="fw-bold mb-0 text-navy">12</h3>
-            <small class="text-muted fw-semibold stat-label">My Rooms</small>
+            <small class="text-muted fw-semibold stat-label">បន្ទប់របស់ខ្ញុំ</small>
           </template>
         </div>
       </div>
@@ -47,7 +47,7 @@
           <div v-if="loading"><div class="skel-line" style="width:60px;height:28px;border-radius:8px"></div></div>
           <template v-else>
             <h3 class="fw-bold mb-0 text-navy">{{ bookings.length }}</h3>
-            <small class="text-muted fw-semibold stat-label">Total Bookings</small>
+            <small class="text-muted fw-semibold stat-label">ការកក់សរុប</small>
           </template>
         </div>
       </div>
@@ -60,7 +60,7 @@
           <div v-if="loading"><div class="skel-line" style="width:60px;height:28px;border-radius:8px"></div></div>
           <template v-else>
             <h3 class="fw-bold mb-0 text-navy">{{ approvedRents }}</h3>
-            <small class="text-muted fw-semibold stat-label">Rented Rooms</small>
+            <small class="text-muted fw-semibold stat-label">បន្ទប់ដែលបានជួល</small>
           </template>
         </div>
       </div>
@@ -68,14 +68,14 @@
         <div class="stat-card card border-0 shadow-sm rounded-4 p-3 h-100">
           <div class="d-flex justify-content-between align-items-start mb-3">
             <div class="icon-shape bg-purple-light"><i class="bi bi-hourglass-split"></i></div>
-            <span class="trend-badge" :class="(pendingBookings + pendingRents) > 0 ? 'trend-warn' : 'trend-up'">
-              <i class="bi bi-clock me-1"></i>{{ pendingBookings + pendingRents }}
+            <span class="trend-badge" :class="(រង់ចាំBookings + រង់ចាំRents) > 0 ? 'trend-warn' : 'trend-up'">
+              <i class="bi bi-clock me-1"></i>{{ រង់ចាំBookings + រង់ចាំRents }}
             </span>
           </div>
           <div v-if="loading"><div class="skel-line" style="width:60px;height:28px;border-radius:8px"></div></div>
           <template v-else>
-            <h3 class="fw-bold mb-0 text-navy">{{ pendingBookings + pendingRents }}</h3>
-            <small class="text-muted fw-semibold stat-label">Needs Action</small>
+            <h3 class="fw-bold mb-0 text-navy">{{ រង់ចាំBookings + រង់ចាំRents }}</h3>
+            <small class="text-muted fw-semibold stat-label">ត្រូវការសកម្មភាព</small>
           </template>
         </div>
       </div>
@@ -86,7 +86,7 @@
       <div class="col-lg-8">
         <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
           <h5 class="fw-bold text-navy mb-4">
-            <i class="bi bi-bar-chart-fill me-2 text-orange"></i>Booking & Rent Overview
+            <i class="bi bi-bar-chart-fill me-2 text-orange"></i>ទិដ្ឋភាពទូទៅការកក់ និងជួល
           </h5>
           <div v-if="loading">
             <div v-for="i in 4" :key="i" class="skel-line mb-3" style="height:36px;border-radius:10px"></div>
@@ -94,16 +94,16 @@
           <div v-else class="d-flex flex-column gap-3">
             <div>
               <div class="d-flex justify-content-between mb-1">
-                <span class="small fw-semibold text-navy"><i class="bi bi-clock-fill me-2 text-warning"></i>Pending Bookings</span>
-                <span class="small fw-bold text-navy">{{ pendingBookings }}</span>
+                <span class="small fw-semibold text-navy"><i class="bi bi-clock-fill me-2 text-warning"></i>ការកក់កំពុងរង់ចាំ</span>
+                <span class="small fw-bold text-navy">{{ រង់ចាំBookings }}</span>
               </div>
               <div class="progress" style="height:8px;border-radius:10px;background:#f0f2f5">
-                <div class="progress-bar" style="background:#f59e0b;border-radius:10px" :style="{ width: barPct(pendingBookings, bookings.length) + '%' }"></div>
+                <div class="progress-bar" style="background:#f59e0b;border-radius:10px" :style="{ width: barPct(រង់ចាំBookings, bookings.length) + '%' }"></div>
               </div>
             </div>
             <div>
               <div class="d-flex justify-content-between mb-1">
-                <span class="small fw-semibold text-navy"><i class="bi bi-check-circle-fill me-2 text-success"></i>Approved Bookings</span>
+                <span class="small fw-semibold text-navy"><i class="bi bi-check-circle-fill me-2 text-success"></i>ការកក់បានអនុម័ត</span>
                 <span class="small fw-bold text-navy">{{ approvedBookings }}</span>
               </div>
               <div class="progress" style="height:8px;border-radius:10px;background:#f0f2f5">
@@ -112,16 +112,16 @@
             </div>
             <div>
               <div class="d-flex justify-content-between mb-1">
-                <span class="small fw-semibold text-navy"><i class="bi bi-clock-fill me-2" style="color:#8b5cf6"></i>Pending Rents</span>
-                <span class="small fw-bold text-navy">{{ pendingRents }}</span>
+                <span class="small fw-semibold text-navy"><i class="bi bi-clock-fill me-2" style="color:#8b5cf6"></i>ការជួលកំពុងរង់ចាំ</span>
+                <span class="small fw-bold text-navy">{{ រង់ចាំRents }}</span>
               </div>
               <div class="progress" style="height:8px;border-radius:10px;background:#f0f2f5">
-                <div class="progress-bar" style="background:#8b5cf6;border-radius:10px" :style="{ width: barPct(pendingRents, rents.length) + '%' }"></div>
+                <div class="progress-bar" style="background:#8b5cf6;border-radius:10px" :style="{ width: barPct(រង់ចាំRents, rents.length) + '%' }"></div>
               </div>
             </div>
             <div>
               <div class="d-flex justify-content-between mb-1">
-                <span class="small fw-semibold text-navy"><i class="bi bi-house-check-fill me-2 text-info"></i>Approved Rents</span>
+                <span class="small fw-semibold text-navy"><i class="bi bi-house-check-fill me-2 text-info"></i>ការជួលបានអនុម័ត</span>
                 <span class="small fw-bold text-navy">{{ approvedRents }}</span>
               </div>
               <div class="progress" style="height:8px;border-radius:10px;background:#f0f2f5">
@@ -133,19 +133,19 @@
             <div class="col-4">
               <div class="summary-chip">
                 <div class="fw-bold text-navy">{{ bookings.length }}</div>
-                <div class="text-muted" style="font-size:.7rem">Total Bookings</div>
+                <div class="text-muted" style="font-size:.7rem">ការកក់សរុប</div>
               </div>
             </div>
             <div class="col-4">
               <div class="summary-chip">
                 <div class="fw-bold text-navy">{{ rents.length }}</div>
-                <div class="text-muted" style="font-size:.7rem">Total Rents</div>
+                <div class="text-muted" style="font-size:.7rem">ការជួលសរុប</div>
               </div>
             </div>
             <div class="col-4">
               <div class="summary-chip">
-                <div class="fw-bold text-orange">{{ pendingBookings + pendingRents }}</div>
-                <div class="text-muted" style="font-size:.7rem">Needs Action</div>
+                <div class="fw-bold text-orange">{{ រង់ចាំBookings + រង់ចាំRents }}</div>
+                <div class="text-muted" style="font-size:.7rem">ត្រូវការសកម្មភាព</div>
               </div>
             </div>
           </div>
@@ -155,7 +155,7 @@
       <div class="col-lg-4">
         <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
           <h5 class="fw-bold text-navy mb-4">
-            <i class="bi bi-pie-chart-fill me-2 text-orange"></i>Room Split
+            <i class="bi bi-pie-chart-fill me-2 text-orange"></i>ការបែងចែកបន្ទប់
           </h5>
           <div class="d-flex justify-content-center mb-3">
             <div class="donut-wrap position-relative">
@@ -175,32 +175,32 @@
           </div>
           <div class="d-flex flex-column gap-2 mb-4">
             <div class="d-flex justify-content-between">
-              <span class="d-flex align-items-center gap-2 small"><span class="legend-dot" style="background:#198754"></span>Active</span>
+              <span class="d-flex align-items-center gap-2 small"><span class="legend-dot" style="background:#198754"></span>សកម្ម</span>
               <span class="fw-bold text-navy small">{{ roomStats.active }}%</span>
             </div>
             <div class="d-flex justify-content-between">
-              <span class="d-flex align-items-center gap-2 small"><span class="legend-dot" style="background:#ff5f00"></span>On Promo</span>
+              <span class="d-flex align-items-center gap-2 small"><span class="legend-dot" style="background:#ff5f00"></span>មានបញ្ចុះតម្លៃ</span>
               <span class="fw-bold text-navy small">{{ roomStats.promo }}%</span>
             </div>
           </div>
           <div class="avg-price-box">
-            <div class="text-muted small mb-1">Average Room Price</div>
-            <div class="fw-bold text-orange" style="font-size:1.4rem">{{ avgPrice }}</div>
-            <div class="text-muted" style="font-size:.72rem">per month</div>
+            <div class="text-muted small mb-1">តម្លៃបន្ទប់មធ្យម</div>
+            <div class="fw-bold text-orange" style="font-size:1.4rem">{{ avgតម្លៃ }}</div>
+            <div class="text-muted" style="font-size:.72rem">ក្នុងមួយខែ</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ── Recent Bookings + Rents ── -->
+    <!-- ── ការកក់ថ្មីៗ + Rents ── -->
     <div class="row g-3 mb-4">
       <div class="col-lg-6">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
           <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
-            <span class="fw-bold text-white"><i class="bi bi-calendar-check me-2"></i>Recent Bookings</span>
+            <span class="fw-bold text-white"><i class="bi bi-calendar-check me-2"></i>ការកក់ថ្មីៗ</span>
             <div class="d-flex gap-2 align-items-center">
-              <span v-if="pendingBookings > 0" class="badge-count">{{ pendingBookings }} pending</span>
-              <router-link to="/provider/booking-check" class="btn btn-xs btn-outline-light">View All</router-link>
+              <span v-if="រង់ចាំBookings > 0" class="badge-count">{{ រង់ចាំBookings }} រង់ចាំ</span>
+              <router-link to="/provider/booking-check" class="btn btn-xs btn-outline-light">មើលទាំងអស់</router-link>
             </div>
           </div>
           <div v-if="loading" class="p-4"><div v-for="i in 4" :key="i" class="skel-line mb-3"></div></div>
@@ -208,10 +208,10 @@
             <table class="table table-hover align-middle mb-0">
               <thead class="table-light">
                 <tr>
-                  <th class="ps-4 small fw-bold text-muted">Room / Tenant</th>
-                  <th class="small fw-bold text-muted">Date</th>
-                  <th class="small fw-bold text-muted">Status</th>
-                  <th class="small fw-bold text-muted">Action</th>
+                  <th class="ps-4 small fw-bold text-muted">បន្ទប់ / អ្នកជួល</th>
+                  <th class="small fw-bold text-muted">កាលបរិច្ឆេទ</th>
+                  <th class="small fw-bold text-muted">ស្ថានភាព</th>
+                  <th class="small fw-bold text-muted">សកម្មភាព</th>
                 </tr>
               </thead>
               <tbody>
@@ -220,7 +220,7 @@
                     <div class="fw-semibold small text-navy text-truncate" style="max-width:120px">{{ b.room?.title || '–' }}</div>
                     <div class="text-muted" style="font-size:.72rem">{{ b.buyer?.name || b.user?.name || '–' }}</div>
                   </td>
-                  <td class="small text-muted">{{ formatDate(b.created_at) }}</td>
+                  <td class="small text-muted">{{ formatdate(b.created_at) }}</td>
                   <td><span :class="['status-pill', statusClass(b.status)]">{{ statusLabel(b.status) }}</span></td>
                   <td>
                     <div class="d-flex gap-1" v-if="isPending(b.status)">
@@ -237,7 +237,7 @@
                 <tr v-if="recentBookings.length === 0">
                   <td colspan="4" class="text-center py-5">
                     <i class="bi bi-calendar-x d-block mb-2" style="font-size:1.8rem;opacity:.2"></i>
-                    <span class="text-muted small">No bookings yet</span>
+                    <span class="text-muted small">មិនទាន់មានការកក់</span>
                   </td>
                 </tr>
               </tbody>
@@ -249,10 +249,10 @@
       <div class="col-lg-6">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
           <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
-            <span class="fw-bold text-white"><i class="bi bi-house-check me-2"></i>Recent Rents</span>
+            <span class="fw-bold text-white"><i class="bi bi-house-check me-2"></i>ការជួលថ្មីៗ</span>
             <div class="d-flex gap-2 align-items-center">
-              <span v-if="pendingRents > 0" class="badge-count">{{ pendingRents }} pending</span>
-              <router-link to="/provider/rent-check" class="btn btn-xs btn-outline-light">View All</router-link>
+              <span v-if="រង់ចាំRents > 0" class="badge-count">{{ រង់ចាំRents }} រង់ចាំ</span>
+              <router-link to="/provider/rent-check" class="btn btn-xs btn-outline-light">មើលទាំងអស់</router-link>
             </div>
           </div>
           <div v-if="loading" class="p-4"><div v-for="i in 4" :key="i" class="skel-line mb-3"></div></div>
@@ -260,10 +260,10 @@
             <table class="table table-hover align-middle mb-0">
               <thead class="table-light">
                 <tr>
-                  <th class="ps-4 small fw-bold text-muted">Room / Tenant</th>
-                  <th class="small fw-bold text-muted">Date</th>
-                  <th class="small fw-bold text-muted">Status</th>
-                  <th class="small fw-bold text-muted">Action</th>
+                  <th class="ps-4 small fw-bold text-muted">បន្ទប់ / អ្នកជួល</th>
+                  <th class="small fw-bold text-muted">កាលបរិច្ឆេទ</th>
+                  <th class="small fw-bold text-muted">ស្ថានភាព</th>
+                  <th class="small fw-bold text-muted">សកម្មភាព</th>
                 </tr>
               </thead>
               <tbody>
@@ -272,7 +272,7 @@
                     <div class="fw-semibold small text-navy text-truncate" style="max-width:120px">{{ r.room?.title || '–' }}</div>
                     <div class="text-muted" style="font-size:.72rem">{{ r.buyer?.name || r.user?.name || '–' }}</div>
                   </td>
-                  <td class="small text-muted">{{ formatDate(r.created_at) }}</td>
+                  <td class="small text-muted">{{ formatdate  (r.created_at) }}</td>
                   <td><span :class="['status-pill', statusClass(r.status)]">{{ statusLabel(r.status) }}</span></td>
                   <td>
                     <div class="d-flex gap-1" v-if="isPending(r.status)">
@@ -289,7 +289,7 @@
                 <tr v-if="recentRents.length === 0">
                   <td colspan="4" class="text-center py-5">
                     <i class="bi bi-house-slash d-block mb-2" style="font-size:1.8rem;opacity:.2"></i>
-                    <span class="text-muted small">No rent requests yet</span>
+                    <span class="text-muted small">មិនទាន់មានសំណើជួល</span>
                   </td>
                 </tr>
               </tbody>
@@ -299,13 +299,13 @@
       </div>
     </div>
 
-    <!-- ── My Rooms + Quick Actions ── -->
+    <!-- ── បន្ទប់របស់ខ្ញុំ + Quick សកម្មភាពs ── -->
     <div class="row g-3">
       <div class="col-lg-8">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
           <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
-            <span class="fw-bold text-white"><i class="bi bi-house-door me-2"></i>My Rooms</span>
-            <router-link to="/provider/my-rooms" class="btn btn-xs btn-outline-light">View All</router-link>
+            <span class="fw-bold text-white"><i class="bi bi-house-door me-2"></i>បន្ទប់របស់ខ្ញុំ</span>
+            <router-link to="/provider/my-rooms" class="btn btn-xs btn-outline-light">មើលទាំងអស់</router-link>
           </div>
           <div v-if="loading" class="p-4"><div v-for="i in 4" :key="i" class="skel-line mb-3"></div></div>
           <div class="table-responsive" v-else>
@@ -314,9 +314,9 @@
                 <tr>
                   <th class="ps-4 small fw-bold text-muted">Room</th>
                   <th class="small fw-bold text-muted">District</th>
-                  <th class="small fw-bold text-muted">Price</th>
-                  <th class="small fw-bold text-muted">Status</th>
-                  <th class="small fw-bold text-muted">Edit</th>
+                  <th class="small fw-bold text-muted">តម្លៃ</th>
+                  <th class="small fw-bold text-muted">ស្ថានភាព</th>
+                  <th class="small fw-bold text-muted">កែសម្រួល</th>
                 </tr>
               </thead>
               <tbody>
@@ -334,10 +334,10 @@
                   <td class="fw-bold small text-orange">${{ room.price }}</td>
                   <td>
                     <span v-if="room.percent_promotion > 0" class="status-pill pill-promo">-{{ room.percent_promotion }}%</span>
-                    <span v-else class="status-pill pill-active">Active</span>
+                    <span v-else class="status-pill pill-active">សកម្ម</span>
                   </td>
                   <td>
-                    <router-link :to="`/provider/edit-room/${room.id}`" class="btn-action edit" title="Edit">
+                    <router-link :to="`/provider/edit-room/${room.id}`" class="btn-action edit" title="កែសម្រួល">
                       <i class="bi bi-pencil-fill"></i>
                     </router-link>
                   </td>
@@ -345,7 +345,7 @@
                 <tr v-if="myRooms.length === 0">
                   <td colspan="5" class="text-center py-5">
                     <i class="bi bi-house-slash d-block mb-2" style="font-size:1.8rem;opacity:.2"></i>
-                    <span class="text-muted small">No rooms posted yet</span>
+                    <span class="text-muted small">មិនទាន់បានបង្ហោះបន្ទប់</span>
                   </td>
                 </tr>
               </tbody>
@@ -357,10 +357,10 @@
       <div class="col-lg-4 d-flex flex-column gap-3">
         <div class="card border-0 shadow-sm rounded-4 p-4">
           <h5 class="fw-bold text-navy mb-3">
-            <i class="bi bi-lightning-fill me-2 text-orange"></i>Quick Actions
+            <i class="bi bi-lightning-fill me-2 text-orange"></i>Quick សកម្មភាពs
           </h5>
           <div class="d-flex flex-column gap-2">
-            <router-link v-for="a in quickActions" :key="a.to" :to="a.to" class="action-box text-decoration-none">
+            <router-link v-for="a in quickសកម្មភាពs" :key="a.to" :to="a.to" class="action-box text-decoration-none">
               <div :class="['action-icon', a.bg]"><i :class="['bi', a.icon]" :style="{ color: a.color }"></i></div>
               <div>
                 <div class="fw-bold small text-navy">{{ a.title }}</div>
@@ -373,31 +373,31 @@
 
         <div class="card border-0 shadow-sm rounded-4 p-4 flex-fill" style="border:1.5px solid #eee">
           <h5 class="fw-bold text-navy mb-4">
-            <i class="bi bi-hdd-network-fill me-2 text-orange"></i>Account Status
+            <i class="bi bi-hdd-network-fill me-2 text-orange"></i>Account ស្ថានភាព
           </h5>
           <div class="d-flex justify-content-between mb-3">
-            <span class="small text-muted">Role</span>
-            <span class="badge" style="background:rgba(255,95,0,.12);color:#ff5f00;font-size:.7rem;font-weight:800">Service Provider</span>
+            <span class="small text-muted">តួនាទី</span>
+            <span class="badge" style="background:rgba(255,95,0,.12);color:#ff5f00;font-size:.7rem;font-weight:800">ម្ចាស់អចលនទ្រព្យ</span>
           </div>
           <div class="d-flex justify-content-between mb-3">
-            <span class="small text-muted">My Rooms</span>
+            <span class="small text-muted">បន្ទប់របស់ខ្ញុំ</span>
             <span class="fw-bold text-navy">{{ myRooms.length }}</span>
           </div>
           <div class="d-flex justify-content-between mb-3">
-            <span class="small text-muted">Avg. Price</span>
-            <span class="fw-bold text-navy">{{ avgPrice }}</span>
+            <span class="small text-muted">Avg. តម្លៃ</span>
+            <span class="fw-bold text-navy">{{ avgតម្លៃ }}</span>
           </div>
           <div class="d-flex justify-content-between mb-3">
-            <span class="small text-muted">Pending Actions</span>
-            <span class="fw-bold" style="color:#f59e0b">{{ pendingBookings + pendingRents }}</span>
+            <span class="small text-muted">Pending សកម្មភាពs</span>
+            <span class="fw-bold" style="color:#f59e0b">{{ រង់ចាំBookings + រង់ចាំRents }}</span>
           </div>
           <div class="d-flex justify-content-between mb-4">
-            <span class="small text-muted">Total Approved</span>
+            <span class="small text-muted">បានអនុម័តសរុប</span>
             <span class="fw-bold text-success">{{ approvedBookings + approvedRents }}</span>
           </div>
           <hr class="my-3" />
           <div class="d-flex justify-content-between">
-            <span class="small text-muted">Last refresh</span>
+            <span class="small text-muted">ពេលធ្វើបច្ចុប្បន្នភាពចុងក្រោយ</span>
             <span class="small text-muted">{{ lastRefresh || '–' }}</span>
           </div>
         </div>
@@ -415,165 +415,419 @@
   </transition>
 </template>
 
+
 <script setup>
 import { ref, computed, onMounted, reactive } from 'vue'
 import { useRoomStore } from '@/stores/RoomStore'
 import { useAuthStore } from '@/stores/auth'
 import api from '@/api/http'
 
-const roomStore   = useRoomStore()
-const authStore   = useAuthStore()
-const loading     = ref(false)
-const actionId    = ref(null)
-const lastRefresh = ref('')
-const bookings    = ref([])
-const rents       = ref([])
-const toast       = reactive({ show: false, message: '', type: 'success' })
+// ── Stores ───────────────────────────────────────────────
+const roomStore = useRoomStore()
+const authStore = useAuthStore()
 
+// ── State ────────────────────────────────────────────────
+const loading = ref(false)
+const actionId = ref(null)
+const lastRefresh = ref('')
+
+const bookings = ref([])
+const rents = ref([])
+
+const toast = reactive({
+  show: false,
+  message: '',
+  type: 'success'
+})
+
+// ── Toast ────────────────────────────────────────────────
 const showToast = (msg, type = 'success') => {
-  toast.message = msg; toast.type = type; toast.show = true
-  setTimeout(() => (toast.show = false), 3000)
+  toast.message = msg
+  toast.type = type
+  toast.show = true
+
+  setTimeout(() => {
+    toast.show = false
+  }, 3000)
 }
 
-// ── My rooms ──────────────────────────────────────────────
+// ── My Rooms ─────────────────────────────────────────────
 const myRooms = computed(() => {
   const uid = authStore.user?.id
+
   if (!uid) return []
-  return (roomStore.rooms || []).filter(r =>
-    String(r.user_id) === String(uid) || String(r.user?.id) === String(uid)
+
+  return (roomStore.rooms || []).filter(room =>
+    String(room.user_id) === String(uid) ||
+    String(room.user?.id) === String(uid)
   )
 })
 
-const promoRooms = computed(() => myRooms.value.filter(r => r.percent_promotion > 0))
+// ── Promo Rooms ──────────────────────────────────────────
+const promoRooms = computed(() => {
+  return myRooms.value.filter(
+    room => room.percent_promotion > 0
+  )
+})
 
+// ── Average Price ────────────────────────────────────────
 const avgPrice = computed(() => {
   if (!myRooms.value.length) return '$0'
-  const avg = myRooms.value.reduce((s, r) => s + Number(r.price || 0), 0) / myRooms.value.length
+
+  const avg =
+    myRooms.value.reduce((sum, room) => {
+      return sum + Number(room.price || 0)
+    }, 0) / myRooms.value.length
+
   return '$' + Math.round(avg)
 })
 
+// ── Room Stats ───────────────────────────────────────────
 const roomStats = computed(() => {
-  const total  = myRooms.value.length || 1
-  const promo  = promoRooms.value.length
-  const promoP = Math.round((promo / total) * 100)
-  return { active: Math.max(0, 100 - promoP), promo: promoP }
+  const total = myRooms.value.length || 1
+  const promo = promoRooms.value.length
+
+  const promoPercent = Math.round(
+    (promo / total) * 100
+  )
+
+  return {
+    active: Math.max(0, 100 - promoPercent),
+    promo: promoPercent
+  }
 })
 
-// ── Status helpers ─────────────────────────────────────────
-const getStatusKey = (s) => {
-  if (s == 2 || s === 'approved') return 'approved'
-  if (s == 3 || s === 'rejected') return 'rejected'
+// ── Status Helpers ───────────────────────────────────────
+const getStatusKey = (status) => {
+  if (status == 2 || status === 'approved') {
+    return 'approved'
+  }
+
+  if (status == 3 || status === 'rejected') {
+    return 'rejected'
+  }
+
   return 'pending'
 }
 
-const pendingBookings  = computed(() => bookings.value.filter(b => getStatusKey(b.status) === 'pending').length)
-const approvedBookings = computed(() => bookings.value.filter(b => getStatusKey(b.status) === 'approved').length)
-const pendingRents     = computed(() => rents.value.filter(r => getStatusKey(r.status) === 'pending').length)
-const approvedRents    = computed(() => rents.value.filter(r => getStatusKey(r.status) === 'approved').length)
-
-const recentBookings = computed(() => bookings.value.slice(0, 6))
-const recentRents    = computed(() => rents.value.slice(0, 6))
-
-const isPending   = (s) => getStatusKey(s) === 'pending'
-const barPct      = (val, total) => total ? Math.round((val / total) * 100) : 0
-const statusClass = (s) => ({ pending: 'pill-pending', approved: 'pill-approved', rejected: 'pill-rejected' })[getStatusKey(s)]
-const statusLabel = (s) => ({ pending: 'Pending', approved: 'Approved', rejected: 'Rejected' })[getStatusKey(s)]
-
-const todayDate = new Date().toLocaleDateString('en-US', {
-  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+// ── Booking Stats ────────────────────────────────────────
+const pendingBookings = computed(() => {
+  return bookings.value.filter(
+    booking => getStatusKey(booking.status) === 'pending'
+  ).length
 })
 
-const formatDate = (dt) => {
-  if (!dt) return '–'
-  return new Date(dt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+const approvedBookings = computed(() => {
+  return bookings.value.filter(
+    booking => getStatusKey(booking.status) === 'approved'
+  ).length
+})
+
+// ── Rent Stats ───────────────────────────────────────────
+const pendingRents = computed(() => {
+  return rents.value.filter(
+    rent => getStatusKey(rent.status) === 'pending'
+  ).length
+})
+
+const approvedRents = computed(() => {
+  return rents.value.filter(
+    rent => getStatusKey(rent.status) === 'approved'
+  ).length
+})
+
+// ── Recent Data ──────────────────────────────────────────
+const recentBookings = computed(() => {
+  return bookings.value.slice(0, 6)
+})
+
+const recentRents = computed(() => {
+  return rents.value.slice(0, 6)
+})
+
+// ── Utility Functions ────────────────────────────────────
+const isPending = (status) => {
+  return getStatusKey(status) === 'pending'
 }
 
+const barPct = (value, total) => {
+  if (!total) return 0
+
+  return Math.round((value / total) * 100)
+}
+
+const statusClass = (status) => {
+  return {
+    pending: 'pill-pending',
+    approved: 'pill-approved',
+    rejected: 'pill-rejected'
+  }[getStatusKey(status)]
+}
+
+const statusLabel = (status) => {
+  return {
+    pending: 'រង់ចាំ',
+    approved: 'បានអនុម័ត',
+    rejected: 'បានបដិសេធ'
+  }[getStatusKey(status)]
+}
+
+// ── Date Helpers ─────────────────────────────────────────
+const todayDate = new Date().toLocaleDateString(
+  'en-US',
+  {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }
+)
+
+const formatDate = (date) => {
+  if (!date) return '–'
+
+  return new Date(date).toLocaleDateString(
+    'en-US',
+    {
+      month: 'short',
+      day: 'numeric'
+    }
+  )
+}
+
+// ── Quick Actions ────────────────────────────────────────
 const quickActions = [
-  { to: '/provider/my-rooms',      title: 'My Rooms',         sub: 'View & manage listings', icon: 'bi-house-door-fill',    bg: 'bg-orange-light', color: '#ff5f00' },
-  { to: '/provider/add-room',      title: 'Post New Room',    sub: 'Add a listing',          icon: 'bi-plus-circle-fill',   bg: 'bg-success-light', color: '#198754' },
-  { to: '/provider/booking-check', title: 'Booking Requests', sub: 'Approve or reject',      icon: 'bi-calendar-check-fill', bg: 'bg-primary-light', color: '#0d6efd' },
-  { to: '/provider/rent-check',    title: 'Rent Requests',    sub: 'Approve or reject',      icon: 'bi-house-check-fill',   bg: 'bg-purple-light', color: '#8b5cf6' },
-  { to: '/provider/profile',       title: 'My Profile',       sub: 'Edit account info',      icon: 'bi-person-fill',        bg: 'bg-navy-light',   color: '#031c36' },
+  {
+    to: '/provider/my-rooms',
+    title: 'បន្ទប់របស់ខ្ញុំ',
+    sub: 'View & manage listings',
+    icon: 'bi-house-door-fill',
+    bg: 'bg-orange-light',
+    color: '#ff5f00'
+  },
+
+  {
+    to: '/provider/add-room',
+    title: 'បង្ហោះបន្ទប់ថ្មី',
+    sub: 'Add a listing',
+    icon: 'bi-plus-circle-fill',
+    bg: 'bg-success-light',
+    color: '#198754'
+  },
+
+  {
+    to: '/provider/booking-check',
+    title: 'Booking Requests',
+    sub: 'Approve or reject',
+    icon: 'bi-calendar-check-fill',
+    bg: 'bg-primary-light',
+    color: '#0d6efd'
+  },
+
+  {
+    to: '/provider/rent-check',
+    title: 'Rent Requests',
+    sub: 'Approve or reject',
+    icon: 'bi-house-check-fill',
+    bg: 'bg-purple-light',
+    color: '#8b5cf6'
+  },
+
+  {
+    to: '/provider/profile',
+    title: 'My Profile',
+    sub: 'Edit account info',
+    icon: 'bi-person-fill',
+    bg: 'bg-navy-light',
+    color: '#031c36'
+  }
 ]
 
-// ── Actions (same as BookingCheckingList / RentCheckingList) ──
+// ── Approve Booking ──────────────────────────────────────
 const approveBooking = async (id) => {
   actionId.value = id
+
   try {
     await api.put(`/books/approve/${id}`)
-    const b = bookings.value.find(x => x.id === id)
-    if (b) b.status = 2
-    showToast('Booking approved!')
-  } catch (e) { showToast(e.response?.data?.message || 'Failed', 'error') }
-  finally { actionId.value = null }
+
+    const booking = bookings.value.find(
+      b => b.id === id
+    )
+
+    if (booking) {
+      booking.status = 2
+    }
+
+    showToast('បានអនុម័តការកក់!')
+
+  } catch (error) {
+
+    showToast(
+      error.response?.data?.message || 'Failed',
+      'error'
+    )
+
+  } finally {
+    actionId.value = null
+  }
 }
 
+// ── Reject Booking ───────────────────────────────────────
 const rejectBooking = async (id) => {
   actionId.value = id
+
   try {
     await api.put(`/books/reject/${id}`)
-    const b = bookings.value.find(x => x.id === id)
-    if (b) b.status = 3
-    showToast('Booking rejected.')
-  } catch (e) { showToast(e.response?.data?.message || 'Failed', 'error') }
-  finally { actionId.value = null }
+
+    const booking = bookings.value.find(
+      b => b.id === id
+    )
+
+    if (booking) {
+      booking.status = 3
+    }
+
+    showToast('បានបដិសេធការកក់។')
+
+  } catch (error) {
+
+    showToast(
+      error.response?.data?.message || 'Failed',
+      'error'
+    )
+
+  } finally {
+    actionId.value = null
+  }
 }
 
+// ── Approve Rent ─────────────────────────────────────────
 const approveRent = async (id) => {
   actionId.value = id
+
   try {
     await api.put(`/rents/approve/${id}`)
-    const r = rents.value.find(x => x.id === id)
-    if (r) r.status = 2
-    showToast('Rent approved!')
-  } catch (e) { showToast(e.response?.data?.message || 'Failed', 'error') }
-  finally { actionId.value = null }
+
+    const rent = rents.value.find(
+      r => r.id === id
+    )
+
+    if (rent) {
+      rent.status = 2
+    }
+
+    showToast('បានអនុម័តការជួល!')
+
+  } catch (error) {
+
+    showToast(
+      error.response?.data?.message || 'Failed',
+      'error'
+    )
+
+  } finally {
+    actionId.value = null
+  }
 }
 
+// ── Reject Rent ──────────────────────────────────────────
 const rejectRent = async (id) => {
   actionId.value = id
+
   try {
     await api.put(`/rents/reject/${id}`)
-    const r = rents.value.find(x => x.id === id)
-    if (r) r.status = 3
-    showToast('Rent rejected.')
-  } catch (e) { showToast(e.response?.data?.message || 'Failed', 'error') }
-  finally { actionId.value = null }
+
+    const rent = rents.value.find(
+      r => r.id === id
+    )
+
+    if (rent) {
+      rent.status = 3
+    }
+
+    showToast('បានបដិសេធការជួល។')
+
+  } catch (error) {
+
+    showToast(
+      error.response?.data?.message || 'Failed',
+      'error'
+    )
+
+  } finally {
+    actionId.value = null
+  }
 }
 
-// ── Fetch — mirrors exact API calls from your related pages ──
+// ── Refresh Dashboard ────────────────────────────────────
 async function refreshAll() {
   loading.value = true
+
   try {
-    if (!authStore.user) await authStore.fetchMe()
 
-    // Fetch rooms for My Rooms table + donut
-    await roomStore.fetchRooms('per_page=100&sort_col=id&sort_dir=desc')
+    // Fetch current user
+    if (!authStore.user) {
+      await authStore.fetchMe()
+    }
 
-    // BookingCheckingList.vue uses:  GET /profile/booking-check
-    // RentCheckingList.vue uses:     GET /profile/rent-check
-    // Dashboard mirrors the same endpoints
+    // Fetch rooms
+    await roomStore.fetchRooms(
+      'per_page=100&sort_col=id&sort_dir=desc'
+    )
+
+    // Fetch bookings + rents
     const [bookRes, rentRes] = await Promise.all([
-      api.get('/profile/booking-check', { params: { page: 1, per_page: 50 } }),
-      api.get('/profile/rent-check',    { params: { page: 1, per_page: 50 } }),
+      api.get('/profile/booking-check', {
+        params: {
+          page: 1,
+          per_page: 50
+        }
+      }),
+
+      api.get('/profile/rent-check', {
+        params: {
+          page: 1,
+          per_page: 50
+        }
+      })
     ])
 
-    // Match exact response parsing from your BookingCheckingList:
-    // bookings.value = res.data.data || []
-    bookings.value = bookRes.data?.data || bookRes.data || []
-    rents.value    = rentRes.data?.data || rentRes.data || []
+    bookings.value =
+      bookRes.data?.data ||
+      bookRes.data ||
+      []
 
-    lastRefresh.value = new Date().toLocaleTimeString()
-  } catch (err) {
-    console.error('Dashboard refresh error:', err)
-    showToast('Failed to load some data', 'error')
+    rents.value =
+      rentRes.data?.data ||
+      rentRes.data ||
+      []
+
+    lastRefresh.value =
+      new Date().toLocaleTimeString()
+
+  } catch (error) {
+
+    console.error(
+      'Dashboard refresh error:',
+      error
+    )
+
+    showToast(
+      'ផ្ទុកទិន្នន័យខ្លះបរាជ័យ',
+      'error'
+    )
+
   } finally {
     loading.value = false
   }
 }
 
-onMounted(refreshAll)
+// ── Mounted ──────────────────────────────────────────────
+onMounted(() => {
+  refreshAll()
+})
 </script>
+
 
 <style scoped>
 .text-navy   { color: #031c36; }
@@ -616,7 +870,7 @@ onMounted(refreshAll)
 .room-thumb-img { width:36px; height:36px; object-fit:cover; }
 
 .status-pill   { font-size:.68rem; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; }
-.pill-pending  { background:#fff8e1; color:#f59e0b; }
+.pill-រង់ចាំ  { background:#fff8e1; color:#f59e0b; }
 .pill-approved { background:#e9faf1; color:#198754; }
 .pill-rejected { background:#ffebee; color:#e53935; }
 .pill-active   { background:#e9faf1; color:#198754; }
