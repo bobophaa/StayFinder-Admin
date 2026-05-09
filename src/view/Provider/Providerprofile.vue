@@ -1,5 +1,5 @@
 <template>
-  <div class="container py-4">
+  <div class="pg">
 
     <!-- Page heading -->
     <div class="pg-heading">
@@ -101,39 +101,18 @@
                 </select>
               </div>
             </div>
-
-            <div class="col-md-6">
-              <label>Phone</label>
-              <input v-model="form.phone" :readonly="!isEditing" />
+            <div class="field">
+              <label>Current job</label>
+              <input v-model="form.current_job" :class="['finput', { active: isEditing }]" :readonly="!isEditing" placeholder="e.g. UX/UI Designer" />
             </div>
-
-            <div class="col-md-6">
-              <label>Gender</label>
-              <select v-model="form.gender" :disabled="!isEditing">
-                <option :value="1">Male</option>
-                <option :value="2">Female</option>
-              </select>
-            </div>
-
-            <div class="col-12">
-              <label>Job</label>
-              <input v-model="form.current_job" :readonly="!isEditing" />
-            </div>
-
-          </div>
-
-          <div v-if="isEditing" class="text-end mt-3">
-            <button class="btn btn-orange" @click="updateProfile">
-              Save
-            </button>
           </div>
         </div>
 
-        <!-- PASSWORD -->
-        <div class="card clean-card p-4">
-          <div class="d-flex justify-content-between mb-3">
-            <h6 class="section-title">Change Password</h6>
-            <button class="btn btn-outline-secondary btn-sm" @click="showPassForm = !showPassForm">
+        <!-- Password Card -->
+        <div class="section-card">
+          <div class="section-head">
+            <span class="section-label">Change password</span>
+            <button class="btn-ghost" @click="showPassForm = !showPassForm">
               {{ showPassForm ? 'Cancel' : 'Change' }}
             </button>
           </div>
@@ -215,18 +194,233 @@ const updateProfile = async () => {
 const changePassword = async () => {
   await api.put('/profile/pass', passForm)
   showPassForm.value = false
+  Object.assign(passForm, { old_pass: '', new_pass: '', new_pass_confirmation: '' })
 }
+
 onMounted(fetchUser)
 </script>
 
 <style scoped>
-:root {
-  --navy:#0d2137; --navy2:#163352; --teal:#1a7a5e; --green:#4aab3e;
-  --accent:#1a6bde; --amber:#c97a10; --danger:#c62828;
-  --bg:#f2f5f9; --white:#fff; --border:rgba(0,0,0,.08);
-  --t1:#0f172a; --t2:#475569; --t3:#94a3b8;
+.pg {
+  padding: 2rem 2.5rem;
+  background: #f0efec;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #1c1c1c;
 }
-.pp-page { min-height:100vh; background:var(--bg); font-family:'DM Sans',ui-sans-serif,system-ui,sans-serif; }
+
+.pg-heading { margin-bottom: 1.75rem; }
+
+.pg-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a2236;
+  letter-spacing: -0.3px;
+}
+
+.title-dot { color: #f97316; }
+
+.pg-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.right-col { display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* Profile Card */
+.profile-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+.card-banner {
+  height: 80px;
+  background: #1a2236;
+  position: relative;
+}
+
+.banner-lines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 14px,
+    rgba(255,255,255,0.04) 14px,
+    rgba(255,255,255,0.04) 15px
+  );
+}
+
+/* Avatar */
+.avatar-wrap {
+  width: 76px;
+  height: 76px;
+  margin: -38px auto 0;
+  position: relative;
+  cursor: pointer;
+}
+
+.avatar-ring {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  background: #1a2236;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: filter 0.2s;
+}
+
+.avatar-wrap:hover .avatar-ring { filter: brightness(0.88); }
+
+.av-img { width: 100%; height: 100%; object-fit: cover; }
+
+.av-letter {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f97316;
+  font-family: Georgia, serif;
+}
+
+.avatar-cam {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  background: #f97316;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.av-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.card-body { padding: 12px 1.25rem 1rem; text-align: center; }
+
+.card-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a2236;
+  margin-bottom: 2px;
+}
+
+.card-email { font-size: 12px; color: #999; margin-bottom: 10px; }
+
+.role-chip {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 20px;
+  background: #fff4ed;
+  color: #c2520a;
+  border: 1px solid #fcd5b3;
+}
+
+.info-block {
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding: 0.25rem 1.25rem 1rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  font-size: 12.5px;
+  gap: 8px;
+}
+
+.info-row.last { border-bottom: none; }
+.info-key { color: #aaa; flex-shrink: 0; }
+.info-val { font-weight: 500; text-align: right; color: #1c1c1c; word-break: break-all; }
+
+/* Section Card */
+.section-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.1rem 1.5rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.section-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a2236;
+  letter-spacing: -0.1px;
+}
+
+.action-row { display: flex; gap: 8px; align-items: center; }
+
+.btn-ghost {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.15);
+  background: transparent;
+  color: #555;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.btn-ghost:hover { background: #f5f4f1; }
+
+.btn-primary {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #f97316;
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover { background: #ea6a0a; }
 
 .form-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 14px; }
 
@@ -279,111 +473,4 @@ onMounted(fetchUser)
   .pg-grid { grid-template-columns: 1fr; }
   .field-pair, .field-pair.three { grid-template-columns: 1fr; }
 }
-
-/* CARD */
-.clean-card {
-  border-radius: 12px;
-  border: 1px solid #eee;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-}
-
-/* AVATAR */
-.avatar-wrapper {
-  position: relative;
-  width: 90px;
-  height: 90px;
-  margin: auto;
-  cursor: pointer;
-}
-
-.avatar {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: #ff5f00;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  font-weight: bold;
-  overflow: hidden;
-}
-
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ICON */
-.avatar-icon {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 28px;
-  height: 28px;
-  background: #ff5f00;
-  color: white;
-  border-radius: 50%;
-  border: 2px solid white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.avatar-wrapper:hover .avatar-icon {
-  transform: scale(1.1);
-}
-
-/* LOADING */
-.avatar-loading {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* INPUT */
-input, select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-}
-
-input:focus {
-  border-color: #ff5f00;
-  outline: none;
-}
-
-/* BUTTON */
-.btn-orange {
-  background: #ff5f00;
-  color: white;
-  border-radius: 8px;
-}
-
-.badge-role {
-  background: #fff3eb;
-  color: #ff5f00;
-  padding: 5px 12px;
-  border-radius: 20px;
-}
-
-/* INFO */
-.info-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.section-title {
-  font-weight: 600;
-}
-
 </style>
