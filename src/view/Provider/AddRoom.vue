@@ -240,23 +240,23 @@
     </div>
   </div>
 </template>
-
 <script setup>
-
-
-import { alertSuccess, alertError, confirmDelete } from '@/Utils/alert'
 import { reactive, ref, onMounted } from 'vue'
 import { useDistrictStore } from '@/stores/DistrictStore'
 import { useRoomOptionStore } from '@/stores/RoomOptionStore'
 import { useRoomStore } from '@/stores/RoomStore'
 import { useRouter } from 'vue-router'
+import { alertSuccess, alertError } from '@/Utils/alert'
 
 const districtStore = useDistrictStore()
 const roomOptionStore = useRoomOptionStore()
 const roomStore = useRoomStore()
 const router = useRouter()
 
+const imagePreview = ref(null)
+
 const errors = reactive({})
+
 const form = reactive({
   title: '',
   price: '',
@@ -274,46 +274,66 @@ const form = reactive({
   map_url: '',
 })
 
-const imagePreview = ref(null)
-
-onMounted(() => {
-  districtStore.fetchDistricts()
-  roomOptionStore.fetchOptions()
+onMounted(async () => {
+  try {
+    await districtStore.fetchDistricts()
+    await roomOptionStore.fetchOptions()
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 const handleFileUpload = (e) => {
   const file = e.target.files[0]
+
   if (file) {
     form.image = file
     imagePreview.value = URL.createObjectURL(file)
-    delete errors.image // Clear error when file is selected
+
+    delete errors.image
   }
 }
 
 const validate = () => {
   Object.keys(errors).forEach((key) => delete errors[key])
+
   let isValid = true
 
   if (!form.title || form.title.length < 5) {
-    errors.title = 'ចំណងជើងត្រូវមានយ៉ាងតិច 5 តួអក្សរ។'
+    errors.title = 'ចំណងជើងត្រូវមានយ៉ាងតិច 5 តួអក្សរ'
     isValid = false
   }
-  if (!form.price || form.price <= 0) {
-    errors.price = 'សូមបញ្ចូលតម្លៃត្រឹមត្រូវ។'
+
+  if (!form.price || Number(form.price) <= 0) {
+    errors.price = 'សូមបញ្ចូលតម្លៃត្រឹមត្រូវ'
     isValid = false
   }
-  if (form.percent_promotion < 0 || form.percent_promotion > 100) {
-    errors.percent_promotion = 'បញ្ចុះតម្លៃត្រូវស្ថិតចន្លោះ 0 ដល់ 100។'
+
+  if (
+    form.percent_promotion < 0 ||
+    form.percent_promotion > 100
+  ) {
+    errors.percent_promotion =
+      'បញ្ចុះតម្លៃត្រូវស្ថិតចន្លោះ 0 ដល់ 100'
     isValid = false
   }
+
   if (!form.district_id) {
-    errors.district_id = 'សូមជ្រើសរើសខណ្ឌ។'
+    errors.district_id = 'សូមជ្រើសរើសខណ្ឌ'
     isValid = false
   }
+
   if (!form.image) {
-    errors.image = 'សូមផ្ទុករូបថតបន្ទប់យ៉ាងហោចណាស់មួយ។'
+    errors.image = 'សូមផ្ទុករូបភាព'
     isValid = false
   }
+
+  if (!form.description || form.description.length < 20) {
+    errors.description =
+      'ពិពណ៌នាត្រូវមានយ៉ាងតិច 20 តួអក្សរ'
+    isValid = false
+  }
+
   if (form.map_url) {
     const url = form.map_url.trim()
 
@@ -323,9 +343,77 @@ const validate = () => {
       )
 
     if (!isValidGoogleMap) {
-  
-</script>
+      errors.map_url =
+        'សូមបញ្ចូល Google Maps URL ត្រឹមត្រូវ'
+      isValid = false
+    }
+  }
 
+  return isValid
+}
+
+const resetForm = () => {
+  form.title = ''
+  form.price = ''
+  form.percent_promotion = 0
+  form.district_id = ''
+  form.room_option_ids = []
+  form.description = ''
+  form.image = null
+  form.pay_water = 0
+  form.pay_electric = 0
+  form.pay_parking = 0
+  form.pay_trash = 0
+  form.bed = ''
+  form.size_room = ''
+  form.map_url = ''
+
+  imagePreview.value = null
+}
+
+const handleSubmit = async () => {
+  if (!validate()) return
+
+  try {
+    const formData = new FormData()
+
+    formData.append('title', form.title)
+    formData.append('price', form.price)
+    formData.append(
+      'percent_promotion',
+      form.percent_promotion,
+    )
+    formData.append('district_id', form.district_id)
+    formData.append('description', form.description)
+    formData.append('image', form.image)
+
+    formData.append('pay_water', form.pay_water)
+    formData.append('pay_electric', form.pay_electric)
+    formData.append('pay_parking', form.pay_parking)
+    formData.append('pay_trash', form.pay_trash)
+
+    formData.append('bed', form.bed)
+    formData.append('size_room', form.size_room)
+    formData.append('map_url', form.map_url)
+
+    form.room_option_ids.forEach((id) => {
+      formData.append('room_option_ids[]', id)
+    })
+
+    await roomStore.createRoom(formData)
+
+    alertSuccess('បង្កើតបន្ទប់ជោគជ័យ')
+
+    resetForm()
+
+    router.push('/rooms')
+  } catch (error) {
+    console.log(error)
+
+    alertError('បង្កើតបន្ទប់បរាជ័យ')
+  }
+}
+</script>
 <style scoped>
 .card-header-navy {
   background: #031c36;
