@@ -1,9 +1,5 @@
 <template>
-<<<<<<< HEAD
-  <div class="pg">
-=======
   <div class="container py-4">
->>>>>>> d1ee42068b953396e964b2b4818804dc6f924368
 
     <!-- Page heading -->
     <div class="pg-heading">

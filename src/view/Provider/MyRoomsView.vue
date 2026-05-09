@@ -68,11 +68,7 @@
 
       
           <tbody>
-<<<<<<< HEAD
-            <tr v-for="(room, idx) in paginatedRooms" :key="room.id" class="tbl-row">
-=======
             <tr v-for="(room, idx) in roomStore.myបន្ទប់s" :key="room.id" class="tbl-row">
->>>>>>> d1ee42068b953396e964b2b4818804dc6f924368
 
              
               <td class="ps-4 text-muted small fw-semibold">{{ (currentPage - 1) * perPage + idx + 1 }}</td>
@@ -168,15 +164,8 @@
       <!-- Table footer with pagination -->
       <div class="tbl-footer px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
         <small class="text-muted">
-<<<<<<< HEAD
-          Showing
-          <strong>{{ (currentPage - 1) * perPage + 1 }}–{{ Math.min(currentPage * perPage, roomStore.myRooms.length) }}</strong>
-          of <strong>{{ roomStore.myRooms.length }}</strong>
-          room{{ roomStore.myRooms.length !== 1 ? 's' : '' }}
-=======
           កំពុងបង្ហាញ <strong>{{ roomStore.myបន្ទប់s.length }}</strong>
           room{{ roomStore.myបន្ទប់s.length !== 1 ? 's' : '' }}
->>>>>>> d1ee42068b953396e964b2b4818804dc6f924368
         </small>
 
         <!-- Pagination controls -->
@@ -478,15 +467,7 @@ async function executeDelete() {
   const success = await roomStore.deleteបន្ទប់(roomToDelete.value.id)
   if (success) {
     deleteModalInstance?.hide()
-<<<<<<< HEAD
-    alertSuccess('Room deleted successfully.')
-    // jump back if current page becomes empty after deletion
-    if (paginatedRooms.value.length === 0 && currentPage.value > 1) {
-      currentPage.value--
-    }
-=======
     alertSuccess('បន្ទប់ត្រូវបានលុបដោយជោគជ័យ!')
->>>>>>> d1ee42068b953396e964b2b4818804dc6f924368
   } else {
     alertError('លុបបន្ទប់បរាជ័យ។ សូមព្យាយាមម្តងទៀត។')
   }
