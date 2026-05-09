@@ -145,28 +145,28 @@
                       <div class="invalid-feedback">{{ errors.map_url }}</div>
                     </div>
 
-                 <div class="mb-0">
-  <label class="form-label fw-bold">ពិពណ៌នា</label>
-  <textarea
-    v-model="form.description"
-    class="form-control custom-input"
-    :class="{ 'is-invalid': errors.description }"
-    rows="4"
-    placeholder="Describe the room in detail (min. 20 characters)..."
-    maxlength="1000"
-  ></textarea>
-  <div class="d-flex justify-content-between mt-1">
-    <div class="invalid-feedback d-block" v-if="errors.description">
-      {{ errors.description }}
-    </div>
-    <small
-      class="ms-auto"
-      :class="form.description.length < 20 ? 'text-danger' : 'text-muted'"
-    >
-      {{ form.description.length }} / 1000
-    </small>
-  </div>
-</div>
+                    <div class="mb-0">
+                      <label class="form-label fw-bold">ពិពណ៌នា</label>
+                      <textarea
+                        v-model="form.description"
+                        class="form-control custom-input"
+                        :class="{ 'is-invalid': errors.description }"
+                        rows="4"
+                        placeholder="Describe the room in detail (min. 20 characters)..."
+                        maxlength="1000"
+                      ></textarea>
+                      <div class="d-flex justify-content-between mt-1">
+                        <div class="invalid-feedback d-block" v-if="errors.description">
+                          {{ errors.description }}
+                        </div>
+                        <small
+                          class="ms-auto"
+                          :class="form.description.length < 20 ? 'text-danger' : 'text-muted'"
+                        >
+                          {{ form.description.length }} / 1000
+                        </small>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -242,6 +242,8 @@
 </template>
 
 <script setup>
+
+
 import { alertSuccess, alertError, confirmDelete } from '@/Utils/alert'
 import { reactive, ref, onMounted } from 'vue'
 import { useDistrictStore } from '@/stores/DistrictStore'
@@ -275,7 +277,7 @@ const form = reactive({
 const imagePreview = ref(null)
 
 onMounted(() => {
-  districtStore.fetchខណ្ឌs()
+  districtStore.fetchDistricts()
   roomOptionStore.fetchOptions()
 })
 
@@ -312,58 +314,16 @@ const validate = () => {
     errors.image = 'សូមផ្ទុករូបថតបន្ទប់យ៉ាងហោចណាស់មួយ។'
     isValid = false
   }
-if (form.map_url) {
-  const url = form.map_url.trim()
+  if (form.map_url) {
+    const url = form.map_url.trim()
 
-  const isValidGoogleMap =
-    /^https?:\/\/(www\.)?(google\.com\/maps|maps\.google\.com|maps\.app\.goo\.gl|goo\.gl\/maps)\/.+/i.test(url)
+    const isValidGoogleMap =
+      /^https?:\/\/(www\.)?(google\.com\/maps|maps\.google\.com|maps\.app\.goo\.gl|goo\.gl\/maps)\/.+/i.test(
+        url,
+      )
 
-  if (!isValidGoogleMap) {
-    errors.map_url =
-      'Please enter a valid តំណ Google Maps (e.g. https://maps.google.com/...)'
-    isValid = false
-  }
-}
-
-if (form.description && form.description.length < 20) {
-  errors.description = 'ពិពណ៌នា must be at least 20 characters.'
-  isValid = false
-}
-  return isValid
-}
-
-const handleSubmit = async () => {
-  if (!validate()) return
-
-  const formData = new FormData()
-  formData.append('title', form.title)
-  formData.append('district_id', form.district_id)
-  formData.append('price', form.price)
-  formData.append('percent_promotion', form.percent_promotion || 0)
-  formData.append('description', form.description || 'StayFinder Listing')
-  formData.append('image', form.image)
-  formData.append('pay_water', form.pay_water || 0)
-  formData.append('pay_electric', form.pay_electric || 0)
-  formData.append('pay_parking', form.pay_parking || 0)
-  formData.append('pay_trash', form.pay_trash || 0)
-  formData.append('bed', form.bed || '1')
-  formData.append('size_room', form.size_room || 'N/A')
-  formData.append('map_url', form.map_url || '')
-
-  try {
-    const success = await roomStore.addRoom(formData)
-    if (success) {
-      await roomStore.fetchRooms()
-      alertSuccess('បានបង្ហោះបន្ទប់របស់អ្នកជោគជ័យ!')
-      router.push('/provider/my-rooms')
-    } else {
-      alertError('បង្ហោះបន្ទប់បរាជ័យ។ សូមព្យាយាមម្តងទៀត។')
-    }
-  } catch (error) {
-    console.error('Submission error:', error)
-    alertError(error.response?.data?.message || 'មានបញ្ហាមិនបានរំពឹងទុកកើតឡើង។')
-  }
-}
+    if (!isValidGoogleMap) {
+  
 </script>
 
 <style scoped>
@@ -427,8 +387,7 @@ const handleSubmit = async () => {
 .invalid-feedback {
   font-size: 0.85rem;
 }
-placeholder{
-color: #7a7a7a !important;
-
+placeholder {
+  color: #7a7a7a !important;
 }
 </style>
