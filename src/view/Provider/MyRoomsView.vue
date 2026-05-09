@@ -11,7 +11,7 @@
           </small>
         </div>
         <router-link to="/provider/add-room" class="btn btn-orange fw-bold px-4">
-          <i class="bi bi-plus-circle-fill me-2"></i>Post New បន្ទប់
+          <i class="bi bi-plus-circle-fill me-2"></i>បង្ហោះបន្ទប់ថ្មី
         </router-link>
       </div>
     </div>
@@ -68,7 +68,7 @@
 
       
           <tbody>
-            <tr v-for="(room, idx) in roomStore.myបន្ទប់s" :key="room.id" class="tbl-row">
+            <tr v-for="(room, idx) in roomStore.myRooms" :key="room.id" class="tbl-row">
 
              
               <td class="ps-4 text-muted small fw-semibold">{{ (currentPage - 1) * perPage + idx + 1 }}</td>
@@ -164,8 +164,8 @@
       <!-- Table footer with pagination -->
       <div class="tbl-footer px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
         <small class="text-muted">
-          កំពុងបង្ហាញ <strong>{{ roomStore.myបន្ទប់s.length }}</strong>
-          room{{ roomStore.myបន្ទប់s.length !== 1 ? 's' : '' }}
+          កំពុងបង្ហាញ <strong>{{ roomStore.myRooms.length }}</strong>
+          room{{ roomStore.myRooms.length !== 1 ? 's' : '' }}
         </small>
 
         <!-- Pagination controls -->

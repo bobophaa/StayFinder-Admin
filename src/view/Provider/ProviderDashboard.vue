@@ -105,9 +105,9 @@
           <div v-else class="d-flex flex-column gap-3">
             <div>
               <div class="d-flex justify-content-between mb-1">
-                <span class="small fw-semibold text-navy"
-                  ><i class="bi bi-clock-fill me-2 text-warning"></i>ការកក់កំពុងរង់ចាំ</span
-                >
+                <span class="small fw-semibold text-navy">
+                  <i class="bi bi-clock-fill me-2 text-warning"></i>ការកក់កំពុងរង់ចាំ
+                </span>
                 <span class="small fw-bold text-navy">{{ pendingBookings }}</span>
               </div>
               <div class="progress" style="height: 8px; border-radius: 10px; background: #f0f2f5">
@@ -120,9 +120,9 @@
             </div>
             <div>
               <div class="d-flex justify-content-between mb-1">
-                <span class="small fw-semibold text-navy"
-                  ><i class="bi bi-check-circle-fill me-2 text-success"></i>ការកក់ដែលបានអនុម័ត</span
-                >
+                <span class="small fw-semibold text-navy">
+                  <i class="bi bi-check-circle-fill me-2 text-success"></i>ការកក់ដែលបានអនុម័ត
+                </span>
                 <span class="small fw-bold text-navy">{{ approvedBookings }}</span>
               </div>
               <div class="progress" style="height: 8px; border-radius: 10px; background: #f0f2f5">
@@ -135,10 +135,9 @@
             </div>
             <div>
               <div class="d-flex justify-content-between mb-1">
-                <span class="small fw-semibold text-navy"
-                  ><i class="bi bi-clock-fill me-2" style="color: #8b5cf6"></i
-                  >ការជួលកំពុងរង់ចាំ</span
-                >
+                <span class="small fw-semibold text-navy">
+                  <i class="bi bi-clock-fill me-2" style="color: #8b5cf6"></i>ការជួលកំពុងរង់ចាំ
+                </span>
                 <span class="small fw-bold text-navy">{{ pendingRents }}</span>
               </div>
               <div class="progress" style="height: 8px; border-radius: 10px; background: #f0f2f5">
@@ -151,9 +150,9 @@
             </div>
             <div>
               <div class="d-flex justify-content-between mb-1">
-                <span class="small fw-semibold text-navy"
-                  ><i class="bi bi-house-check-fill me-2 text-info"></i>ការជួលដែលបានអនុម័ត</span
-                >
+                <span class="small fw-semibold text-navy">
+                  <i class="bi bi-house-check-fill me-2 text-info"></i>ការជួលដែលបានអនុម័ត
+                </span>
                 <span class="small fw-bold text-navy">{{ approvedRents }}</span>
               </div>
               <div class="progress" style="height: 8px; border-radius: 10px; background: #f0f2f5">
@@ -222,15 +221,15 @@
           </div>
           <div class="d-flex flex-column gap-2 mb-4">
             <div class="d-flex justify-content-between">
-              <span class="d-flex align-items-center gap-2 small"
-                ><span class="legend-dot" style="background: #198754"></span>សកម្ម</span
-              >
+              <span class="d-flex align-items-center gap-2 small">
+                <span class="legend-dot" style="background: #198754"></span>សកម្ម
+              </span>
               <span class="fw-bold text-navy small">{{ roomStats.active }}%</span>
             </div>
             <div class="d-flex justify-content-between">
-              <span class="d-flex align-items-center gap-2 small"
-                ><span class="legend-dot" style="background: #ff5f00"></span>មានការបញ្ចុះតម្លៃ</span
-              >
+              <span class="d-flex align-items-center gap-2 small">
+                <span class="legend-dot" style="background: #ff5f00"></span>មានការបញ្ចុះតម្លៃ
+              </span>
               <span class="fw-bold text-navy small">{{ roomStats.promo }}%</span>
             </div>
           </div>
@@ -248,16 +247,16 @@
       <div class="col-lg-6">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
           <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
-            <span class="fw-bold text-white"
-              ><i class="bi bi-calendar-check me-2"></i>ការកក់ថ្មីៗ</span
-            >
+            <span class="fw-bold text-white">
+              <i class="bi bi-calendar-check me-2"></i>ការកក់ថ្មីៗ
+            </span>
             <div class="d-flex gap-2 align-items-center">
-              <span v-if="pendingBookings > 0" class="badge-count"
-                >{{ pendingBookings }} កំពុងរង់ចាំ</span
-              >
-              <router-link to="/provider/booking-check" class="btn btn-xs btn-outline-light"
-                >មើលទាំងអស់</router-link
-              >
+              <span v-if="pendingBookings > 0" class="badge-count">
+                {{ pendingBookings }} កំពុងរង់ចាំ
+              </span>
+              <router-link to="/provider/booking-check" class="btn btn-xs btn-outline-light">
+                មើលទាំងអស់
+              </router-link>
             </div>
           </div>
           <div v-if="loading" class="p-4">
@@ -285,9 +284,9 @@
                   </td>
                   <td class="small text-muted">{{ formatdate(b.created_at) }}</td>
                   <td>
-                    <span :class="['status-pill', statusClass(b.status)]">{{
-                      statusLabel(b.status)
-                    }}</span>
+                    <span :class="['status-pill', statusClass(b.status)]">
+                      {{ statusLabel(b.status) }}
+                    </span>
                   </td>
                   <td>
                     <div class="d-flex gap-1" v-if="isPending(b.status)">
@@ -313,10 +312,7 @@
                 </tr>
                 <tr v-if="recentBookings.length === 0">
                   <td colspan="4" class="text-center py-5">
-                    <i
-                      class="bi bi-calendar-x d-block mb-2"
-                      style="font-size: 1.8rem; opacity: 0.2"
-                    ></i>
+                    <i class="bi bi-calendar-x d-block mb-2" style="font-size: 1.8rem; opacity: 0.2"></i>
                     <span class="text-muted small">មិនទាន់មានការកក់</span>
                   </td>
                 </tr>
@@ -329,16 +325,16 @@
       <div class="col-lg-6">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
           <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
-            <span class="fw-bold text-white"
-              ><i class="bi bi-house-check me-2"></i>ការជួលថ្មីៗ</span
-            >
+            <span class="fw-bold text-white">
+              <i class="bi bi-house-check me-2"></i>ការជួលថ្មីៗ
+            </span>
             <div class="d-flex gap-2 align-items-center">
-              <span v-if="pendingRents > 0" class="badge-count"
-                >{{ pendingRents }} កំពុងរង់ចាំ</span
-              >
-              <router-link to="/provider/rent-check" class="btn btn-xs btn-outline-light"
-                >មើលទាំងអស់</router-link
-              >
+              <span v-if="pendingRents > 0" class="badge-count">
+                {{ pendingRents }} កំពុងរង់ចាំ
+              </span>
+              <router-link to="/provider/rent-check" class="btn btn-xs btn-outline-light">
+                មើលទាំងអស់
+              </router-link>
             </div>
           </div>
           <div v-if="loading" class="p-4">
@@ -366,9 +362,9 @@
                   </td>
                   <td class="small text-muted">{{ formatdate(r.created_at) }}</td>
                   <td>
-                    <span :class="['status-pill', statusClass(r.status)]">{{
-                      statusLabel(r.status)
-                    }}</span>
+                    <span :class="['status-pill', statusClass(r.status)]">
+                      {{ statusLabel(r.status) }}
+                    </span>
                   </td>
                   <td>
                     <div class="d-flex gap-1" v-if="isPending(r.status)">
@@ -394,10 +390,7 @@
                 </tr>
                 <tr v-if="recentRents.length === 0">
                   <td colspan="4" class="text-center py-5">
-                    <i
-                      class="bi bi-house-slash d-block mb-2"
-                      style="font-size: 1.8rem; opacity: 0.2"
-                    ></i>
+                    <i class="bi bi-house-slash d-block mb-2" style="font-size: 1.8rem; opacity: 0.2"></i>
                     <span class="text-muted small">មិនទាន់មានការស្នើសុំជួល</span>
                   </td>
                 </tr>
@@ -408,17 +401,17 @@
       </div>
     </div>
 
-    <!-- ── បន្ទប់របស់ខ្ញុំ + Quick សកម្មភាពs ── -->
+    <!-- ── បន្ទប់របស់ខ្ញុំ + Quick Actions ── -->
     <div class="row g-3">
       <div class="col-lg-8">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
           <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
-            <span class="fw-bold text-white"
-              ><i class="bi bi-house-door me-2"></i>បន្ទប់របស់ខ្ញុំ</span
-            >
-            <router-link to="/provider/my-rooms" class="btn btn-xs btn-outline-light"
-              >មើលទាំងអស់</router-link
-            >
+            <span class="fw-bold text-white">
+              <i class="bi bi-house-door me-2"></i>បន្ទប់របស់ខ្ញុំ
+            </span>
+            <router-link to="/provider/my-rooms" class="btn btn-xs btn-outline-light">
+              មើលទាំងអស់
+            </router-link>
           </div>
           <div v-if="loading" class="p-4">
             <div v-for="i in 4" :key="i" class="skel-line mb-3"></div>
@@ -445,16 +438,15 @@
                       <span
                         class="fw-semibold small text-navy text-truncate"
                         style="max-width: 120px"
-                        >{{ room.title }}</span
-                      >
+                      >{{ room.title }}</span>
                     </div>
                   </td>
                   <td class="small text-muted">{{ room.district?.name || '–' }}</td>
                   <td class="fw-bold small text-orange">${{ room.price }}</td>
                   <td>
-                    <span v-if="room.percent_promotion > 0" class="status-pill pill-promo"
-                      >-{{ room.percent_promotion }}%</span
-                    >
+                    <span v-if="room.percent_promotion > 0" class="status-pill pill-promo">
+                      -{{ room.percent_promotion }}%
+                    </span>
                     <span v-else class="status-pill pill-active">សកម្ម</span>
                   </td>
                   <td>
@@ -469,10 +461,7 @@
                 </tr>
                 <tr v-if="myRooms.length === 0">
                   <td colspan="5" class="text-center py-5">
-                    <i
-                      class="bi bi-house-slash d-block mb-2"
-                      style="font-size: 1.8rem; opacity: 0.2"
-                    ></i>
+                    <i class="bi bi-house-slash d-block mb-2" style="font-size: 1.8rem; opacity: 0.2"></i>
                     <span class="text-muted small">មិនទាន់មានបន្ទប់</span>
                   </td>
                 </tr>
@@ -506,10 +495,7 @@
           </div>
         </div>
 
-        <div
-          class="card border-0 shadow-sm rounded-4 p-4 flex-fill"
-          style="border: 1.5px solid #eee"
-        >
+        <div class="card border-0 shadow-sm rounded-4 p-4 flex-fill" style="border: 1.5px solid #eee">
           <h5 class="fw-bold text-navy mb-4">
             <i class="bi bi-hdd-network-fill me-2 text-orange"></i>ស្ថានភាពគណនី
           </h5>
@@ -517,14 +503,8 @@
             <span class="small text-muted">តួនាទី</span>
             <span
               class="badge"
-              style="
-                background: rgba(255, 95, 0, 0.12);
-                color: #ff5f00;
-                font-size: 0.7rem;
-                font-weight: 800;
-              "
-              >ម្ចាស់ផ្ទះជួល</span
-            >
+              style="background: rgba(255, 95, 0, 0.12); color: #ff5f00; font-size: 0.7rem; font-weight: 800"
+            >ម្ចាស់ផ្ទះជួល</span>
           </div>
           <div class="d-flex justify-content-between mb-3">
             <span class="small text-muted">បន្ទប់របស់ខ្ញុំ</span>
@@ -569,7 +549,6 @@ const roomStore = useRoomStore()
 const authStore = useAuthStore()
 const loading = ref(false)
 const actionId = ref(null)
-const lastRefresh = ref('')
 const bookings = ref([])
 const rents = ref([])
 const toast = reactive({ show: false, message: '', type: 'success' })
@@ -579,24 +558,23 @@ const showToast = (msg, type = 'success') => {
   toast.message = msg
   toast.type = type
   toast.show = true
-
   setTimeout(() => {
     toast.show = false
   }, 3000)
 }
 
+// ── Computed ─────────────────────────────────────────────
 const myRooms = computed(() => roomStore.myRooms)
+
 const promoRooms = computed(() => myRooms.value.filter((r) => r.percent_promotion > 0))
+
 const avgPrice = computed(() => {
   if (!myRooms.value.length) return '$0'
-
   const avg =
-    myRooms.value.reduce((sum, room) => {
-      return sum + Number(room.price || 0)
-    }, 0) / myRooms.value.length
-
+    myRooms.value.reduce((sum, room) => sum + Number(room.price || 0), 0) / myRooms.value.length
   return '$' + Math.round(avg)
 })
+
 const roomStats = computed(() => {
   const total = myRooms.value.length || 1
   const promo = promoRooms.value.length
@@ -625,6 +603,7 @@ const approvedRents = computed(
 const recentBookings = computed(() => bookings.value.slice(0, 6))
 const recentRents = computed(() => rents.value.slice(0, 6))
 
+// ── Helpers ───────────────────────────────────────────────
 const isPending = (s) => getStatusKey(s) === 'pending'
 const barPct = (val, total) => (total ? Math.round((val / total) * 100) : 0)
 const statusClass = (s) =>
@@ -634,6 +613,12 @@ const statusClass = (s) =>
 const statusLabel = (s) =>
   ({ pending: 'កំពុងរង់ចាំ', approved: 'បានអនុម័ត', rejected: 'បានបដិសេធ' })[getStatusKey(s)]
 
+// FIX: was named formatDate but called as formatdate in the template — now consistent
+const formatdate = (dt) => {
+  if (!dt) return '–'
+  return new Date(dt).toLocaleDateString('km-KH', { month: 'short', day: 'numeric' })
+}
+
 const todayDate = new Date().toLocaleDateString('km-KH', {
   weekday: 'long',
   year: 'numeric',
@@ -641,12 +626,7 @@ const todayDate = new Date().toLocaleDateString('km-KH', {
   day: 'numeric',
 })
 
-const formatDate = (dt) => {
-  if (!dt) return '–'
-  return new Date(dt).toLocaleDateString('km-KH', { month: 'short', day: 'numeric' })
-}
-
-// ── Quick Actions ────────────────────────────────────────
+// ── Quick Actions ─────────────────────────────────────────
 const quickActions = [
   {
     to: '/provider/my-rooms',
@@ -690,6 +670,7 @@ const quickActions = [
   },
 ]
 
+// ── API Actions ───────────────────────────────────────────
 const approveBooking = async (id) => {
   actionId.value = id
   try {
@@ -703,6 +684,7 @@ const approveBooking = async (id) => {
     actionId.value = null
   }
 }
+
 const rejectBooking = async (id) => {
   actionId.value = id
   try {
@@ -716,6 +698,7 @@ const rejectBooking = async (id) => {
     actionId.value = null
   }
 }
+
 const approveRent = async (id) => {
   actionId.value = id
   try {
@@ -729,6 +712,7 @@ const approveRent = async (id) => {
     actionId.value = null
   }
 }
+
 const rejectRent = async (id) => {
   actionId.value = id
   try {
@@ -743,26 +727,15 @@ const rejectRent = async (id) => {
   }
 }
 
+// ── Data Fetch ────────────────────────────────────────────
 async function refreshAll() {
   loading.value = true
-
   try {
     if (!authStore.user) await authStore.fetchMe()
     await roomStore.fetchMyRooms()
     const [bookRes, rentRes] = await Promise.all([
-      api.get('/profile/booking-check', {
-        params: {
-          page: 1,
-          per_page: 50,
-        },
-      }),
-
-      api.get('/profile/rent-check', {
-        params: {
-          page: 1,
-          per_page: 50,
-        },
-      }),
+      api.get('/profile/booking-check', { params: { page: 1, per_page: 50 } }),
+      api.get('/profile/rent-check', { params: { page: 1, per_page: 50 } }),
     ])
     bookings.value = bookRes.data?.data || bookRes.data || []
     rents.value = rentRes.data?.data || rentRes.data || []
@@ -774,7 +747,7 @@ async function refreshAll() {
   }
 }
 
-// ── Mounted ──────────────────────────────────────────────
+// ── Mounted ───────────────────────────────────────────────
 onMounted(() => {
   refreshAll()
 })
@@ -798,9 +771,7 @@ onMounted(() => {
   border-radius: 10px;
   font-weight: 600;
   padding: 8px 18px;
-  transition:
-    background 0.2s,
-    transform 0.15s;
+  transition: background 0.2s, transform 0.15s;
 }
 .btn-orange:hover {
   background: #e65600;
@@ -826,9 +797,7 @@ onMounted(() => {
   border-radius: 20px;
 }
 .stat-card {
-  transition:
-    transform 0.25s,
-    box-shadow 0.25s;
+  transition: transform 0.25s, box-shadow 0.25s;
   border-top: 3px solid transparent;
 }
 .stat-card:hover {
@@ -1068,12 +1037,8 @@ onMounted(() => {
   animation: shimmer 1.4s infinite;
 }
 @keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 .provider-toast {
   position: fixed;
