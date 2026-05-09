@@ -68,8 +68,7 @@
 
       
           <tbody>
-            <tr v-for="(room, idx) in roomStore.myRooms" :key="room.id" class="tbl-row">
-
+<tr v-for="(room, idx) in paginatedRooms" :key="room.id" class="tbl-row">
              
               <td class="ps-4 text-muted small fw-semibold">{{ (currentPage - 1) * perPage + idx + 1 }}</td>
 
@@ -308,12 +307,12 @@
             </div>
 
             <!-- បរិក្ខារ -->
-            <div class="detail-section mb-4" v-if="selectedបន្ទប់.room_options?.length">
+            <div class="detail-section mb-4" v-if="selectedបន្ទប់.options?.length">
               <div class="section-title">
                 <i class="bi bi-check-circle-fill me-2 text-orange"></i>បរិក្ខារ
               </div>
               <div class="d-flex flex-wrap gap-2 mt-2">
-                <span class="amenity-tag" v-for="opt in selectedបន្ទប់.room_options" :key="opt.id">
+                <span class="amenity-tag" v-for="opt in selectedបន្ទប់.options" :key="opt.id">
                   {{ opt.name }}
                 </span>
               </div>
@@ -451,9 +450,7 @@ onMounted(async () => {
 })
 
 // ── Open card detail ───────────────────────────────────────
-function openDetail(room) {
-  selectedroom.value = room
-}
+function openDetail(room) { selectedបន្ទប់.value = room }
 
 // ── Delete flow ────────────────────────────────────────────
 function confirmDelete(room) {

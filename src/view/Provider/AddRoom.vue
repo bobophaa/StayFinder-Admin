@@ -9,6 +9,11 @@
           </div>
 
           <div class="card-body p-4 bg-white">
+            <!-- API error banner -->
+            <div v-if="roomStore.error" class="alert alert-danger rounded-3 mb-4 d-flex align-items-center gap-2">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+              <span>{{ roomStore.error }}</span>
+            </div>
             <form @submit.prevent="handleSubmit">
               <div class="row g-4">
                 <!-- ── Left Column ── -->
@@ -310,8 +315,8 @@ const validate = () => {
     isValid = false
   }
 
-  // FIX: added Number() cast — v-model on number input returns a string,
-  // so direct comparison with 0/100 would silently pass invalid values
+ 
+
   if (Number(form.percent_promotion) < 0 || Number(form.percent_promotion) > 100) {
     errors.percent_promotion = 'បញ្ចុះតម្លៃត្រូវស្ថិតចន្លោះ 0 ដល់ 100'
     isValid = false
@@ -361,37 +366,41 @@ const resetForm = () => {
   form.size_room = ''
   form.map_url = ''
 
-  // FIX: revoke object URL before clearing to avoid memory leak
+ 
   if (imagePreview.value) URL.revokeObjectURL(imagePreview.value)
   imagePreview.value = null
 }
 
 const handleSubmit = async () => {
   if (!validate()) return
+  roomStore.error = '' // clear any previous API error
 
   try {
     const formData = new FormData()
     formData.append('title', form.title)
     formData.append('price', form.price)
-    formData.append('percent_promotion', form.percent_promotion)
+    formData.append('percent_promotion', Number(form.percent_promotion) || 0)
     formData.append('district_id', form.district_id)
     formData.append('description', form.description)
     formData.append('image', form.image)
-    formData.append('pay_water', form.pay_water)
-    formData.append('pay_electric', form.pay_electric)
-    formData.append('pay_parking', form.pay_parking)
-    formData.append('pay_trash', form.pay_trash)
+    formData.append('pay_water', Number(form.pay_water) || 0)
+    formData.append('pay_electric', Number(form.pay_electric) || 0)
+    formData.append('pay_parking', Number(form.pay_parking) || 0)
+    formData.append('pay_trash', Number(form.pay_trash) || 0)
     formData.append('bed', form.bed)
     formData.append('size_room', form.size_room)
     formData.append('map_url', form.map_url)
-    form.room_option_ids.forEach((id) => {
-      formData.append('room_option_ids[]', id)
-    })
+    // API requires room_option_ids as a JSON string e.g. "[1,2,3]"
+    formData.append('room_option_ids', JSON.stringify(form.room_option_ids))
 
-    await roomStore.createRoom(formData)
-    alertSuccess('បង្កើតបន្ទប់ជោគជ័យ')
-    resetForm()
-    router.push('/rooms')
+    const success = await roomStore.createRoom(formData)
+    if (success) {
+      alertSuccess('បង្កើតបន្ទប់ជោគជ័យ')
+      resetForm()
+      router.push('/provider/my-rooms')
+    } else {
+      alertError('បង្កើតបន្ទប់បរាជ័យ។ សូមព្យាយាមម្តងទៀត។')
+    }
   } catch (error) {
     console.error('Create room error:', error)
     alertError('បង្កើតបន្ទប់បរាជ័យ')
