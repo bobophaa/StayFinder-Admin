@@ -5,13 +5,13 @@
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
       <div class="card-header-navy p-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
         <div>
-          <h4 class="fw-bold mb-0 text-white">My Room Listings</h4>
+          <h4 class="fw-bold mb-0 text-white">បញ្ជីបន្ទប់របស់ខ្ញុំ</h4>
           <small class="opacity-75 text-white">
-            {{ roomStore.myRooms.length }} room{{ roomStore.myRooms.length !== 1 ? 's' : '' }} posted by you
+            {{ roomStore.myRooms.length }} room{{ roomStore.myRooms.length !== 1 ? 's' : '' }} ដែលអ្នកបានបង្ហោះ
           </small>
         </div>
         <router-link to="/provider/add-room" class="btn btn-orange fw-bold px-4">
-          <i class="bi bi-plus-circle-fill me-2"></i>Post New Room
+          <i class="bi bi-plus-circle-fill me-2"></i>Post New បន្ទប់
         </router-link>
       </div>
     </div>
@@ -41,10 +41,10 @@
   
     <div v-else-if="roomStore.myRooms.length === 0" class="empty-state text-center py-5 mt-4">
       <div class="empty-icon mb-4"><i class="bi bi-house-slash"></i></div>
-      <h5 class="fw-bold text-navy mb-2">No rooms posted yet</h5>
-      <p class="text-muted mb-4">Start earning by listing your first room today.</p>
+      <h5 class="fw-bold text-navy mb-2">មិនទាន់បានបង្ហោះបន្ទប់</h5>
+      <p class="text-muted mb-4">ចាប់ផ្តើមរកចំណូលដោយបង្ហោះបន្ទប់ដំបូងរបស់អ្នកថ្ងៃនេះ។</p>
       <router-link to="/provider/add-room" class="btn btn-orange px-5 py-2 fw-bold">
-        <i class="bi bi-plus-circle-fill me-2"></i>Post Your First Room
+        <i class="bi bi-plus-circle-fill me-2"></i>បង្ហោះបន្ទប់ដំបូង
       </router-link>
     </div>
 
@@ -56,19 +56,23 @@
           <thead>
             <tr class="tbl-head">
               <th class="ps-4 py-3 small fw-bold">#</th>
-              <th class="py-3 small fw-bold">Room</th>
-              <th class="py-3 small fw-bold d-none d-md-table-cell">District</th>
-              <th class="py-3 small fw-bold">Price</th>
-              <th class="py-3 small fw-bold d-none d-lg-table-cell">Beds / Size</th>
-              <th class="py-3 small fw-bold d-none d-lg-table-cell">Bills</th>
-              <th class="py-3 small fw-bold">Status</th>
-              <th class="py-3 small fw-bold pe-4 text-end">Actions</th>
+              <th class="py-3 small fw-bold">បន្ទប់</th>
+              <th class="py-3 small fw-bold d-none d-md-table-cell">ខណ្ឌ</th>
+              <th class="py-3 small fw-bold">តម្លៃ</th>
+              <th class="py-3 small fw-bold d-none d-lg-table-cell">គ្រែ / ទំហំ</th>
+              <th class="py-3 small fw-bold d-none d-lg-table-cell">វិក្កយបត្រ</th>
+              <th class="py-3 small fw-bold">ស្ថានភាព</th>
+              <th class="py-3 small fw-bold pe-4 text-end">សកម្មភាព</th>
             </tr>
           </thead>
 
       
           <tbody>
+<<<<<<< HEAD
             <tr v-for="(room, idx) in paginatedRooms" :key="room.id" class="tbl-row">
+=======
+            <tr v-for="(room, idx) in roomStore.myបន្ទប់s" :key="room.id" class="tbl-row">
+>>>>>>> d1ee42068b953396e964b2b4818804dc6f924368
 
              
               <td class="ps-4 text-muted small fw-semibold">{{ (currentPage - 1) * perPage + idx + 1 }}</td>
@@ -82,7 +86,7 @@
                   </div>
                   <div>
                     <div class="room-name" @click="openDetail(room)">{{ room.title }}</div>
-                    <!-- District visible only on small screens -->
+                    <!-- ខណ្ឌ visible only on small screens -->
                     <div class="text-muted d-md-none" style="font-size:.72rem">
                       <i class="bi bi-geo-alt me-1 text-orange"></i>{{ room.district?.name || '–' }}
                     </div>
@@ -90,18 +94,18 @@
                 </div>
               </td>
 
-              <!-- District -->
+              <!-- ខណ្ឌ -->
               <td class="d-none d-md-table-cell small text-muted">
                 <i class="bi bi-geo-alt-fill me-1 text-orange"></i>{{ room.district?.name || '–' }}
               </td>
 
-              <!-- Price -->
+              <!-- តម្លៃ -->
               <td>
                 <span class="fw-bold text-orange">${{ room.price }}</span>
-                <span class="text-muted small">/month</span>
+                <span class="text-muted small">/ខែ</span>
               </td>
 
-              <!-- Beds / Size -->
+              <!-- គ្រែ / ទំហំ -->
               <td class="d-none d-lg-table-cell">
                 <div class="d-flex flex-wrap gap-1">
                   <span class="spec-chip" v-if="room.bed">
@@ -114,7 +118,7 @@
                 </div>
               </td>
 
-              <!-- Bills -->
+              <!-- វិក្កយបត្រ -->
               <td class="d-none d-lg-table-cell">
                 <div class="d-flex flex-wrap gap-1">
                   <span class="bill-chip" v-if="room.pay_water">
@@ -127,7 +131,7 @@
                 </div>
               </td>
 
-              <!-- Status -->
+              <!-- ស្ថានភាព -->
               <td>
                 <span v-if="room.percent_promotion > 0" class="status-pill pill-promo">
                   <i class="bi bi-tag-fill me-1"></i>-{{ room.percent_promotion }}%
@@ -137,11 +141,11 @@
                 </span>
               </td>
 
-              <!-- Actions -->
+              <!-- សកម្មភាព -->
               <td class="pe-4 text-end">
                 <div class="d-flex gap-2 justify-content-end">
                   <!-- Eye — opens card detail -->
-                  <button class="tbl-btn tbl-btn-view" @click="openDetail(room)" title="View card">
+                  <button class="tbl-btn tbl-btn-view" @click="openDetail(room)" title="មើលកាត">
                     <i class="bi bi-eye-fill"></i>
                   </button>
                   <!-- Edit -->
@@ -164,10 +168,15 @@
       <!-- Table footer with pagination -->
       <div class="tbl-footer px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
         <small class="text-muted">
+<<<<<<< HEAD
           Showing
           <strong>{{ (currentPage - 1) * perPage + 1 }}–{{ Math.min(currentPage * perPage, roomStore.myRooms.length) }}</strong>
           of <strong>{{ roomStore.myRooms.length }}</strong>
           room{{ roomStore.myRooms.length !== 1 ? 's' : '' }}
+=======
+          កំពុងបង្ហាញ <strong>{{ roomStore.myបន្ទប់s.length }}</strong>
+          room{{ roomStore.myបន្ទប់s.length !== 1 ? 's' : '' }}
+>>>>>>> d1ee42068b953396e964b2b4818804dc6f924368
         </small>
 
         <!-- Pagination controls -->
@@ -202,25 +211,25 @@
         </nav>
 
         <router-link to="/provider/add-room" class="btn btn-orange btn-sm fw-bold px-3">
-          <i class="bi bi-plus-circle-fill me-1"></i>Add Room
+          <i class="bi bi-plus-circle-fill me-1"></i>Add បន្ទប់
         </router-link>
       </div>
     </div>
 
 
     <transition name="modal-fade">
-      <div v-if="selectedRoom" class="detail-overlay" @click.self="selectedRoom = null">
+      <div v-if="selectedបន្ទប់" class="detail-overlay" @click.self="selectedបន្ទប់ = null">
         <div class="detail-modal">
 
           <!-- Modal header -->
           <div class="detail-header">
             <div class="flex-fill overflow-hidden">
-              <h5 class="fw-bold text-white mb-0 text-truncate">{{ selectedRoom.title }}</h5>
+              <h5 class="fw-bold text-white mb-0 text-truncate">{{ selectedបន្ទប់.title }}</h5>
               <small class="opacity-75 text-white">
-                <i class="bi bi-geo-alt me-1"></i>{{ selectedRoom.district?.name || '–' }}, Phnom Penh
+                <i class="bi bi-geo-alt me-1"></i>{{ selectedបន្ទប់.district?.name || '–' }}, Phnom Penh
               </small>
             </div>
-            <button class="detail-close" @click="selectedRoom = null">
+            <button class="detail-close" @click="selectedបន្ទប់ = null">
               <i class="bi bi-x-lg"></i>
             </button>
           </div>
@@ -230,20 +239,20 @@
 
             <!-- Image -->
             <div class="detail-img-wrap mb-4">
-              <img v-if="selectedRoom.image" :src="selectedRoom.image" class="detail-img" :alt="selectedRoom.title" />
+              <img v-if="selectedបន្ទប់.image" :src="selectedបន្ទប់.image" class="detail-img" :alt="selectedបន្ទប់.title" />
               <div v-else class="detail-img-placeholder d-flex align-items-center justify-content-center">
                 <i class="bi bi-building" style="font-size:3rem;color:#ccc"></i>
               </div>
-              <span v-if="selectedRoom.percent_promotion > 0" class="detail-promo-badge">
-                <i class="bi bi-tag-fill me-1"></i>-{{ selectedRoom.percent_promotion }}% OFF
+              <span v-if="selectedបន្ទប់.percent_promotion > 0" class="detail-promo-badge">
+                <i class="bi bi-tag-fill me-1"></i>-{{ selectedបន្ទប់.percent_promotion }}% OFF
               </span>
             </div>
 
-            <!-- Price + status -->
+            <!-- តម្លៃ + status -->
             <div class="d-flex justify-content-between align-items-center mb-4">
               <div>
-                <span class="detail-price">${{ selectedRoom.price }}</span>
-                <span class="text-muted small"> /month</span>
+                <span class="detail-price">${{ selectedបន្ទប់.price }}</span>
+                <span class="text-muted small"> /ខែ</span>
               </div>
               <span class="status-pill pill-active">
                 <i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i>Active
@@ -255,22 +264,22 @@
               <div class="col-6">
                 <div class="info-card">
                   <i class="bi bi-geo-alt-fill text-orange mb-1 d-block"></i>
-                  <div class="info-label">District</div>
-                  <div class="info-value">{{ selectedRoom.district?.name || '–' }}</div>
+                  <div class="info-label">ខណ្ឌ</div>
+                  <div class="info-value">{{ selectedបន្ទប់.district?.name || '–' }}</div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="info-card">
                   <i class="bi bi-person-fill text-orange mb-1 d-block"></i>
                   <div class="info-label">Beds</div>
-                  <div class="info-value">{{ selectedRoom.bed || '–' }}</div>
+                  <div class="info-value">{{ selectedបន្ទប់.bed || '–' }}</div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="info-card">
                   <i class="bi bi-aspect-ratio text-orange mb-1 d-block"></i>
-                  <div class="info-label">Room Size</div>
-                  <div class="info-value">{{ selectedRoom.size_room || '–' }}</div>
+                  <div class="info-label">បន្ទប់ Size</div>
+                  <div class="info-value">{{ selectedបន្ទប់.size_room || '–' }}</div>
                 </div>
               </div>
               <div class="col-6">
@@ -278,64 +287,64 @@
                   <i class="bi bi-tag-fill text-orange mb-1 d-block"></i>
                   <div class="info-label">Promotion</div>
                   <div class="info-value">
-                    {{ selectedRoom.percent_promotion > 0 ? `-${selectedRoom.percent_promotion}%` : 'None' }}
+                    {{ selectedបន្ទប់.percent_promotion > 0 ? `-${selectedបន្ទប់.percent_promotion}%` : 'None' }}
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Bills -->
+            <!-- វិក្កយបត្រ -->
             <div class="detail-section mb-4">
               <div class="section-title">
-                <i class="bi bi-receipt me-2 text-orange"></i>Monthly Bills
+                <i class="bi bi-receipt me-2 text-orange"></i>Monthly វិក្កយបត្រ
               </div>
               <div class="bills-card">
                 <div class="bill-row">
                   <span><i class="bi bi-droplet-fill text-info me-2"></i>Water</span>
-                  <strong>${{ selectedRoom.pay_water || '0' }}</strong>
+                  <strong>${{ selectedបន្ទប់.pay_water || '0' }}</strong>
                 </div>
                 <div class="bill-row">
                   <span><i class="bi bi-lightning-fill text-warning me-2"></i>Electric</span>
-                  <strong>${{ selectedRoom.pay_electric || '0' }}</strong>
+                  <strong>${{ selectedបន្ទប់.pay_electric || '0' }}</strong>
                 </div>
                 <div class="bill-row">
                   <span><i class="bi bi-trash3-fill text-success me-2"></i>Trash</span>
-                  <strong>{{ selectedRoom.pay_trash ? '$' + selectedRoom.pay_trash : 'Free' }}</strong>
+                  <strong>{{ selectedបន្ទប់.pay_trash ? '$' + selectedបន្ទប់.pay_trash : 'ឥតគិតថ្លៃ' }}</strong>
                 </div>
                 <div class="bill-row border-0">
                   <span><i class="bi bi-car-front-fill text-secondary me-2"></i>Parking</span>
-                  <strong>{{ selectedRoom.pay_parking ? '$' + selectedRoom.pay_parking : 'Free' }}</strong>
+                  <strong>{{ selectedបន្ទប់.pay_parking ? '$' + selectedបន្ទប់.pay_parking : 'ឥតគិតថ្លៃ' }}</strong>
                 </div>
               </div>
             </div>
 
-            <!-- Amenities -->
-            <div class="detail-section mb-4" v-if="selectedRoom.room_options?.length">
+            <!-- បរិក្ខារ -->
+            <div class="detail-section mb-4" v-if="selectedបន្ទប់.room_options?.length">
               <div class="section-title">
-                <i class="bi bi-check-circle-fill me-2 text-orange"></i>Amenities
+                <i class="bi bi-check-circle-fill me-2 text-orange"></i>បរិក្ខារ
               </div>
               <div class="d-flex flex-wrap gap-2 mt-2">
-                <span class="amenity-tag" v-for="opt in selectedRoom.room_options" :key="opt.id">
+                <span class="amenity-tag" v-for="opt in selectedបន្ទប់.room_options" :key="opt.id">
                   {{ opt.name }}
                 </span>
               </div>
             </div>
 
-            <!-- Description -->
-            <div class="detail-section mb-4" v-if="selectedRoom.description">
+            <!-- ពិពណ៌នា -->
+            <div class="detail-section mb-4" v-if="selectedបន្ទប់.description">
               <div class="section-title">
-                <i class="bi bi-file-text me-2 text-orange"></i>Description
+                <i class="bi bi-file-text me-2 text-orange"></i>ពិពណ៌នា
               </div>
               <p class="text-muted small mt-2 mb-0" style="line-height:1.7">
-                {{ selectedRoom.description }}
+                {{ selectedបន្ទប់.description }}
               </p>
             </div>
 
             <!-- Map -->
-            <div v-if="selectedRoom.map_url">
-              <a :href="selectedRoom.map_url" target="_blank"
+            <div v-if="selectedបន្ទប់.map_url">
+              <a :href="selectedបន្ទប់.map_url" target="_blank"
                 class="btn btn-outline-navy btn-sm w-100">
-                <i class="bi bi-geo-alt-fill me-2"></i>View on Google Maps
+                <i class="bi bi-geo-alt-fill me-2"></i>មើលលើ Google Maps
               </a>
             </div>
 
@@ -343,10 +352,10 @@
 
           <!-- Modal footer -->
           <div class="detail-footer">
-            <button class="btn btn-light rounded-3 px-4" @click="selectedRoom = null">Close</button>
-            <router-link :to="`/provider/edit-room/${selectedRoom.id}`"
+            <button class="btn btn-light rounded-3 px-4" @click="selectedបន្ទប់ = null">បិទ</button>
+            <router-link :to="`/provider/edit-room/${selectedបន្ទប់.id}`"
               class="btn btn-orange px-4 fw-bold">
-              <i class="bi bi-pencil-fill me-2"></i>Edit This Room
+              <i class="bi bi-pencil-fill me-2"></i>Edit This បន្ទប់
             </router-link>
           </div>
 
@@ -360,12 +369,12 @@
         <div class="modal-content border-0 rounded-4 overflow-hidden">
           <div class="modal-header" style="background:#031c36;border-bottom:3px solid #ff5f00">
             <h5 class="modal-title fw-bold" style="color:#F4A25A">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>Delete Room
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>លុបបន្ទប់
             </h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body p-4" v-if="roomToDelete">
-            <p class="mb-1 text-muted small">You are about to permanently delete:</p>
+            <p class="mb-1 text-muted small">អ្នកកំពុងនឹងលុបជាអចិន្ត្រៃយ៍៖</p>
             <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-3"
               style="background:#f8f9fa;border:1.5px solid #e9ecef">
               <div class="room-thumb">
@@ -374,12 +383,12 @@
               </div>
               <div>
                 <div class="fw-bold text-navy small">{{ roomToDelete.title }}</div>
-                <div class="text-orange fw-bold">${{ roomToDelete.price }}/month</div>
+                <div class="text-orange fw-bold">${{ roomToDelete.price }}/ខែ</div>
               </div>
             </div>
             <div class="alert alert-warning py-2 small rounded-3">
               <i class="bi bi-exclamation-circle-fill me-2"></i>
-              This action <strong>cannot be undone</strong>.
+              សកម្មភាពនេះ <strong>មិនអាចត្រឡប់វិញបានទេ</strong>។
             </div>
           </div>
           <div class="modal-footer border-0 px-4 pb-4 pt-0 gap-2">
@@ -387,7 +396,7 @@
             <button class="btn btn-danger rounded-3 px-4 fw-bold" @click="executeDelete"
               :disabled="deletingId !== null">
               <span v-if="deletingId !== null" class="spinner-border spinner-border-sm me-2"></span>
-              <i v-else class="bi bi-trash3-fill me-2"></i>Yes, Delete
+              <i v-else class="bi bi-trash3-fill me-2"></i>លុប
             </button>
           </div>
         </div>
@@ -407,7 +416,7 @@ const roomStore    = useRoomStore()
 const authStore    = useAuthStore()
 const deletingId   = ref(null)
 const roomToDelete = ref(null)
-const selectedRoom = ref(null)   // card detail modal
+const selectedបន្ទប់ = ref(null)   // card detail modal
 let deleteModalInstance = null
 
 // ── Pagination ─────────────────────────────────────────────
@@ -454,7 +463,7 @@ onMounted(async () => {
 
 // ── Open card detail ───────────────────────────────────────
 function openDetail(room) {
-  selectedRoom.value = room
+  selectedroom.value = room
 }
 
 // ── Delete flow ────────────────────────────────────────────
@@ -466,16 +475,20 @@ function confirmDelete(room) {
 async function executeDelete() {
   if (!roomToDelete.value) return
   deletingId.value = roomToDelete.value.id
-  const success = await roomStore.deleteRoom(roomToDelete.value.id)
+  const success = await roomStore.deleteបន្ទប់(roomToDelete.value.id)
   if (success) {
     deleteModalInstance?.hide()
+<<<<<<< HEAD
     alertSuccess('Room deleted successfully.')
     // jump back if current page becomes empty after deletion
     if (paginatedRooms.value.length === 0 && currentPage.value > 1) {
       currentPage.value--
     }
+=======
+    alertSuccess('បន្ទប់ត្រូវបានលុបដោយជោគជ័យ!')
+>>>>>>> d1ee42068b953396e964b2b4818804dc6f924368
   } else {
-    alertError('Failed to delete the room. Please try again.')
+    alertError('លុបបន្ទប់បរាជ័យ។ សូមព្យាយាមម្តងទៀត។')
   }
   deletingId.value  = null
   roomToDelete.value = null
@@ -530,7 +543,7 @@ async function executeDelete() {
 .room-thumb:hover { box-shadow: 0 4px 12px rgba(255,95,0,.3); transform: scale(1.04); }
 .room-thumb-img { width: 56px; height: 56px; object-fit: cover; }
 
-/* ── Room name ── */
+/* ── បន្ទប់ name ── */
 .room-name {
   font-size: .88rem; font-weight: 700; color: #031c36;
   cursor: pointer; max-width: 180px;
@@ -545,7 +558,7 @@ async function executeDelete() {
 .bill-chip { background: #fafafa; border: 1px solid #eee; color: #666; font-size: .68rem; padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
 .amenity-tag { background: rgba(255,95,0,.08); color: #ff5f00; border: 1px solid rgba(255,95,0,.2); font-size: .68rem; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
 
-/* ── Status pills ── */
+/* ── ស្ថានភាព pills ── */
 .status-pill { font-size: .7rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; display: inline-flex; align-items: center; }
 .pill-active { background: #e9faf1; color: #198754; }
 .pill-promo  { background: #fff4ed; color: #ff5f00; }
@@ -631,7 +644,7 @@ async function executeDelete() {
 .detail-img-placeholder { width: 100%; height: 220px; background: linear-gradient(135deg,#e8edf2,#f5f8fb); }
 .detail-promo-badge { position: absolute; top: 12px; left: 12px; background: #ff5f00; color: #fff; font-size: .72rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; }
 
-/* Price */
+/* តម្លៃ */
 .detail-price { font-size: 1.9rem; font-weight: 900; color: #ff5f00; line-height: 1; }
 
 /* Info cards */
@@ -642,7 +655,7 @@ async function executeDelete() {
 /* Section */
 .section-title { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #031c36; display: flex; align-items: center; }
 
-/* Bills */
+/* វិក្កយបត្រ */
 .bills-card { background: #f8f9fa; border-radius: 12px; border: 1px solid #eee; overflow: hidden; margin-top: 8px; }
 .bill-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px dashed #eee; font-size: .85rem; color: #555; }
 .bill-row strong { color: #031c36; }

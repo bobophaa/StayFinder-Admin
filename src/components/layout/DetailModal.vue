@@ -33,18 +33,8 @@
             <!-- ===== Guest Info ===== -->
             <div class="info-section">
               <div class="section-label">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-                Guest Information
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                ព័ត៌មានភ្ញៀវ
               </div>
               <div class="profile-card">
                 <img
@@ -72,26 +62,16 @@
                 </div>
                 <div class="info-item">
                   <span class="info-label">ID Card</span>
-                  <span class="info-value">{{ item.buyer?.id_card || 'Not provided' }}</span>
+                  <span class="info-value">{{ item.buyer?.id_card || 'មិនបានផ្តល់' }}</span>
                 </div>
               </div>
             </div>
 
-            <!-- ===== Room Details ===== -->
+            <!-- ===== ព័ត៌មានបន្ទប់ ===== -->
             <div class="info-section">
               <div class="section-label">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                  <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-                Room Details
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                ព័ត៌មានបន្ទប់
               </div>
               <div class="room-hero" v-if="item.room?.image">
                 <img :src="item.room.image" class="room-image" alt="room" />
@@ -102,60 +82,58 @@
               </div>
               <div class="info-grid three-col">
                 <div class="info-item">
-                  <span class="info-label">Room Title</span>
+                  <span class="info-label">ចំណងជើងបន្ទប់</span>
                   <span class="info-value fw">{{ item.room?.title || '—' }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">Size</span>
+                  <span class="info-label">ទំហំ</span>
                   <span class="info-value">{{ item.room?.size_room || '—' }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">Beds</span>
+                  <span class="info-label">គ្រែ</span>
                   <span class="info-value">{{ item.room?.bed || '—' }}</span>
                 </div>
               </div>
 
               <!-- Pricing breakdown -->
               <div class="pricing-card">
-                <div class="pricing-title">Monthly Pricing</div>
+                <div class="pricing-title">តម្លៃប្រចាំខែ</div>
                 <div class="pricing-rows">
                   <div class="pricing-row">
-                    <span>Room Rent</span>
+                    <span>ថ្លៃបន្ទប់</span>
                     <span class="pricing-amount main">${{ item.room?.price ?? '—' }}</span>
                   </div>
                   <div class="pricing-row">
-                    <span>Water</span>
+                    <span>ទឹក</span>
                     <span class="pricing-amount">${{ item.room?.pay_water ?? '—' }}</span>
                   </div>
                   <div class="pricing-row">
-                    <span>Electric</span>
+                    <span>អគ្គិសនី</span>
                     <span class="pricing-amount">${{ item.room?.pay_electric ?? '—' }}</span>
                   </div>
                   <div class="pricing-row">
-                    <span>Parking</span>
+                    <span>ចំណត</span>
                     <span class="pricing-amount">${{ item.room?.pay_parking ?? '—' }}</span>
                   </div>
                   <div class="pricing-row">
-                    <span>Trash</span>
+                    <span>សំរាម</span>
                     <span class="pricing-amount">${{ item.room?.pay_trash ?? '—' }}</span>
                   </div>
                   <div v-if="item.room?.percent_promotion > 0" class="pricing-row promo">
-                    <span>Promotion</span>
-                    <span class="pricing-amount promo-text"
-                      >-{{ item.room.percent_promotion }}%</span
-                    >
+                    <span>បញ្ចុះតម្លៃ</span>
+                    <span class="pricing-amount promo-text">-{{ item.room.percent_promotion }}%</span>
                   </div>
                   <div class="pricing-divider"></div>
                   <div class="pricing-row total">
-                    <span>Estimated Total</span>
+                    <span>សរុបប៉ាន់ស្មាន</span>
                     <span class="pricing-amount total-amount">${{ estimatedTotal }}</span>
                   </div>
                 </div>
               </div>
 
-              <!-- Amenities -->
+              <!-- បរិក្ខារ -->
               <div v-if="item.room?.options?.length" class="amenities-row">
-                <span class="info-label" style="margin-bottom: 8px; display: block">Amenities</span>
+                <span class="info-label" style="margin-bottom: 8px; display: block">បរិក្ខារ</span>
                 <div class="amenities-list">
                   <span v-for="opt in item.room.options" :key="opt.id" class="amenity-tag">
                     {{ opt.name }}
@@ -163,29 +141,18 @@
                 </div>
               </div>
 
-              <!-- Description -->
+              <!-- ពិពណ៌នា -->
               <div v-if="item.room?.description" class="room-description">
-                <span class="info-label">Description</span>
+                <span class="info-label">ពិពណ៌នា</span>
                 <p class="desc-text">{{ item.room.description }}</p>
               </div>
 
-              <!-- Map -->
+              <!-- ផែនទី -->
               <div v-if="item.room?.map_url" class="info-item" style="margin-top: 8px">
-                <span class="info-label">Map</span>
+                <span class="info-label">ផែនទី</span>
                 <a :href="item.room.map_url" target="_blank" class="map-link">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
-                  </svg>
-                  Open in Maps
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  Open in ផែនទីs
                 </a>
               </div>
             </div>
@@ -210,15 +177,15 @@
               </div>
               <div class="info-grid">
                 <div class="info-item">
-                  <span class="info-label">Check-in Date</span>
+                  <span class="info-label">ថ្ងៃចូលស្នាក់នៅ</span>
                   <span class="info-value fw">{{ formatDate(item.checkin_date) }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">Check-in Time</span>
+                  <span class="info-label">ម៉ោងចូលស្នាក់នៅ</span>
                   <span class="info-value">{{ formatTime(item.checkin_date) }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">Created At</span>
+                  <span class="info-label">បានបង្កើតនៅ</span>
                   <span class="info-value">{{ formatDate(item.created_at) }}</span>
                 </div>
                 <div class="info-item">
@@ -231,43 +198,25 @@
 
               <!-- Payment proof -->
               <div class="payment-section">
-                <span class="info-label">Payment Proof</span>
-                <div
-                  v-if="paymentUrl"
-                  class="payment-preview-box"
-                  @click="showPaymentFull = !showPaymentFull"
-                >
+                <span class="info-label">ភស្តុតាងការទូទាត់</span>
+                <div v-if="paymentUrl" class="payment-preview-box" @click="showPaymentFull = !showPaymentFull">
                   <img :src="paymentUrl" class="payment-preview-img" alt="Payment proof" />
-                  <span class="payment-hint"
-                    >Click to {{ showPaymentFull ? 'collapse' : 'enlarge' }}</span
-                  >
+                  <span class="payment-hint">Click to {{ showPaymentFull ? 'បង្រួម' : 'ពង្រីក' }}</span>
                 </div>
                 <Transition name="expand">
                   <div v-if="showPaymentFull && paymentUrl" class="payment-full">
                     <img :src="paymentUrl" class="payment-full-img" alt="Payment proof full" />
                   </div>
                 </Transition>
-                <p v-if="!paymentUrl" class="no-data-text">No payment proof uploaded</p>
+                <p v-if="!paymentUrl" class="no-data-text">មិនមានភស្តុតាងការទូទាត់</p>
               </div>
             </div>
 
             <!-- ===== Seller / Owner Info ===== -->
             <div class="info-section" v-if="item.seller">
               <div class="section-label">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="8.5" cy="7" r="4" />
-                  <line x1="20" y1="8" x2="20" y2="14" />
-                  <line x1="23" y1="11" x2="17" y2="11" />
-                </svg>
-                Room Owner
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                ម្ចាស់បន្ទប់
               </div>
               <div class="profile-card compact">
                 <img
@@ -304,7 +253,7 @@ import { ref, computed } from 'vue'
 const props = defineProps({
   show: { type: Boolean, default: false },
   item: { type: Object, default: () => ({}) },
-  title: { type: String, default: 'Booking' },
+  title: { type: String, default: 'ការកក់' },
   paymentUrlGetter: { type: Function, default: null },
 })
 
@@ -320,19 +269,19 @@ const getStatusKey = (status) => {
 
 const statusKey = computed(() => getStatusKey(props.item?.status))
 const statusLabel = computed(() => {
-  if (statusKey.value === 'approved') return 'Approved'
-  if (statusKey.value === 'rejected') return 'Rejected'
-  return 'Pending'
+  if (statusKey.value === 'approved') return 'បានអនុម័ត'
+  if (statusKey.value === 'rejected') return 'បានបដិសេធ'
+  return 'កំពុងរង់ចាំ'
 }) 
 
 const genderText = (g) => {
-  if (g === 1 || g === '1') return 'Male'
-  if (g === 2 || g === '2') return 'Female'
-  return 'Unknown'
+  if (g === 1 || g === '1') return 'ប្រុស'
+  if (g === 2 || g === '2') return 'ស្រី'
+  return 'មិនស្គាល់'
 }
 
 const formatDate = (dateString) => {
-  if (!dateString) return 'N/A'
+  if (!dateString) return 'មិនមាន'
   const d = new Date(dateString)
   return d.toLocaleDateString('en-US', {
     weekday: 'short',
@@ -343,7 +292,7 @@ const formatDate = (dateString) => {
 }
 
 const formatTime = (dateString) => {
-  if (!dateString) return 'N/A'
+  if (!dateString) return 'មិនមាន'
   const d = new Date(dateString)
   return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
 }
@@ -702,7 +651,7 @@ const estimatedTotal = computed(() => {
   font-size: 1.05rem;
 }
 
-/* ===== Amenities ===== */
+/* ===== បរិក្ខារ ===== */
 .amenities-row {
   margin-top: 16px;
 }
@@ -725,7 +674,7 @@ const estimatedTotal = computed(() => {
   font-weight: 600;
 }
 
-/* ===== Room Description ===== */
+/* ===== Room ពិពណ៌នា ===== */
 .room-description {
   margin-top: 16px;
 }
@@ -737,7 +686,7 @@ const estimatedTotal = computed(() => {
   margin: 6px 0 0;
 }
 
-/* ===== Map Link ===== */
+/* ===== ផែនទី Link ===== */
 .map-link {
   display: inline-flex;
   align-items: center;

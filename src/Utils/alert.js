@@ -19,7 +19,7 @@ const Toast = Swal.mixin({
 export const alertSuccess = (message) => {
   Swal.fire({
     icon: 'success',
-    title: 'Success!',
+    title: 'ជោគជ័យ!',
     text: message,
     showConfirmButton: false, 
     timer: 1500, 
@@ -33,8 +33,8 @@ export const alertSuccess = (message) => {
 export const alertError = (message) => {
   Swal.fire({
     icon: 'error',
-    title: 'Error!',
-    text: message || 'Something went wrong. Please try again.',
+    title: 'បរាជ័យ!',
+    text: message || 'មានបញ្ហាមួយកើតឡើង។ សូមព្យាយាមម្តងទៀត។',
     // confirmButtonColor: '#031c36',
      // Your Navy Theme Color
   });
@@ -43,16 +43,16 @@ export const alertError = (message) => {
 /**
  * Show a confirmation dialog for deletions
  */
-export const confirmDelete = async (title = "Are you sure?") => {
+export const confirmDelete = async (title = "តើអ្នកប្រាកដទេ?") => {
   const result = await Swal.fire({
     title: title,
-    text: "This action cannot be undone!",
+    text: "សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#d33', // Red for delete
     cancelButtonColor: '#031c36', // Navy for cancel
-    confirmButtonText: 'Yes, Log Out!',
-    cancelButtonText: 'Cancel'
+    confirmButtonText: 'បាទ/ចាស',
+    cancelButtonText: 'បោះបង់'
   });
   return result.isConfirmed;
 };

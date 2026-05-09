@@ -1,7 +1,7 @@
 import axios from 'axios'
  
 const api = axios.create({
-  baseURL: 'https://bontubjoul2.csm.linkpc.net/api',
+  baseURL: 'https://api-bontubjoul.g2.ant.com.kh/api',
   headers: {
     Accept: 'application/json',
   },

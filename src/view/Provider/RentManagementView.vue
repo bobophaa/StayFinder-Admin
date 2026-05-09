@@ -8,8 +8,8 @@
       <div class="container py-5">
         <!-- Header -->
         <div class="mb-4">
-          <h2 class="fw-bold text-dark">ពិនិត្យ​សេវា​ជួល</h2>
-          <p class="text-muted">គ្រប់គ្រង​ និង​ផ្ទៀងផ្ទាត់​សេវា​ជួល</p>
+          <h2 class="fw-bold text-dark">បញ្ជីពិនិត្យការជួល</h2>
+          <p class="text-muted">គ្រប់គ្រង និងផ្ទៀងផ្ទាត់សំណើជួលបន្ទប់តាមប្រភេទ</p>
         </div>
 
         <!-- Table -->
@@ -24,7 +24,7 @@
           :page-size="pageSize"
           :total-items="totalRequests"
           :active-filter="activeFilter"
-          :empty-message="'No rent requests found'"
+          :empty-message="'មិនមានសំណើជួល'"
           :payment-url-getter="getPaymentProofUrl"
           @approve="approveRent"
           @reject="rejectRent"
@@ -37,7 +37,7 @@
         <DetailModal
           :show="showDetailModal"
           :item="selectedItem"
-          title="Rent"
+          title="ការជួល"
           :payment-url-getter="getPaymentProofUrl"
           @close="showDetailModal = false"
         />
@@ -123,7 +123,7 @@ const fetchRents = async () => {
     
     
   } catch (err) {
-    error.value = err.response?.data?.message || 'Failed to fetch rents'
+    error.value = err.response?.data?.message || 'ផ្ទុកសំណើជួលបរាជ័យ'
   } finally {
     loading.value = false
   }

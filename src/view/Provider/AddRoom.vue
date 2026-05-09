@@ -6,8 +6,8 @@
           <div
             class="card-header-navy p-3 text-white d-flex justify-content-between align-items-center"
           >
-            <h4 class="fw-bold mb-0">Post a New Room</h4>
-            <span class="badge bg-orange px-3 py-2">Full Details Mode</span>
+            <h4 class="fw-bold mb-0">បង្ហោះបន្ទប់ថ្មី</h4>
+            <span class="badge bg-orange px-3 py-2">របៀបព័ត៌មានលម្អិតពេញលេញ</span>
           </div>
 
           <div class="card-body p-4 bg-white">
@@ -15,10 +15,10 @@
               <div class="row g-4">
                 <div class="col-xl-7 col-lg-6">
                   <div class="section-container">
-                    <h5 class="section-title mb-4">General Information</h5>
+                    <h5 class="section-title mb-4">ព័ត៌មានទូទៅ</h5>
 
                     <div class="mb-4">
-                      <label class="form-label fw-bold">Room Title</label>
+                      <label class="form-label fw-bold">ចំណងជើងបន្ទប់</label>
                       <input
                         v-model="form.title"
                         type="text"
@@ -31,7 +31,7 @@
 
                     <div class="row g-3 mb-4">
                       <div class="col-md-4">
-                        <label class="form-label fw-bold">Price ($)</label>
+                        <label class="form-label fw-bold">តម្លៃ ($)</label>
                         <input
                           v-model="form.price"
                           type="number"
@@ -42,7 +42,7 @@
                         <div class="invalid-feedback">{{ errors.price }}</div>
                       </div>
                       <div class="col-md-4">
-                        <label class="form-label fw-bold">Promotion (%)</label>
+                        <label class="form-label fw-bold">បញ្ចុះតម្លៃ (%)</label>
                         <input
                           v-model="form.percent_promotion"
                           type="number"
@@ -53,13 +53,13 @@
                         <div class="invalid-feedback">{{ errors.percent_promotion }}</div>
                       </div>
                       <div class="col-md-4">
-                        <label class="form-label fw-bold">District</label>
+                        <label class="form-label fw-bold">ខណ្ឌ</label>
                         <select
                           v-model="form.district_id"
                           class="form-select custom-input"
                           :class="{ 'is-invalid': errors.district_id }"
                         >
-                          <option value="" disabled>Select District</option>
+                          <option value="" disabled>Select ខណ្ឌ</option>
                           <option
                             v-for="dist in districtStore.districts"
                             :key="dist.id"
@@ -72,10 +72,10 @@
                       </div>
                     </div>
 
-                    <h5 class="section-title mb-4">Bills & Specifications</h5>
+                    <h5 class="section-title mb-4">វិក្កយបត្រ និងលក្ខណៈបច្ចេកទេស</h5>
                     <div class="row g-3 mb-4">
                       <div class="col-md-3 col-6">
-                        <label class="small fw-bold text-muted">Water ($)</label>
+                        <label class="small fw-bold text-muted">ទឹក ($)</label>
                         <input
                           v-model="form.pay_water"
                           type="number"
@@ -84,7 +84,7 @@
                         />
                       </div>
                       <div class="col-md-3 col-6">
-                        <label class="small fw-bold text-muted">Electric ($)</label>
+                        <label class="small fw-bold text-muted">អគ្គិសនី ($)</label>
                         <input
                           v-model="form.pay_electric"
                           type="number"
@@ -93,7 +93,7 @@
                         />
                       </div>
                       <div class="col-md-3 col-6">
-                        <label class="small fw-bold text-muted">Parking ($)</label>
+                        <label class="small fw-bold text-muted">ចំណត ($)</label>
                         <input
                           v-model="form.pay_parking"
                           type="number"
@@ -102,7 +102,7 @@
                         />
                       </div>
                       <div class="col-md-3 col-6">
-                        <label class="small fw-bold text-muted">Trash ($)</label>
+                        <label class="small fw-bold text-muted">សំរាម ($)</label>
                         <input
                           v-model="form.pay_trash"
                           type="number"
@@ -114,16 +114,16 @@
 
                     <div class="row g-3 mb-4">
                       <div class="col-md-4">
-                        <label class="small fw-bold text-muted">Beds</label>
+                        <label class="small fw-bold text-muted">គ្រែ</label>
                         <input
                           v-model="form.bed"
                           type="text"
                           class="form-control custom-input"
-                          placeholder="e.g. 2 Beds"
+                          placeholder="e.g. 2 គ្រែ"
                         />
                       </div>
                       <div class="col-md-8">
-                        <label class="small fw-bold text-muted">Room Size</label>
+                        <label class="small fw-bold text-muted">ទំហំបន្ទប់</label>
                         <input
                           v-model="form.size_room"
                           type="text"
@@ -134,7 +134,7 @@
                     </div>
 
                     <div class="mb-4">
-                      <label class="form-label fw-bold">Google Maps URL</label>
+                      <label class="form-label fw-bold">តំណ Google Maps</label>
                       <input
                         v-model="form.map_url"
                         type="url"
@@ -146,7 +146,7 @@
                     </div>
 
                  <div class="mb-0">
-  <label class="form-label fw-bold">Description</label>
+  <label class="form-label fw-bold">ពិពណ៌នា</label>
   <textarea
     v-model="form.description"
     class="form-control custom-input"
@@ -172,10 +172,10 @@
 
                 <div class="col-xl-5 col-lg-6">
                   <div class="section-container h-100 d-flex flex-column">
-                    <h5 class="section-title mb-4">Media & Amenities</h5>
+                    <h5 class="section-title mb-4">មេឌៀ និងបរិក្ខារ</h5>
 
                     <div class="mb-4">
-                      <label class="form-label fw-bold">Room Photo</label>
+                      <label class="form-label fw-bold">រូបថតបន្ទប់</label>
                       <div
                         class="upload-box p-3 border rounded-3 text-center mb-3"
                         :class="{ 'border-danger': errors.image }"
@@ -194,12 +194,12 @@
                         class="preview-full-box rounded-3 overflow-hidden shadow-sm border mb-4"
                       >
                         <img :src="imagePreview" class="img-fluid w-100" />
-                        <div class="preview-overlay">Full Image Preview</div>
+                        <div class="preview-overlay">មើលរូបភាពពេញ</div>
                       </div>
                     </div>
 
                     <div class="mb-4">
-                      <label class="form-label fw-bold mb-3">Amenities / Facilities</label>
+                      <label class="form-label fw-bold mb-3">បរិក្ខារ / សេវាកម្ម</label>
                       <div class="amenities-grid-full p-3 bg-light rounded-3 border">
                         <div
                           v-for="opt in roomOptionStore.options"
@@ -227,7 +227,7 @@
                         :disabled="roomStore.loading"
                       >
                         <i class="bi bi-cloud-arrow-up-fill me-2"></i>
-                        {{ roomStore.loading ? 'Uploading Room...' : 'SUBMIT ROOM LISTING' }}
+                        {{ roomStore.loading ? 'កំពុងផ្ទុកបន្ទប់...' : 'បញ្ជូនបញ្ជីបន្ទប់' }}
                       </button>
                     </div>
                   </div>
@@ -275,7 +275,7 @@ const form = reactive({
 const imagePreview = ref(null)
 
 onMounted(() => {
-  districtStore.fetchDistricts()
+  districtStore.fetchខណ្ឌs()
   roomOptionStore.fetchOptions()
 })
 
@@ -293,23 +293,23 @@ const validate = () => {
   let isValid = true
 
   if (!form.title || form.title.length < 5) {
-    errors.title = 'Title must be at least 5 characters long.'
+    errors.title = 'ចំណងជើងត្រូវមានយ៉ាងតិច 5 តួអក្សរ។'
     isValid = false
   }
   if (!form.price || form.price <= 0) {
-    errors.price = 'Please enter a valid price.'
+    errors.price = 'សូមបញ្ចូលតម្លៃត្រឹមត្រូវ។'
     isValid = false
   }
   if (form.percent_promotion < 0 || form.percent_promotion > 100) {
-    errors.percent_promotion = 'Promotion must be between 0 and 100.'
+    errors.percent_promotion = 'បញ្ចុះតម្លៃត្រូវស្ថិតចន្លោះ 0 ដល់ 100។'
     isValid = false
   }
   if (!form.district_id) {
-    errors.district_id = 'Please select a district.'
+    errors.district_id = 'សូមជ្រើសរើសខណ្ឌ។'
     isValid = false
   }
   if (!form.image) {
-    errors.image = 'Please upload at least one room photo.'
+    errors.image = 'សូមផ្ទុករូបថតបន្ទប់យ៉ាងហោចណាស់មួយ។'
     isValid = false
   }
 if (form.map_url) {
@@ -320,13 +320,13 @@ if (form.map_url) {
 
   if (!isValidGoogleMap) {
     errors.map_url =
-      'Please enter a valid Google Maps URL (e.g. https://maps.google.com/...)'
+      'Please enter a valid តំណ Google Maps (e.g. https://maps.google.com/...)'
     isValid = false
   }
 }
 
 if (form.description && form.description.length < 20) {
-  errors.description = 'Description must be at least 20 characters.'
+  errors.description = 'ពិពណ៌នា must be at least 20 characters.'
   isValid = false
 }
   return isValid
@@ -354,14 +354,14 @@ const handleSubmit = async () => {
     const success = await roomStore.addRoom(formData)
     if (success) {
       await roomStore.fetchRooms()
-      alertSuccess('Your room has been listed successfully!')
+      alertSuccess('បានបង្ហោះបន្ទប់របស់អ្នកជោគជ័យ!')
       router.push('/provider/my-rooms')
     } else {
-      alertError('Failed to list the room. Please try again.')
+      alertError('បង្ហោះបន្ទប់បរាជ័យ។ សូមព្យាយាមម្តងទៀត។')
     }
   } catch (error) {
     console.error('Submission error:', error)
-    alertError(error.response?.data?.message || 'An unexpected error occurred.')
+    alertError(error.response?.data?.message || 'មានបញ្ហាមិនបានរំពឹងទុកកើតឡើង។')
   }
 }
 </script>

@@ -35,6 +35,7 @@
 
 body {
     line-height: 1.6;
+    font-family: 'Kantumruy', 'Kantumruy Pro', sans-serif;
     background-color: var(--bs-bg-soft) !important;
     color: var(--bs-color-dark);
    
@@ -42,7 +43,7 @@ body {
 
 /* Typography */
 :lang(en) { font-family: 'Poppins', sans-serif !important; }
-:lang(km) { font-family: 'Kantumruy Pro', sans-serif !important; }
+:lang(km) { font-family: 'Kantumruy', 'Kantumruy Pro', sans-serif !important; }
 
 /* =========================
         BUTTONS

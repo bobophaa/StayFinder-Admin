@@ -15,7 +15,7 @@
 
           <h2 class="text-white fw-bold fs-3 mb-2">StayFinder</h2>
           <p class="text-blue-muted mb-5 small px-3">
-            Management portal for admins and property providers.
+            ផ្ទាំងគ្រប់គ្រងសម្រាប់អ្នកគ្រប់គ្រង និងម្ចាស់អចលនទ្រព្យ។
           </p>
 
           <!-- Role cards -->
@@ -24,21 +24,21 @@
               <i class="bi bi-speedometer2 role-icon" style="color: #ff5f00"></i>
               <div>
                 <div class="role-title">System Admin</div>
-                <div class="role-desc">Manage users, locations &amp; settings</div>
+                <div class="role-desc">គ្រប់គ្រងអ្នកប្រើ ទីតាំង និងការកំណត់</div>
               </div>
             </div>
             <div class="role-card">
               <i class="bi bi-building role-icon" style="color: #2575fc"></i>
               <div>
                 <div class="role-title">Provider</div>
-                <div class="role-desc">Manage properties &amp; bookings</div>
+                <div class="role-desc">គ្រប់គ្រងអចលនទ្រព្យ និងការកក់</div>
               </div>
             </div>
           </div>
 
           <div class="security-note mt-5">
             <i class="bi bi-shield-lock-fill me-2"></i>
-            Secured · Encrypted · Authorized Only
+            សុវត្ថិភាព · អ៊ិនគ្រីប · អនុញ្ញាតតែអ្នកមានសិទ្ធិ
           </div>
         </div>
       </div>
@@ -48,14 +48,14 @@
         <!-- Top bar -->
         <div class="d-flex align-items-center justify-content-between mb-5">
           <div class="portal-badge">
-            <i class="bi bi-shield-fill-check me-2"></i>Management Portal
+            <i class="bi bi-shield-fill-check me-2"></i>ផ្ទាំងគ្រប់គ្រង
           </div>
         
         </div>
 
         <div class="mb-4">
-          <h1 class="fw-bold text-white mb-1" style="font-size: 1.85rem">Welcome Back</h1>
-          <p class="text-muted-dim small">Sign in — you'll be redirected based on your role</p>
+          <h1 class="fw-bold text-white mb-1" style="font-size: 1.85rem">សូមស្វាគមន៍មកវិញ</h1>
+          <p class="text-muted-dim small">ចូលគណនី — ប្រព័ន្ធនឹងបញ្ជូនតាមតួនាទីរបស់អ្នក</p>
         </div>
 
         <form @submit.prevent="handleLogin">
@@ -68,7 +68,7 @@
 
           <!-- Email -->
           <div class="mb-4">
-            <label class="field-label">Email Address</label>
+            <label class="field-label">អ៊ីមែល</label>
             <div
               class="dark-group"
               :class="{ 'dark-group-error': submitted && !authStore.emailOrPhone }"
@@ -83,13 +83,13 @@
               />
             </div>
             <small v-if="submitted && !authStore.emailOrPhone" class="err-text"
-              >Email is required.</small
+              >ត្រូវការអ៊ីមែល។</small
             >
           </div>
 
-          <!-- Password -->
+          <!-- ពាក្យសម្ងាត់ -->
           <div class="mb-4">
-            <label class="field-label">Password</label>
+            <label class="field-label">ពាក្យសម្ងាត់</label>
             <div
               class="dark-group"
               :class="{ 'dark-group-error': submitted && !authStore.password }"
@@ -107,7 +107,7 @@
               </span>
             </div>
             <small v-if="submitted && !authStore.password" class="err-text"
-              >Password is required.</small
+              >ត្រូវការពាក្យសម្ងាត់។</small
             >
           </div>
 
@@ -115,9 +115,9 @@
           <transition name="alert-fade">
             <div v-if="detectedRole" class="role-hint mb-3">
               <i class="bi bi-arrow-right-circle-fill me-2"></i>
-              You'll be redirected to:
+              អ្នកនឹងត្រូវបានបញ្ជូនទៅ៖
               <strong>{{
-                detectedRole === 'System Admin' ? 'Admin Dashboard' : 'Provider Dashboard'
+                detectedRole === 'System Admin' ? 'ផ្ទាំងអ្នកគ្រប់គ្រង' : 'ផ្ទាំងម្ចាស់អចលនទ្រព្យ'
               }}</strong>
             </div>
           </transition>
@@ -130,13 +130,13 @@
           >
             <span v-if="authStore.loading" class="spinner-border spinner-border-sm me-2"></span>
             <i v-else class="bi bi-box-arrow-in-right me-2"></i>
-            {{ authStore.loading ? 'Authenticating...' : 'Sign In' }}
+            {{ authStore.loading ? 'កំពុងផ្ទៀងផ្ទាត់...' : 'ចូលគណនី' }}
           </button>
 
           <div class="text-center mt-4">
             <p class="small text-muted-dim mb-0">
               <i class="bi bi-info-circle me-1"></i>
-              Restricted to authorized admins and providers only.
+              សម្រាប់តែអ្នកគ្រប់គ្រង និងម្ចាស់អចលនទ្រព្យដែលមានសិទ្ធិប៉ុណ្ណោះ។
             </p>
           </div>
         </form>
@@ -173,7 +173,7 @@ const handleLogin = async () => {
       await router.push({ name: 'provider.dashboard' })
     }
 
-    alertSuccess('Logged in successfully!')
+    alertSuccess('ចូលគណនីបានជោគជ័យ!')
   }
 }
 </script>

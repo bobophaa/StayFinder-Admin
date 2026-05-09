@@ -29,7 +29,7 @@ export const useRoomStore = defineStore('room', {
 
         this.rooms = res.data?.data?.data || res.data?.data || res.data || []
       } catch (err) {
-        this.error = err.response?.data?.message || 'Failed to load rooms.'
+        this.error = err.response?.data?.message || 'ផ្ទុកបន្ទប់បរាជ័យ។'
         console.error(err)
       } finally {
         this.loading = false
@@ -45,7 +45,7 @@ export const useRoomStore = defineStore('room', {
         const providerId = user?.id
 
         if (!providerId) {
-          this.error = 'Could not find your user ID. Please log in again.'
+          this.error = 'មិនអាចរកលេខសម្គាល់អ្នកប្រើបានទេ។ សូមចូលគណនីម្តងទៀត។'
           return
         }
 
@@ -82,7 +82,7 @@ export const useRoomStore = defineStore('room', {
             'owner_id:', sample.owner_id)
         }
       } catch (err) {
-        this.error = err.response?.data?.message || 'Failed to load your rooms.'
+        this.error = err.response?.data?.message || 'ផ្ទុកបន្ទប់របស់អ្នកបរាជ័យ។'
         console.error(err)
       } finally {
         this.loading = false
@@ -97,7 +97,7 @@ export const useRoomStore = defineStore('room', {
         const res = await api.get(`/rooms/${id}`)
         this.room = res.data?.data || res.data
       } catch (err) {
-        this.error = 'Could not find room details.'
+        this.error = 'មិនអាចរកព័ត៌មានបន្ទប់បានទេ។'
         console.error(err)
       } finally {
         this.loading = false
@@ -134,7 +134,7 @@ export const useRoomStore = defineStore('room', {
         this.myRooms = this.myRooms.filter((r) => r.id !== roomId)
         return true
       } catch (err) {
-        this.error = err.response?.data?.message || 'Failed to delete room.'
+        this.error = err.response?.data?.message || 'លុបបន្ទប់បរាជ័យ។'
         console.error(err)
         return false
       }

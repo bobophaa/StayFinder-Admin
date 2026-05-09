@@ -4,9 +4,13 @@
 
     <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
       <div>
+<<<<<<< HEAD
         <h2 class="fw-bold text-navy mb-1">ស្វាគមន៍ការត្រឡប់មកវិញ, អ្នកគ្រប់គ្រង!</h2>
+=======
+        <h2 class="fw-bold text-navy mb-1">សូមស្វាគមន៍មកវិញ, {{ user?.name || 'Admin' }}</h2>
+>>>>>>> d1ee42068b953396e964b2b4818804dc6f924368
         <p class="text-muted mb-0">
-          Here's what's happening with
+          នេះជាអ្វីដែលកំពុងកើតឡើងជាមួយ
           <span class="fw-bold text-navy">StayFinder</span> today —
           <span class="text-muted small">{{ todayDate }}</span>
         </p>
@@ -45,7 +49,7 @@
         <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h5 class="fw-bold text-navy mb-0">
-              <i class="bi bi-bar-chart-fill me-2 text-orange"></i>Booking Activity
+              <i class="bi bi-bar-chart-fill me-2 text-orange"></i>សកម្មភាពការកក់
             </h5>
             <div class="d-flex gap-1">
               <button v-for="p in ['7d','30d','90d']" :key="p" class="btn btn-xs"
@@ -66,7 +70,7 @@
       <div class="col-lg-4">
         <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
           <h5 class="fw-bold text-navy mb-4">
-            <i class="bi bi-pie-chart-fill me-2 text-orange"></i>Room Split
+            <i class="bi bi-pie-chart-fill me-2 text-orange"></i>ការបែងចែកបន្ទប់
           </h5>
           <div class="d-flex justify-content-center mb-3">
             <div class="donut-wrap position-relative">
@@ -83,21 +87,21 @@
               </svg>
               <div class="donut-center">
                 <div class="fw-bold text-navy" style="font-size:1.1rem">{{ roomStore.rooms?.length || 0 }}</div>
-                <div class="text-muted" style="font-size:.65rem">Rooms</div>
+                <div class="text-muted" style="font-size:.65rem">បន្ទប់</div>
               </div>
             </div>
           </div>
           <div class="d-flex flex-column gap-2">
             <div class="d-flex justify-content-between align-items-center">
-              <span class="d-flex align-items-center gap-2 small"><span class="legend-dot" style="background:#198754"></span>High-priced</span>
+              <span class="d-flex align-items-center gap-2 small"><span class="legend-dot" style="background:#198754"></span>តម្លៃខ្ពស់</span>
               <span class="fw-bold text-navy small">{{ roomStats.available }}%</span>
             </div>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="d-flex align-items-center gap-2 small"><span class="legend-dot" style="background:#0d6efd"></span>Mid-range</span>
+              <span class="d-flex align-items-center gap-2 small"><span class="legend-dot" style="background:#0d6efd"></span>តម្លៃមធ្យម</span>
               <span class="fw-bold text-navy small">{{ roomStats.regular }}%</span>
             </div>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="d-flex align-items-center gap-2 small"><span class="legend-dot" style="background:#ff5f00"></span>Promo</span>
+              <span class="d-flex align-items-center gap-2 small"><span class="legend-dot" style="background:#ff5f00"></span>បញ្ចុះតម្លៃ</span>
               <span class="fw-bold text-navy small">{{ roomStats.promo }}%</span>
             </div>
           </div>
@@ -110,8 +114,8 @@
       <div class="col-lg-12">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
           <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
-            <span class="fw-bold text-white"><i class="bi bi-house-door me-2"></i>Recent Rooms</span>
-            <router-link to="/admin/rooms" class="btn btn-xs btn-outline-light">View All</router-link>
+            <span class="fw-bold text-white"><i class="bi bi-house-door me-2"></i>Recent បន្ទប់</span>
+            <router-link to="/admin/rooms" class="btn btn-xs btn-outline-light">មើលទាំងអស់</router-link>
           </div>
           <div v-if="loading" class="p-4">
             <div v-for="i in 5" :key="i" class="skeleton-line mb-3"></div>
@@ -121,14 +125,14 @@
               <thead class="table-light">
                 <tr>
                   <th class="ps-4 small fw-bold text-muted">#</th>
-                  <th class="small fw-bold text-muted">Title</th>
-                  <th class="small fw-bold text-muted">District</th>
-                  <th class="small fw-bold text-muted">Price</th>
-                  <th class="small fw-bold text-muted">Status</th>
+                  <th class="small fw-bold text-muted">ចំណងជើង</th>
+                  <th class="small fw-bold text-muted">ខណ្ឌ</th>
+                  <th class="small fw-bold text-muted">តម្លៃ</th>
+                  <th class="small fw-bold text-muted">ស្ថានភាព</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="room in recentRooms" :key="room.id">
+                <tr v-for="room in recentបន្ទប់" :key="room.id">
                   <td class="ps-4 text-muted small">{{ room.id }}</td>
                   <td>
                     <div class="d-flex align-items-center gap-2">
@@ -142,12 +146,12 @@
                   <td class="small text-muted">{{ room.district?.name || '–' }}</td>
                   <td class="fw-bold small text-orange">${{ room.price }}</td>
                   <td>
-                    <span v-if="room.percent_promotion > 0" class="status-pill pill-promo">-{{ room.percent_promotion }}% Promo</span>
-                    <span v-else class="status-pill pill-active">Active</span>
+                    <span v-if="room.percent_promotion > 0" class="status-pill pill-promo">-{{ room.percent_promotion }}% បញ្ចុះតម្លៃ</span>
+                    <span v-else class="status-pill pill-active">សកម្ម</span>
                   </td>
                 </tr>
-                <tr v-if="recentRooms.length === 0">
-                  <td colspan="5" class="text-center text-muted py-4 small">No rooms yet</td>
+                <tr v-if="recentបន្ទប់.length === 0">
+                  <td colspan="5" class="text-center text-muted py-4 small">មិនទាន់មានបន្ទប់</td>
                 </tr>
               </tbody>
             </table>
@@ -159,7 +163,7 @@
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
           <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
             <span class="fw-bold text-white"><i class="bi bi-calendar-check me-2"></i>Recent Bookings</span>
-            <router-link to="/admin/bookings" class="btn btn-xs btn-outline-light">View All</router-link>
+            <router-link to="/admin/bookings" class="btn btn-xs btn-outline-light">មើលទាំងអស់</router-link>
           </div>
           <div v-if="loading" class="p-4">
             <div v-for="i in 5" :key="i" class="skeleton-line mb-3"></div>
@@ -170,7 +174,7 @@
                 <tr>
                   <th class="ps-4 small fw-bold text-muted">Room</th>
                   <th class="small fw-bold text-muted">Date</th>
-                  <th class="small fw-bold text-muted">Status</th>
+                  <th class="small fw-bold text-muted">ស្ថានភាព</th>
                 </tr>
               </thead>
               <tbody>
@@ -192,15 +196,15 @@
       </div> -->
     </div>
 
-    <!-- ── District Breakdown ── -->
+    <!-- ── ខណ្ឌ Breakdown ── -->
     <div class="row g-3 mb-4">
       <div class="col-12">
         <div class="card border-0 shadow-sm rounded-4 p-4">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="fw-bold text-navy mb-0">
-              <i class="bi bi-geo-alt-fill me-2 text-orange"></i>Rooms by District
+              <i class="bi bi-geo-alt-fill me-2 text-orange"></i>បន្ទប់ by ខណ្ឌ
             </h5>
-            <router-link to="/admin/districts" class="small fw-bold text-decoration-none text-orange">Manage</router-link>
+            <router-link to="/admin/districts" class="small fw-bold text-decoration-none text-orange">គ្រប់គ្រង</router-link>
           </div>
           <div v-if="loading">
             <div v-for="i in 4" :key="i" class="skeleton-line mb-3"></div>
@@ -217,7 +221,7 @@
               </div>
             </div>
             <div v-if="districtBreakdown.length === 0" class="col-12 text-center text-muted small py-3">
-              No district data available
+              មិនមានទិន្នន័យខណ្ឌ
             </div>
           </div>
         </div>
@@ -227,11 +231,11 @@
     <!-- ── Bottom Row ── -->
     <div class="row g-3">
 
-      <!-- Quick Actions -->
+      <!-- សកម្មភាពរហ័ស -->
       <div class="col-lg-4">
         <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
           <h5 class="fw-bold text-navy mb-4">
-            <i class="bi bi-lightning-fill me-2 text-orange"></i>Quick Actions
+            <i class="bi bi-lightning-fill me-2 text-orange"></i>សកម្មភាពរហ័ស
           </h5>
           <div class="d-flex flex-column gap-2">
             <router-link v-for="action in quickActions" :key="action.to" :to="action.to" class="action-box text-decoration-none">
@@ -248,14 +252,14 @@
         </div>
       </div>
 
-      <!-- Top Promo Rooms -->
+      <!-- Top បញ្ចុះតម្លៃ បន្ទប់ -->
       <div class="col-lg-4">
         <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="fw-bold text-navy mb-0">
-              <i class="bi bi-tag-fill me-2 text-orange"></i>Top Promotions
+              <i class="bi bi-tag-fill me-2 text-orange"></i>Top បញ្ចុះតម្លៃtions
             </h5>
-            <span class="badge-count">{{ promoRooms.length }}</span>
+            <span class="badge-count">{{ promoបន្ទប់.length }}</span>
           </div>
           <div v-if="loading">
             <div v-for="i in 4" :key="i" class="d-flex gap-2 mb-3">
@@ -264,7 +268,7 @@
             </div>
           </div>
           <div v-else class="d-flex flex-column gap-3">
-            <div v-for="room in promoRooms.slice(0,5)" :key="room.id" class="d-flex align-items-center gap-3">
+            <div v-for="room in promoបន្ទប់.slice(0,5)" :key="room.id" class="d-flex align-items-center gap-3">
               <div class="room-thumb" style="width:42px;height:42px;border-radius:10px;flex-shrink:0;overflow:hidden">
                 <img v-if="room.image" :src="room.image" style="width:42px;height:42px;object-fit:cover"/>
                 <div v-else class="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
@@ -277,23 +281,23 @@
               </div>
               <span class="promo-pill">-{{ room.percent_promotion }}%</span>
             </div>
-            <div v-if="promoRooms.length === 0" class="text-center py-4">
+            <div v-if="promoបន្ទប់.length === 0" class="text-center py-4">
               <i class="bi bi-tag d-block mb-2" style="font-size:1.8rem;opacity:.2"></i>
-              <span class="text-muted small">No promotions active</span>
+              <span class="text-muted small">មិនមានប្រម៉ូសិនសកម្ម</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- System Status + Activity Feed -->
+      <!-- System ស្ថានភាព + Activity Feed -->
       <div class="col-lg-4">
         <div class="card border-0 shadow-sm rounded-4 p-4 h-100  text-black">
           <h5 class="fw-bold mb-4">
-            <i class="bi bi-hdd-network-fill me-2" style="color:#ff9a5c"></i>System Status
+            <i class="bi bi-hdd-network-fill me-2" style="color:#ff9a5c"></i>System ស្ថានភាព
           </h5>
 
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="small opacity-75">API Response</span>
+            <span class="small opacity-75">ការឆ្លើយតប API</span>
             <span class="badge" :class="apiMs < 200 ? 'bg-success' : 'bg-warning'">{{ apiMs }}ms</span>
           </div>
           <div class="progress mb-4" style="height:5px;background:rgba(255,255,255,.12);border-radius:10px">
@@ -302,29 +306,29 @@
           </div>
 
           <div class="d-flex justify-content-between mb-3">
-            <span class="small opacity-75">Database</span>
-            <span class="small text-success"><i class="bi bi-check-circle-fill me-1"></i>Connected</span>
+            <span class="small opacity-75">មូលដ្ឋានទិន្នន័យ</span>
+            <span class="small text-success"><i class="bi bi-check-circle-fill me-1"></i>បានភ្ជាប់</span>
           </div>
           <div class="d-flex justify-content-between mb-3">
-            <span class="small opacity-75">Total Rooms</span>
+            <span class="small opacity-75">Total បន្ទប់</span>
             <span class="fw-bold">{{ roomStore.rooms?.length || 0 }}</span>
           </div>
           <div class="d-flex justify-content-between mb-3">
-            <span class="small opacity-75">Districts</span>
+            <span class="small opacity-75">ខណ្ឌs</span>
             <span class="fw-bold">{{ districtStore.districts?.length || 0 }}</span>
           </div>
           <div class="d-flex justify-content-between mb-3">
-            <span class="small opacity-75">Avg. Room Price</span>
-            <span class="fw-bold">{{ avgPrice }}</span>
+            <span class="small opacity-75">Avg. Room តម្លៃ</span>
+            <span class="fw-bold">{{ avgតម្លៃ }}</span>
           </div>
           <div class="d-flex justify-content-between mb-4">
-            <span class="small opacity-75">Active Promos</span>
-            <span class="fw-bold" style="color:#ff9a5c">{{ promoRooms.length }}</span>
+            <span class="small opacity-75">សកម្ម បញ្ចុះតម្លៃs</span>
+            <span class="fw-bold" style="color:#ff9a5c">{{ promoបន្ទប់.length }}</span>
           </div>
 
           <hr style="border-color:rgba(255,255,255,.1)"/>
 
-          <p class="small fw-bold mb-3 opacity-75 text-uppercase" style="letter-spacing:.06em;font-size:.68rem">Recent Activity</p>
+          <p class="small fw-bold mb-3 opacity-75 text-uppercase" style="letter-spacing:.06em;font-size:.68rem">សកម្មភាពថ្មីៗ</p>
           <div class="d-flex flex-column gap-3">
             <div v-for="act in activityFeed" :key="act.id" class="d-flex gap-2 align-items-start">
               <div :class="['act-dot flex-shrink-0', act.dotClass]" style="margin-top:5px"></div>
@@ -358,17 +362,17 @@ const lastRefresh  = ref('')
 const recentBookings = ref([]) // replace with bookingStore.bookings when ready
 
 // ── Derived from stores ────────────────────────────────────
-const recentRooms = computed(() => (roomStore.rooms || []).slice(0, 6))
-const promoRooms  = computed(() => (roomStore.rooms || []).filter(r => r.percent_promotion > 0))
+const recentបន្ទប់ = computed(() => (roomStore.rooms || []).slice(0, 6))
+const promoបន្ទប់  = computed(() => (roomStore.rooms || []).filter(r => r.percent_promotion > 0))
 
-const avgPrice = computed(() => {
+const avgតម្លៃ = computed(() => {
   const rooms = roomStore.rooms || []
   if (!rooms.length) return '$0'
   const avg = rooms.reduce((s, r) => s + Number(r.price || 0), 0) / rooms.length
   return '$' + Math.round(avg)
 })
 
-// ── District breakdown ─────────────────────────────────────
+// ── ខណ្ឌ breakdown ─────────────────────────────────────
 const districtBreakdown = computed(() => {
   const rooms = roomStore.rooms || []
   const total = rooms.length || 1
@@ -385,7 +389,7 @@ const districtBreakdown = computed(() => {
 // ── Donut stats ────────────────────────────────────────────
 const roomStats = computed(() => {
   const total  = roomStore.rooms?.length || 1
-  const promo  = promoRooms.value.length
+  const promo  = promoបន្ទប់.value.length
   const promoP = Math.round((promo / total) * 100)
   const regular = Math.round(((total - promo) / total) * 55)
   const avail   = Math.max(0, 100 - promoP - regular)
@@ -394,19 +398,19 @@ const roomStats = computed(() => {
 
 // ── Stat cards ─────────────────────────────────────────────
 const statCards = computed(() => [
-  { title: 'Total Rooms',  value: roomStore.rooms?.length || 0,       icon: 'bi-house-door-fill', bgClass: 'bg-orange-light', trend: 8  },
-  { title: 'Districts',    value: districtStore.districts?.length || 0, icon: 'bi-geo-alt-fill',  bgClass: 'bg-primary-light', trend: 2  },
-  { title: 'Promo Rooms',  value: promoRooms.value.length,            icon: 'bi-tag-fill',        bgClass: 'bg-success-light', trend: 12 },
-  { title: 'Avg. Price',   value: avgPrice.value,                     icon: 'bi-wallet2',         bgClass: 'bg-purple-light',  trend: -3 },
+  { title: 'Total បន្ទប់',  value: roomStore.rooms?.length || 0,       icon: 'bi-house-door-fill', bgClass: 'bg-orange-light', trend: 8  },
+  { title: 'ខណ្ឌs',    value: districtStore.districts?.length || 0, icon: 'bi-geo-alt-fill',  bgClass: 'bg-primary-light', trend: 2  },
+  { title: 'បញ្ចុះតម្លៃ បន្ទប់',  value: promoបន្ទប់.value.length,            icon: 'bi-tag-fill',        bgClass: 'bg-success-light', trend: 12 },
+  { title: 'Avg. តម្លៃ',   value: avgតម្លៃ.value,                     icon: 'bi-wallet2',         bgClass: 'bg-purple-light',  trend: -3 },
 ])
 
 // ── Quick actions ──────────────────────────────────────────
 const quickActions = [
-  { to: '/admin/Manage',        title: 'Manage Users',  sub: 'View & set roles',       icon: 'bi-people-fill',      bg: 'bg-primary-light', color: '#0d6efd' },
-  { to: '/admin/room-options', title: 'Room Options',  sub: 'Amenities & facilities', icon: 'bi-ui-checks',        bg: 'bg-orange-light',  color: '#ff5f00' },
-  { to: '/admin/locations',    title: 'Districts',     sub: 'Manage locations',       icon: 'bi-geo-alt-fill',     bg: 'bg-success-light', color: '#198754' },
-  { to: '/provider/add-room',  title: 'Post New Room', sub: 'Add a listing',          icon: 'bi-plus-circle-fill', bg: 'bg-purple-light',  color: '#8b5cf6' },
-  { to: '/admin/bookings',     title: 'All Bookings',  sub: 'Approve or reject',      icon: 'bi-calendar-check',   bg: 'bg-orange-light',  color: '#ff5f00' },
+  { to: '/admin/គ្រប់គ្រង',        title: 'គ្រប់គ្រង Users',  sub: 'View & set roles',       icon: 'bi-people-fill',      bg: 'bg-primary-light', color: '#0d6efd' },
+  { to: '/admin/room-options', title: 'ជម្រើសបន្ទប់',  sub: 'Amenities & facilities', icon: 'bi-ui-checks',        bg: 'bg-orange-light',  color: '#ff5f00' },
+  { to: '/admin/locations',    title: 'ខណ្ឌs',     sub: 'គ្រប់គ្រង locations',       icon: 'bi-geo-alt-fill',     bg: 'bg-success-light', color: '#198754' },
+  { to: '/provider/add-room',  title: 'បង្ហោះបន្ទប់ថ្មី', sub: 'Add a listing',          icon: 'bi-plus-circle-fill', bg: 'bg-purple-light',  color: '#8b5cf6' },
+  { to: '/admin/bookings',     title: 'ការកក់ទាំងអស់',  sub: 'Approve or reject',      icon: 'bi-calendar-check',   bg: 'bg-orange-light',  color: '#ff5f00' },
 ]
 
 // ── Activity feed (replace with real events from API) ──────
@@ -415,7 +419,7 @@ const activityFeed = ref([
   { id: 2, text: 'Booking #42 approved',           time: '14 mins ago', dotClass: 'dot-green'  },
   { id: 3, text: 'New user registered',            time: '1 hr ago',    dotClass: 'dot-blue'   },
   { id: 4, text: 'Booking #38 rejected',           time: '3 hrs ago',   dotClass: 'dot-red'    },
-  { id: 5, text: 'District "Sen Sok" added',       time: 'Yesterday',   dotClass: 'dot-blue'   },
+  { id: 5, text: 'ខណ្ឌ "Sen Sok" added',       time: 'Yesterday',   dotClass: 'dot-blue'   },
 ])
 
 // ── Chart ──────────────────────────────────────────────────
@@ -449,7 +453,7 @@ const statusLabel = (s) => ({ 1: 'Pending', 2: 'Approved', 3: 'Rejected' })[s] |
 async function refreshAll() {
   loading.value = true
   const t0 = Date.now()
-  await Promise.all([roomStore.fetchRooms(), districtStore.fetchDistricts()])
+  await Promise.all([roomStore.fetchបន្ទប់(), districtStore.fetchខណ្ឌs()])
   apiMs.value       = Date.now() - t0
   lastRefresh.value = new Date().toLocaleTimeString()
   loading.value     = false
