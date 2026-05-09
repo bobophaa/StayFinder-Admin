@@ -24,7 +24,7 @@
             <th v-for="col in columns" :key="col.key" :class="'th-' + col.key">
               {{ col.label }}
             </th>
-            <th class="th-actions">Actions</th>
+            <th class="th-actions">សកម្មភាព</th>
           </tr>
         </thead>
 
@@ -82,7 +82,7 @@
                 </div>
               </template>
 
-              <!-- Payment proof column -->
+              <!-- ភស្តុតាងការទូទាត់ column -->
               <template v-else-if="col.type === 'payment'">
                 <div
                   v-if="getPaymentUrl(row)"
@@ -90,8 +90,8 @@
                   :class="{ clickable: canInteract(row) }"
                   @click="canInteract(row) && $emit('view-payment', row)"
                 >
-                  <img :src="getPaymentUrl(row)" class="payment-thumb" alt="Payment proof" />
-                  <span class="payment-label">View</span>
+                  <img :src="getPaymentUrl(row)" class="payment-thumb" alt="ភស្តុតាងការទូទាត់" />
+                  <span class="payment-label">មើល</span>
                 </div>
                 <span v-else class="no-payment">—</span>
               </template>
@@ -119,10 +119,10 @@
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
-                  <span class="btn-label">Detail</span>
+                  លម្អិត
                 </button>
                 <button
-                  v-if="showActions"
+                  v-if="showសកម្មភាព"
                   class="action-btn approve-btn"
                   :disabled="approvingId === row.id || !isPending(row.status)"
                   @click="$emit('approve', row.id)"
@@ -139,12 +139,10 @@
                   >
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
-                  <span class="btn-label">{{
-                    approvingId === row.id ? 'Approving…' : 'Approve'
-                  }}</span>
+                  {{ approvingId === row.id ? 'កំពុងអនុម័ត…' : 'អនុម័ត' }}
                 </button>
                 <button
-                  v-if="showActions"
+                  v-if="showសកម្មភាព"
                   class="action-btn reject-btn"
                   :disabled="rejectingId === row.id || !isPending(row.status)"
                   @click="$emit('reject', row.id)"
@@ -162,9 +160,7 @@
                     <line x1="18" y1="6" x2="6" y2="18" />
                     <line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
-                  <span class="btn-label">{{
-                    rejectingId === row.id ? 'Rejecting…' : 'Reject'
-                  }}</span>
+                  {{ rejectingId === row.id ? 'កំពុងបដិសេធ…' : 'បដិសេធ' }}
                 </button>
               </div>
             </td>
@@ -177,7 +173,7 @@
         <div class="loading-spinner">
           <div class="spinner-ring"></div>
         </div>
-        <p class="state-text">Loading data…</p>
+        <p class="state-text">កំពុងផ្ទុកទិន្នន័យ…</p>
       </div>
 
       <!-- Empty state -->
@@ -201,10 +197,10 @@
     <!-- Pagination -->
     <div v-if="!loading && effectiveTotalItems > pageSize" class="table-pagination">
       <p class="pagination-info">
-        Showing
-        <strong>{{ (currentPage - 1) * pageSize + 1 }}</strong
-        >–<strong>{{ Math.min(currentPage * pageSize, effectiveTotalItems) }}</strong> of
-        <strong>{{ effectiveTotalItems }}</strong> entries
+        កំពុងបង្ហាញ
+        <strong>{{ (currentPage - 1) * pageSize + 1 }}</strong> –
+        <strong>{{ Math.min(currentPage * pageSize, totalItems) }}</strong>
+        នៃ <strong>{{ totalItems }}</strong> ធាតុ
       </p>
 
       <nav aria-label="Table pages">
@@ -259,14 +255,14 @@ const props = defineProps({
   data: { type: Array, default: () => [] },
   columns: { type: Array, required: true },
   loading: { type: Boolean, default: false },
-  showActions: { type: Boolean, default: true },
+  showសកម្មភាព: { type: Boolean, default: true },
   approvingId: { type: [Number, String, null], default: null },
   rejectingId: { type: [Number, String, null], default: null },
   currentPage: { type: Number, default: 1 },
   pageSize: { type: Number, default: 12 },
   totalItems: { type: Number, default: 0 },
   activeFilter: { type: String, default: 'all' },
-  emptyMessage: { type: String, default: 'No data found' },
+  emptyMessage: { type: String, default: 'មិនមានទិន្នន័យ' },
   paymentUrlGetter: { type: Function, default: null },
 })
 
@@ -292,9 +288,9 @@ const getStatusKey = (status) => {
 }
 
 const getStatusLabel = (status) => {
-  if (status === 2 || status === '2' || status === 'approved') return 'Approved'
-  if (status === 3 || status === '3' || status === 'rejected') return 'Rejected'
-  return 'Pending'
+  if (status === 2 || status === '2' || status === 'approved') return 'បានអនុម័ត'
+  if (status === 3 || status === '3' || status === 'rejected') return 'បានបដិសេធ'
+  return 'កំពុងរង់ចាំ'
 }
 
 const isPending = (status) => {
@@ -327,7 +323,7 @@ const getPaymentUrl = (row) => {
 }
 
 const formatDate = (dateString) => {
-  if (!dateString) return 'N/A'
+  if (!dateString) return 'មិនមាន'
   const date = new Date(dateString)
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
@@ -373,10 +369,10 @@ const statusCategories = computed(() => {
   const approved = props.data.filter((item) => getStatusKey(item.status) === 'approved').length
   const rejected = props.data.filter((item) => getStatusKey(item.status) === 'rejected').length
   return [
-    { key: 'all', label: 'All', count: props.data.length },
-    { key: 'pending', label: 'Pending', count: pending },
-    { key: 'approved', label: 'Approved', count: approved },
-    { key: 'rejected', label: 'Rejected', count: rejected },
+    { key: 'all', label: 'ទាំងអស់', count: props.data.length },
+    { key: 'pending', label: 'រង់ចាំ', count: pending },
+    { key: 'approved', label: 'អនុម័ត', count: approved },
+    { key: 'rejected', label: 'បដិសេធ', count: rejected },
   ]
 })
 </script>

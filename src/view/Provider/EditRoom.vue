@@ -5,17 +5,17 @@
         <!-- Card -->
         <div class="card shadow-lg rounded-4 p-5 border-0">
           <!-- Header -->
-          <h3 class="fw-bold text-navy mb-4 text-center">ការកែប្រែបន្ទប់</h3>
+          <h3 class="fw-bold text-navy mb-4 text-center">កែសម្រួលបញ្ជីបន្ទប់</h3>
 
           <!-- Loading -->
           <div v-if="loadingFetch" class="text-center py-5">
             <div class="spinner-border text-orange" role="status"></div>
-            <p class="mt-3 text-muted">ទាញយកព័ត៌មានបន្ទប់...</p>
+            <p class="mt-3 text-muted">កំពុងទាញព័ត៌មានបន្ទប់...</p>
           </div>
 
           <!-- Form -->
           <form v-else @submit.prevent="handleUpdate">
-            <!-- Room Title -->
+            <!-- ចំណងជើងបន្ទប់ -->
             <div class="mb-4">
               <label class="form-label fw-bold">ចំណងជើងបន្ទប់</label>
               <input
@@ -49,14 +49,14 @@
               </div>
             </div>
 
-            <!-- Description -->
+            <!-- ពិពណ៌នា -->
             <div class="mb-4">
-              <label class="form-label fw-bold">ការពិពណ៌នា</label>
+              <label class="form-label fw-bold">ពិពណ៌នា</label>
               <textarea
                 v-model="form.description"
                 class="form-control form-control-lg text-muted"
                 rows="5"
-                placeholder="Describe your room..."
+                placeholder="ពិពណ៌នាបន្ទប់របស់អ្នក..."
               ></textarea>
             </div>
 
@@ -72,7 +72,7 @@
                 />
               </div>
               <input type="file" @change="onFileChange" class="form-control" accept="image/*" />
-              <small class="text-muted">ចន្លោះទទេរ​.</small>
+              <small class="text-muted">ទុកចោលដើម្បីរក្សារូបភាពបច្ចុប្បន្ន។</small>
             </div>
 
             <!-- Buttons -->
@@ -82,7 +82,7 @@
                 @click="$router.back()"
                 class="btn btn-light px-4 rounded-pill shadow-sm"
               >
-                ត្រលប់ក្រោយ
+                បោះបង់
               </button>
               <button
                 type="submit"
@@ -90,7 +90,7 @@
                 :disabled="loadingSubmit"
               >
                 <span v-if="loadingSubmit" class="spinner-border spinner-border-sm me-2"></span>
-                រក្សាទុកការផ្លាស់ប្តូរ
+                រក្សាទុកការកែប្រែ
               </button>
             </div>
           </form>
@@ -139,7 +139,7 @@ const fetchRoomDetail = async () => {
     }
   } catch (err) {
     console.error(err)
-    alert('មិនអាចទាញយកព័ត៌មានបន្ទប់បានទេ.')
+    alert('មិនអាចផ្ទុកទិន្នន័យបន្ទប់។')
   } finally {
     loadingFetch.value = false
   }
@@ -170,14 +170,14 @@ const handleUpdate = async () => {
 
     const success = await roomStore.updateRoom(roomId, formData)
     if (success) {
-      alert('បន្ទប់ត្រូវបានធ្វើឱ្យបានជោគជ័យ!')
+      alert('បានកែសម្រួលបន្ទប់ជោគជ័យ!')
       router.push('/provider/my-rooms')
     } else {
-      alert('ការផ្លាស់ប្តូរបានបរាជ័យ!')
+      alert('កែសម្រួលបរាជ័យ!')
     }
   } catch (err) {
     console.error(err)
-    alert('មានកំហុសបានកើតឡើង។')
+    alert('មានបញ្ហាកើតឡើង។')
   } finally {
     loadingSubmit.value = false
   }

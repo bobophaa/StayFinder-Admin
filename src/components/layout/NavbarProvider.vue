@@ -37,7 +37,7 @@ const defaultAvatar = computed(() =>
   `https://ui-avatars.com/api/?background=031c36&color=fff&name=${encodeURIComponent(auth.user?.name || 'CV')}`
 );
 const formatPageName = (name) => {
-  if (!name) return 'Dashboard';
+  if (!name) return 'ផ្ទាំងគ្រប់គ្រង';
   return name.toString()
     .replace(/([A-Z])/g, ' $1')
     .replace(/^./, (str) => str.toUpperCase())
