@@ -4,11 +4,7 @@
 
     <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
       <div>
-<<<<<<< HEAD
-        <h2 class="fw-bold text-navy mb-1">ស្វាគមន៍ការត្រឡប់មកវិញ, អ្នកគ្រប់គ្រង!</h2>
-=======
         <h2 class="fw-bold text-navy mb-1">សូមស្វាគមន៍មកវិញ, {{ user?.name || 'Admin' }}</h2>
->>>>>>> d1ee42068b953396e964b2b4818804dc6f924368
         <p class="text-muted mb-0">
           នេះជាអ្វីដែលកំពុងកើតឡើងជាមួយ
           <span class="fw-bold text-navy">StayFinder</span> today —
