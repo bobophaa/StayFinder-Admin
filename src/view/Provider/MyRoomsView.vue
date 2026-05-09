@@ -461,7 +461,7 @@ function confirmDelete(room) {
 async function executeDelete() {
   if (!roomToDelete.value) return
   deletingId.value = roomToDelete.value.id
-  const success = await roomStore.deleteបន្ទប់(roomToDelete.value.id)
+  const success = await roomStore.deleteRoom(roomToDelete.value.id)
   if (success) {
     deleteModalInstance?.hide()
     alertSuccess('បន្ទប់ត្រូវបានលុបដោយជោគជ័យ!')
