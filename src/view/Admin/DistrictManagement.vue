@@ -10,11 +10,13 @@
       </button>
     </div>
 
+    <!-- Loading -->
     <div v-if="districtStore.loading" class="text-center py-5">
       <div class="spinner-border text-orange" role="status"></div>
       <p class="mt-2 text-muted">កំពុងទាញយកខណ្ឌ...</p>
     </div>
 
+    <!-- Table -->
     <div v-else class="card border-0 shadow-sm rounded-4">
       <div class="table-responsive p-3">
         <table class="table table-hover align-middle">
@@ -27,7 +29,9 @@
           </thead>
           <tbody>
             <tr v-for="dist in districtStore.districts" :key="dist.id">
-              <td><span class="fw-bold text-muted">#{{ dist.id }}</span></td>
+              <td>
+                <span class="fw-bold text-muted">#{{ dist.id }}</span>
+              </td>
               <td>
                 <div class="d-flex align-items-center">
                   <div class="location-icon me-3"><i class="bi bi-geo-fill"></i></div>
@@ -36,40 +40,65 @@
               </td>
               <td>
                 <div class="d-flex justify-content-center gap-2">
-                  <button @click="openModal(dist)" class="btn btn-sm btn-outline-navy rounded-pill px-3">
+                  <button
+                    @click="openModal(dist)"
+                    class="btn btn-sm btn-outline-navy rounded-pill px-3"
+                  >
                     កែសម្រួល
                   </button>
-                  <button @click="handleលុប(dist.id)" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                    លុប
+                  <!-- FIX: was handleលុប() → handleDelete() -->
+                  <button
+                    @click="handleDelete(dist.id, dist.name)"
+                    :disabled="deletingId === dist.id"
+                    class="btn btn-sm btn-outline-danger rounded-pill px-3"
+                  >
+                    <span
+                      v-if="deletingId === dist.id"
+                      class="spinner-border spinner-border-sm"
+                    ></span>
+                    <span v-else>លុប</span>
                   </button>
                 </div>
               </td>
+            </tr>
+            <tr v-if="districtStore.districts.length === 0">
+              <td colspan="3" class="text-center py-4 text-muted small">មិនទាន់មានខណ្ឌ</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <div v-if="showModal" class="modal-backdrop">
-      <div class="modal-content p-4 shadow-lg border-0">
-        <h4 class="fw-bold mb-3 text-navy">{{ isកែសម្រួល ? 'កែសម្រួល District' : 'New District' }}</h4>
-        
+    <!-- Add / Edit Modal -->
+    <div v-if="showModal" class="modal-backdrop" @click.self="showModal = false">
+      <div class="modal-box p-4 shadow-lg border-0">
+        <h4 class="fw-bold mb-3 text-navy">
+          {{ isEditing ? 'កែសម្រួលខណ្ឌ' : 'បន្ថែមខណ្ឌថ្មី' }}
+        </h4>
+
         <div class="mb-4">
           <label class="form-label fw-semibold">ឈ្មោះខណ្ឌ</label>
-          <input 
-            v-model="districtName" 
-            type="text" 
-            class="form-control form-control-lg rounded-3" 
-            placeholder="e.g. Chamkarmon"
+          <input
+            v-model="districtName"
+            type="text"
+            class="form-control form-control-lg rounded-3"
+            placeholder="ឧទាហរណ៍៖ ចំការមន"
             @keyup.enter="handleSubmit"
-          >
+            autofocus
+          />
         </div>
 
         <div class="d-flex gap-2">
-          <button @click="showModal = false" class="btn btn-light flex-grow-1 py-2 rounded-3">បោះបង់</button>
-          <button @click="handleSubmit" :disabled="isSaving" class="btn btn-orange flex-grow-1 py-2 rounded-3">
+          <button @click="showModal = false" class="btn btn-light flex-grow-1 py-2 rounded-3">
+            បោះបង់
+          </button>
+          <button
+            @click="handleSubmit"
+            :disabled="isSaving"
+            class="btn btn-orange flex-grow-1 py-2 rounded-3"
+          >
             <span v-if="isSaving" class="spinner-border spinner-border-sm me-2"></span>
-            {{ isកែសម្រួល ? 'ធ្វើបច្ចុប្បន្នភាព' : 'រក្សាទុក' }}
+            {{ isEditing ? 'ធ្វើបច្ចុប្បន្នភាព' : 'រក្សាទុក' }}
           </button>
         </div>
       </div>
@@ -80,14 +109,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useDistrictStore } from '@/stores/DistrictStore'
-// import { alertSuccess, alertError, confirmលុប } from '@/utils/alert'
-// import { alertError, confirmលុប, alertSuccess, } from '@/utils/alert'
+import { alertSuccess, alertError } from '@/Utils/alert'
+import Swal from 'sweetalert2'
 
 const districtStore = useDistrictStore()
 
 const showModal = ref(false)
-const isកែសម្រួល = ref(false)
+const isEditing = ref(false)
 const isSaving = ref(false)
+const deletingId = ref(null)
 const districtName = ref('')
 const selectedId = ref(null)
 
@@ -97,54 +127,83 @@ onMounted(() => {
 
 const openModal = (dist = null) => {
   if (dist) {
-    isកែសម្រួល.value = true
+    isEditing.value = true
     selectedId.value = dist.id
     districtName.value = dist.name
   } else {
-    isកែសម្រួល.value = false
+    isEditing.value = false
+    selectedId.value = null
     districtName.value = ''
   }
   showModal.value = true
 }
 
 const handleSubmit = async () => {
-  if (!districtName.value.trim()) return alertError('សូមបញ្ចូលឈ្មោះខណ្ឌ')
-  
+  if (!districtName.value.trim()) {
+    alertError('សូមបញ្ចូលឈ្មោះខណ្ឌ')
+    return
+  }
+
   isSaving.value = true
   let success = false
 
-  if (isកែសម្រួល.value) {
+  if (isEditing.value) {
     success = await districtStore.updateDistrict(selectedId.value, districtName.value)
   } else {
     success = await districtStore.addDistrict(districtName.value)
   }
 
   if (success) {
-    alertSuccess(isកែសម្រួល.value ? 'បានធ្វើបច្ចុប្បន្នភាពខណ្ឌ!' : 'បានបន្ថែមខណ្ឌ!')
+    alertSuccess(isEditing.value ? 'បានធ្វើបច្ចុប្បន្នភាពខណ្ឌ!' : 'បានបន្ថែមខណ្ឌ!')
     showModal.value = false
-    districtStore.fetchDistricts()
+    await districtStore.fetchDistricts()
   } else {
     alertError('រក្សាទុកខណ្ឌបរាជ័យ។')
   }
+
   isSaving.value = false
 }
 
-const handleលុប = async (id) => {
-  const confirmed = await confirmលុប('តើអ្នកប្រាកដថាចង់លុបខណ្ឌនេះឬ?')
-  if (confirmed) {
-    const success = await districtStore.deleteDistrict(id)
-    if (success) {
-      alertSuccess('បានលុបខណ្ឌជោគជ័យ')
-      districtStore.fetchDistricts()
-    } else {
-      alertError('សកម្មភាពបរាជ័យ។')
-    }
+const handleDelete = async (id, name) => {
+  const result = await Swal.fire({
+    title: 'លុបខណ្ឌនេះ?',
+    html: `អ្នកកំពុងនឹងលុប <strong>"${name}"</strong><br><span style="font-size:.9rem;color:#888">សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។</span>`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'លុប',
+    cancelButtonText: 'បោះបង់',
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    reverseButtons: true,
+    customClass: {
+      popup: 'swal-custom-popup',
+      title: 'swal-custom-title',
+      confirmButton: 'swal-confirm-btn',
+      cancelButton: 'swal-cancel-btn',
+    },
+  })
+
+  if (!result.isConfirmed) return
+
+  deletingId.value = id
+  const success = await districtStore.deleteDistrict(id)
+
+  if (success) {
+    alertSuccess('បានលុបខណ្ឌជោគជ័យ!')
+    await districtStore.fetchDistricts()
+  } else {
+    alertError('សកម្មភាពបរាជ័យ។')
   }
+
+  deletingId.value = null
 }
 </script>
 
 <style scoped>
-.text-navy { color: #031c36; }
+.text-navy {
+  color: #031c36;
+}
+
 .bg-navy-header th {
   background-color: #031c36 !important;
   color: white !important;
@@ -152,6 +211,7 @@ const handleលុប = async (id) => {
   font-size: 0.85rem;
   text-transform: uppercase;
 }
+
 .location-icon {
   width: 35px;
   height: 35px;
@@ -162,8 +222,38 @@ const handleលុប = async (id) => {
   justify-content: center;
   color: #ff5f00;
 }
-.btn-orange { background: #ff5f00; color: white; border: none; }
-.btn-orange:hover { background: #e65600; }
+
+.btn-main {
+  background: #031c36;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  transition:
+    background 0.2s,
+    transform 0.15s;
+}
+.btn-main:hover {
+  background: #052d5a;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-orange {
+  background: #ff5f00;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.btn-orange:hover:not(:disabled) {
+  background: #e65600;
+}
+.btn-orange:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
 
 .btn-outline-navy {
   border: 1px solid #031c36;
@@ -175,12 +265,43 @@ const handleលុប = async (id) => {
 }
 
 .modal-backdrop {
-  position: fixed; top: 0; left: 0;
-  width: 100vw; height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   background: rgba(3, 28, 54, 0.7);
-  display: flex; justify-content: center; align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 1050;
 }
-.modal-content { background: white; width: 420px; border-radius: 20px; }
-.shadow-orange { box-shadow: 0 4px 15px rgba(255, 95, 0, 0.25); }
+.modal-box {
+  background: white;
+  width: 420px;
+  border-radius: 20px;
+}
+.shadow-orange {
+  box-shadow: 0 4px 15px rgba(255, 95, 0, 0.25);
+}
+</style>
+
+<style>
+.swal-custom-popup {
+  border-radius: 20px !important;
+  font-family: inherit !important;
+  padding: 2rem !important;
+}
+.swal-custom-title {
+  color: #031c36 !important;
+  font-weight: 700 !important;
+  font-size: 1.2rem !important;
+}
+.swal-confirm-btn,
+.swal-cancel-btn {
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  padding: 10px 28px !important;
+  font-size: 0.9rem !important;
+}
 </style>

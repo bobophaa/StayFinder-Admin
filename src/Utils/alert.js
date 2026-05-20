@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2';
 
-// Toast configuration for quick notifications
+
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -27,31 +27,26 @@ export const alertSuccess = (message) => {
   });
 };
 
-/**
- * Show an error alert
- */
+
 export const alertError = (message) => {
   Swal.fire({
     icon: 'error',
     title: 'បរាជ័យ!',
     text: message || 'មានបញ្ហាមួយកើតឡើង។ សូមព្យាយាមម្តងទៀត។',
-    // confirmButtonColor: '#031c36',
-     // Your Navy Theme Color
+   
   });
 };
 
-/**
- * Show a confirmation dialog for deletions
- */
+
 export const confirmDelete = async (title = "តើអ្នកប្រាកដទេ?") => {
   const result = await Swal.fire({
     title: title,
     text: "សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!",
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#d33', // Red for delete
-    cancelButtonColor: '#031c36', // Navy for cancel
-    confirmButtonText: 'បាទ/ចាស',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#031c36', 
+    confirmButtonText: 'យល់ព្រម',
     cancelButtonText: 'បោះបង់'
   });
   return result.isConfirmed;

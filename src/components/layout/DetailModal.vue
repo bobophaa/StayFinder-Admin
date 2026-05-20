@@ -33,7 +33,17 @@
             <!-- ===== Guest Info ===== -->
             <div class="info-section">
               <div class="section-label">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
                 ព័ត៌មានភ្ញៀវ
               </div>
               <div class="profile-card">
@@ -49,19 +59,19 @@
               </div>
               <div class="info-grid">
                 <div class="info-item">
-                  <span class="info-label">Email</span>
+                  <span class="info-label">អ៊ីមេល</span>
                   <span class="info-value">{{ item.buyer?.email || '—' }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">Phone</span>
+                  <span class="info-label">ទូរស័ព្ទ</span>
                   <span class="info-value">{{ item.buyer?.phone || '—' }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">Gender</span>
+                  <span class="info-label">ភេទ</span>
                   <span class="info-value">{{ genderText(item.buyer?.gender) }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">ID Card</span>
+                  <span class="info-label">ប័ណ្ណអត្តសញ្ញាណ</span>
                   <span class="info-value">{{ item.buyer?.id_card || 'មិនបានផ្តល់' }}</span>
                 </div>
               </div>
@@ -70,11 +80,21 @@
             <!-- ===== ព័ត៌មានបន្ទប់ ===== -->
             <div class="info-section">
               <div class="section-label">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
                 ព័ត៌មានបន្ទប់
               </div>
               <div class="room-hero" v-if="item.room?.image">
-                <img :src="item.room.image" class="room-image" alt="room" />
+                <img :src="item.room.image" class="room-image" alt="រូបភាពបន្ទប់" />
                 <div class="room-overlay">
                   <h4 class="room-title-overlay">{{ item.room?.title || '—' }}</h4>
                   <span class="room-district">{{ item.room?.district?.name || '—' }}</span>
@@ -121,7 +141,9 @@
                   </div>
                   <div v-if="item.room?.percent_promotion > 0" class="pricing-row promo">
                     <span>បញ្ចុះតម្លៃ</span>
-                    <span class="pricing-amount promo-text">-{{ item.room.percent_promotion }}%</span>
+                    <span class="pricing-amount promo-text"
+                      >-{{ item.room.percent_promotion }}%</span
+                    >
                   </div>
                   <div class="pricing-divider"></div>
                   <div class="pricing-row total">
@@ -151,8 +173,19 @@
               <div v-if="item.room?.map_url" class="info-item" style="margin-top: 8px">
                 <span class="info-label">ផែនទី</span>
                 <a :href="item.room.map_url" target="_blank" class="map-link">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                  Open in ផែនទីs
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                  បើកលើផែនទី
                 </a>
               </div>
             </div>
@@ -173,7 +206,7 @@
                   <line x1="8" y1="2" x2="8" y2="6" />
                   <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
-                {{ title }} Info
+                ព័ត៌មាន {{ title }}
               </div>
               <div class="info-grid">
                 <div class="info-item">
@@ -189,7 +222,7 @@
                   <span class="info-value">{{ formatDate(item.created_at) }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">Status</span>
+                  <span class="info-label">ស្ថានភាព</span>
                   <span class="status-pill small" :class="'pill-' + statusKey">{{
                     statusLabel
                   }}</span>
@@ -199,9 +232,15 @@
               <!-- Payment proof -->
               <div class="payment-section">
                 <span class="info-label">ភស្តុតាងការទូទាត់</span>
-                <div v-if="paymentUrl" class="payment-preview-box" @click="showPaymentFull = !showPaymentFull">
-                  <img :src="paymentUrl" class="payment-preview-img" alt="Payment proof" />
-                  <span class="payment-hint">Click to {{ showPaymentFull ? 'បង្រួម' : 'ពង្រីក' }}</span>
+                <div
+                  v-if="paymentUrl"
+                  class="payment-preview-box"
+                  @click="showPaymentFull = !showPaymentFull"
+                >
+                  <img :src="paymentUrl" class="payment-preview-img" alt="ការ​បញ្ជាក់​ទូទាត់" />
+                  <span class="payment-hint"
+                    >ចុចដើម្បី{{ showPaymentFull ? 'បង្រួម' : 'ពង្រីក' }}</span
+                  >
                 </div>
                 <Transition name="expand">
                   <div v-if="showPaymentFull && paymentUrl" class="payment-full">
@@ -215,14 +254,26 @@
             <!-- ===== Seller / Owner Info ===== -->
             <div class="info-section" v-if="item.seller">
               <div class="section-label">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="8.5" cy="7" r="4" />
+                  <line x1="20" y1="8" x2="20" y2="14" />
+                  <line x1="23" y1="11" x2="17" y2="11" />
+                </svg>
                 ម្ចាស់បន្ទប់
               </div>
               <div class="profile-card compact">
                 <img
                   :src="item.seller?.avatar || 'https://via.placeholder.com/48'"
                   class="profile-avatar small"
-                  alt="seller avatar"
+                  alt="រូបភាពម្ចាស់"
                 />
                 <div class="profile-info">
                   <h4 class="profile-name small">{{ item.seller?.name || '—' }}</h4>
@@ -231,11 +282,11 @@
               </div>
               <div class="info-grid">
                 <div class="info-item">
-                  <span class="info-label">Email</span>
+                  <span class="info-label">អ៊ីមែល</span>
                   <span class="info-value">{{ item.seller?.email || '—' }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">Phone</span>
+                  <span class="info-label">ទូរស័ព្ទ</span>
                   <span class="info-value">{{ item.seller?.phone || '—' }}</span>
                 </div>
               </div>
@@ -272,7 +323,7 @@ const statusLabel = computed(() => {
   if (statusKey.value === 'approved') return 'បានអនុម័ត'
   if (statusKey.value === 'rejected') return 'បានបដិសេធ'
   return 'កំពុងរង់ចាំ'
-}) 
+})
 
 const genderText = (g) => {
   if (g === 1 || g === '1') return 'ប្រុស'
@@ -419,14 +470,14 @@ const estimatedTotal = computed(() => {
 .status-pill {
   display: inline-flex;
   align-items: center;
-  padding: 2px 10px; 
-  font-size: 0.7rem; 
+  padding: 2px 10px;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 .status-pill.small {
-  padding: 1px 8px; 
-  font-size: 0.65rem; 
+  padding: 1px 8px;
+  font-size: 0.65rem;
 }
 .pill-pending {
   background: #fffbeb;
