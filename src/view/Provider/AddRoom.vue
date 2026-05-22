@@ -3,14 +3,19 @@
     <div class="row">
       <div class="col-12">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="card-header-navy p-3 text-white d-flex justify-content-between align-items-center">
+          <div
+            class="card-header-navy p-3 text-white d-flex justify-content-between align-items-center"
+          >
             <h4 class="fw-bold mb-0">បង្ហោះបន្ទប់ថ្មី</h4>
             <span class="badge bg-orange px-3 py-2">របៀបព័ត៌មានលម្អិតពេញលេញ</span>
           </div>
 
           <div class="card-body p-4 bg-white">
             <!-- API error banner -->
-            <div v-if="roomStore.error" class="alert alert-danger rounded-3 mb-4 d-flex align-items-center gap-2">
+            <div
+              v-if="roomStore.error"
+              class="alert alert-danger rounded-3 mb-4 d-flex align-items-center gap-2"
+            >
               <i class="bi bi-exclamation-triangle-fill"></i>
               <span>{{ roomStore.error }}</span>
             </div>
@@ -28,7 +33,7 @@
                         type="text"
                         class="form-control custom-input"
                         :class="{ 'is-invalid': errors.title }"
-                        placeholder="e.g. Modern Studio near RUPP"
+                        placeholder="ឧទាហរណ៍: បន្ទប់សម្រាប់ជួលនៅភ្នំពេញ"
                       />
                       <div class="invalid-feedback">{{ errors.title }}</div>
                     </div>
@@ -63,7 +68,7 @@
                           class="form-select custom-input"
                           :class="{ 'is-invalid': errors.district_id }"
                         >
-                          <option value="" disabled>Select ខណ្ឌ</option>
+                          <option value="" disabled>ជ្រើសរើសខណ្ឌ</option>
                           <option
                             v-for="dist in districtStore.districts"
                             :key="dist.id"
@@ -123,7 +128,7 @@
                           v-model="form.bed"
                           type="text"
                           class="form-control custom-input"
-                          placeholder="e.g. 2 គ្រែ"
+                          placeholder="ឧទាហរណ៍: 2 គ្រែ"
                         />
                       </div>
                       <div class="col-md-8">
@@ -132,13 +137,13 @@
                           v-model="form.size_room"
                           type="text"
                           class="form-control custom-input"
-                          placeholder="e.g. 4m x 5m"
+                          placeholder="ឧទាហរណ៍: 4m x 5m"
                         />
                       </div>
                     </div>
 
                     <div class="mb-4">
-                      <label class="form-label fw-bold">តំណ Google Maps</label>
+                      <label class="form-label fw-bold">លីង​ផែនទី Google</label>
                       <input
                         v-model="form.map_url"
                         type="url"
@@ -156,7 +161,7 @@
                         class="form-control custom-input"
                         :class="{ 'is-invalid': errors.description }"
                         rows="4"
-                        placeholder="Describe the room in detail (min. 20 characters)..."
+                        placeholder="សូមបញ្ចូលពិពណ៌នាអំពីបន្ទប់របស់អ្នក។ តើមានអ្វីពិសេស? តើមានអ្វីនៅជុំវិញខ្លះ?"
                         maxlength="1000"
                       ></textarea>
                       <div class="d-flex justify-content-between mt-1">
@@ -178,7 +183,7 @@
                 <!-- ── Right Column ── -->
                 <div class="col-xl-5 col-lg-6">
                   <div class="section-container h-100 d-flex flex-column">
-                    <h5 class="section-title mb-4">មេឌៀ និងបរិក្ខារ</h5>
+                    <h5 class="section-title mb-4">រូបថត និងបរិក្ខារ</h5>
 
                     <div class="mb-4">
                       <label class="form-label fw-bold">រូបថតបន្ទប់</label>
@@ -315,8 +320,6 @@ const validate = () => {
     isValid = false
   }
 
- 
-
   if (Number(form.percent_promotion) < 0 || Number(form.percent_promotion) > 100) {
     errors.percent_promotion = 'បញ្ចុះតម្លៃត្រូវស្ថិតចន្លោះ 0 ដល់ 100'
     isValid = false
@@ -340,7 +343,9 @@ const validate = () => {
   if (form.map_url) {
     const url = form.map_url.trim()
     const isValidGoogleMap =
-      /^https?:\/\/(www\.)?(google\.com\/maps|maps\.google\.com|maps\.app\.goo\.gl|goo\.gl\/maps)\/.+/i.test(url)
+      /^https?:\/\/(www\.)?(google\.com\/maps|maps\.google\.com|maps\.app\.goo\.gl|goo\.gl\/maps)\/.+/i.test(
+        url,
+      )
     if (!isValidGoogleMap) {
       errors.map_url = 'សូមបញ្ចូល Google Maps URL ត្រឹមត្រូវ'
       isValid = false
@@ -366,7 +371,6 @@ const resetForm = () => {
   form.size_room = ''
   form.map_url = ''
 
- 
   if (imagePreview.value) URL.revokeObjectURL(imagePreview.value)
   imagePreview.value = null
 }
@@ -469,7 +473,9 @@ const handleSubmit = async () => {
   color: white;
   border: none;
   border-radius: 12px;
-  transition: background 0.2s, transform 0.15s;
+  transition:
+    background 0.2s,
+    transform 0.15s;
 }
 .btn-orange:hover:not(:disabled) {
   background: #e65600;

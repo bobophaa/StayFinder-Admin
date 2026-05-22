@@ -23,7 +23,7 @@
                 type="text"
                 class="form-control form-control-lg"
                 required
-                placeholder="e.g. Modern Condo near RUPP"
+                placeholder="ឧទាហរណ៍៖ កុងដូទាន់សម័យនៅក្បែរ RUPP"
               />
             </div>
 
@@ -44,7 +44,7 @@
                   v-model="form.size_room"
                   type="text"
                   class="form-control form-control-lg"
-                  placeholder="e.g. Big, 4x5m"
+                  placeholder="ឧទាហរណ៍៖ ធំ 4x5 ម"
                 />
               </div>
             </div>
@@ -68,7 +68,7 @@
                   :src="imagePreview"
                   class="img-thumbnail rounded-4 shadow-sm"
                   style="max-height: 250px"
-                  alt="Room Preview"
+                  alt="រូបភាពមើលទិដ្ឋភាពបន្ទប់"
                 />
               </div>
               <input type="file" @change="onFileChange" class="form-control" accept="image/*" />

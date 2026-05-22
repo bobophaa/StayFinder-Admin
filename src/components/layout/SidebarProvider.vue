@@ -66,7 +66,8 @@ const handleLogout = async () => {
     showCancelButton: true,
     confirmButtonColor: 'green',
     cancelButtonColor: 'red',
-    confirmButtonText: 'បាទ/ចាស ចាកចេញ',
+    confirmButtonText: 'យល់ព្រម',
+    cancelButtonText: 'បោះបង់'
   })
 
   if (result.isConfirmed) {

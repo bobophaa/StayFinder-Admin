@@ -103,7 +103,7 @@
             </td>
 
             <!-- Action buttons -->
-            <td class="td-actions" data-label="Actions">
+            <td class="td-actions" data-label="សកម្មភាព">
               <div class="action-group">
                 <button class="action-btn detail-btn" @click="$emit('view-detail', row)">
                   <svg

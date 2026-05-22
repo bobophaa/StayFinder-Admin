@@ -44,7 +44,7 @@
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
-                Guest Information
+                ព័ត៌មានភ្ញៀវ
               </div>
               <div class="profile-card">
                 <img
@@ -59,11 +59,11 @@
               </div>
               <div class="info-grid">
                 <div class="info-item">
-                  <span class="info-label">អ៊ីម៉ែល</span>
+                  <span class="info-label">អ៊ីមេល</span>
                   <span class="info-value">{{ item.buyer?.email || '—' }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">លេខទូរស័ព្ទ</span>
+                  <span class="info-label">ទូរស័ព្ទ</span>
                   <span class="info-value">{{ item.buyer?.phone || '—' }}</span>
                 </div>
                 <div class="info-item">
@@ -71,8 +71,8 @@
                   <span class="info-value">{{ genderText(item.buyer?.gender) }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">ID Card</span>
-                  <span class="info-value">{{ item.buyer?.id_card || 'Not provided' }}</span>
+                  <span class="info-label">ប័ណ្ណអត្តសញ្ញាណ</span>
+                  <span class="info-value">{{ item.buyer?.id_card || 'មិនបានផ្តល់' }}</span>
                 </div>
               </div>
             </div>
@@ -91,7 +91,7 @@
                   <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                   <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
-                Room Details
+                ព័ត៌មានបន្ទប់
               </div>
               <div class="room-hero" v-if="item.room?.image">
                 <img :src="item.room.image" class="room-image" alt="រូបភាពបន្ទប់" />
@@ -140,7 +140,7 @@
                     <span class="pricing-amount">${{ item.room?.pay_trash ?? '—' }}</span>
                   </div>
                   <div v-if="item.room?.percent_promotion > 0" class="pricing-row promo">
-                    <span>Promotion</span>
+                    <span>បញ្ចុះតម្លៃ</span>
                     <span class="pricing-amount promo-text"
                       >-{{ item.room.percent_promotion }}%</span
                     >
@@ -185,7 +185,7 @@
                     <polyline points="15 3 21 3 21 9" />
                     <line x1="10" y1="14" x2="21" y2="3" />
                   </svg>
-                  Open in Maps
+                  បើកលើផែនទី
                 </a>
               </div>
             </div>
@@ -231,14 +231,16 @@
 
               <!-- Payment proof -->
               <div class="payment-section">
-                <span class="info-label">Payment Proof</span>
+                <span class="info-label">ភស្តុតាងការទូទាត់</span>
                 <div
                   v-if="paymentUrl"
                   class="payment-preview-box"
                   @click="showPaymentFull = !showPaymentFull"
                 >
-                  <img :src="paymentUrl" class="payment-preview-img" alt="Payment proof" />
-                  <span class="payment-hint">Click to {{ showPaymentFull ? 'បង្រួម' : 'ពង្រីក' }}</span>
+                  <img :src="paymentUrl" class="payment-preview-img" alt="ការ​បញ្ជាក់​ទូទាត់" />
+                  <span class="payment-hint"
+                    >ចុចដើម្បី{{ showPaymentFull ? 'បង្រួម' : 'ពង្រីក' }}</span
+                  >
                 </div>
                 <Transition name="expand">
                   <div v-if="showPaymentFull && paymentUrl" class="payment-full">
@@ -265,7 +267,7 @@
                   <line x1="20" y1="8" x2="20" y2="14" />
                   <line x1="23" y1="11" x2="17" y2="11" />
                 </svg>
-                Room Owner
+                ម្ចាស់បន្ទប់
               </div>
               <div class="profile-card compact">
                 <img
@@ -280,11 +282,11 @@
               </div>
               <div class="info-grid">
                 <div class="info-item">
-                  <span class="info-label">អ៊ីម៉ែល</span>
+                  <span class="info-label">អ៊ីមែល</span>
                   <span class="info-value">{{ item.seller?.email || '—' }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">លេខទូរស័ព្ទ</span>
+                  <span class="info-label">ទូរស័ព្ទ</span>
                   <span class="info-value">{{ item.seller?.phone || '—' }}</span>
                 </div>
               </div>

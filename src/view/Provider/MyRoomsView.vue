@@ -1,13 +1,12 @@
 <template>
   <div class="container-fluid py-3 px-md-4">
 
-    <!-- ── Header ── -->
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
       <div class="card-header-navy p-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
         <div>
           <h4 class="fw-bold mb-0 text-white">បញ្ជីបន្ទប់របស់ខ្ញុំ</h4>
           <small class="opacity-75 text-white">
-            {{ roomStore.myRooms.length }} room{{ roomStore.myRooms.length !== 1 ? 's' : '' }} ដែលអ្នកបានបង្ហោះ
+            {{ roomStore.myRooms.length }} បន្ទប់ ដែលអ្នកបានបង្ហោះ
           </small>
         </div>
         <router-link to="/provider/add-room" class="btn btn-orange fw-bold px-4">
@@ -60,7 +59,7 @@
               <th class="py-3 small fw-bold d-none d-md-table-cell">ខណ្ឌ</th>
               <th class="py-3 small fw-bold">តម្លៃ</th>
               <th class="py-3 small fw-bold d-none d-lg-table-cell">គ្រែ / ទំហំ</th>
-              <th class="py-3 small fw-bold d-none d-lg-table-cell">វិក្កយបត្រ</th>
+              <!-- <th class="py-3 small fw-bold d-none d-lg-table-cell"></th> -->
               <th class="py-3 small fw-bold">ស្ថានភាព</th>
               <th class="py-3 small fw-bold pe-4 text-end">សកម្មភាព</th>
             </tr>
@@ -114,7 +113,7 @@
               </td>
 
               <!-- វិក្កយបត្រ -->
-              <td class="d-none d-lg-table-cell">
+              <!-- <td class="d-none d-lg-table-cell">
                 <div class="d-flex flex-wrap gap-1">
                   <span class="bill-chip" v-if="room.pay_water">
                     <i class="bi bi-droplet-fill text-info me-1"></i>${{ room.pay_water }}
@@ -124,15 +123,15 @@
                   </span>
                   <span v-if="!room.pay_water && !room.pay_electric" class="text-muted small">–</span>
                 </div>
-              </td>
+              </td> -->
 
               <!-- ស្ថានភាព -->
               <td>
                 <span v-if="room.percent_promotion > 0" class="status-pill pill-promo">
-                  <i class="bi bi-tag-fill me-1"></i>-{{ room.percent_promotion }}%
+                  <i class="bi bi-tag-fill me-1"></i>បញ្ចុះតម្លៃ{{ room.percent_promotion }}%
                 </span>
                 <span v-else class="status-pill pill-active">
-                  <i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i>Active
+                  <i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i> ធម្មតា
                 </span>
               </td>
 
@@ -143,13 +142,13 @@
                   <button class="tbl-btn tbl-btn-view" @click="openDetail(room)" title="មើលកាត">
                     <i class="bi bi-eye-fill"></i>
                   </button>
-                  <!-- Edit -->
-                  <router-link :to="`/provider/edit-room/${room.id}`" class="tbl-btn tbl-btn-edit" title="Edit">
+                  <!-- កែប្រែ -->
+                  <router-link :to="`/provider/edit-room/${room.id}`" class="tbl-btn tbl-btn-edit" title="កែប្រែ">
                     <i class="bi bi-pencil-fill"></i>
                   </router-link>
-                  <!-- Delete -->
+                  <!-- លុប -->
                   <button class="tbl-btn tbl-btn-del" @click="confirmDelete(room)"
-                    :disabled="deletingId === room.id" title="Delete">
+                    :disabled="deletingId === room.id" title="លុប">
                     <span v-if="deletingId === room.id" class="spinner-border spinner-border-sm"></span>
                     <i v-else class="bi bi-trash3-fill"></i>
                   </button>
@@ -163,12 +162,10 @@
       <!-- Table footer with pagination -->
       <div class="tbl-footer px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
         <small class="text-muted">
-          កំពុងបង្ហាញ <strong>{{ roomStore.myRooms.length }}</strong>
-          room{{ roomStore.myRooms.length !== 1 ? 's' : '' }}
+          កំពុងបង្ហាញ <strong>{{ roomStore.myRooms.length }}</strong> បន្ទប់
         </small>
-
         <!-- Pagination controls -->
-        <nav v-if="totalPages > 1" aria-label="Room list pages">
+        <nav v-if="totalPages > 1" aria-label="ទំព័រ បញ្ជីបន្ទប់">
           <ul class="pagination pagination-sm mb-0 gap-1">
             <!-- Prev -->
             <li class="page-item" :class="{ disabled: currentPage === 1 }">
@@ -199,7 +196,7 @@
         </nav>
 
         <router-link to="/provider/add-room" class="btn btn-orange btn-sm fw-bold px-3">
-          <i class="bi bi-plus-circle-fill me-1"></i>Add បន្ទប់
+          <i class="bi bi-plus-circle-fill me-1"></i>បន្ថែមបន្ទប់
         </router-link>
       </div>
     </div>
@@ -232,7 +229,7 @@
                 <i class="bi bi-building" style="font-size:3rem;color:#ccc"></i>
               </div>
               <span v-if="selectedបន្ទប់.percent_promotion > 0" class="detail-promo-badge">
-                <i class="bi bi-tag-fill me-1"></i>-{{ selectedបន្ទប់.percent_promotion }}% OFF
+                <i class="bi bi-tag-fill me-1"></i>បញ្ចុះតម្លៃ​ {{ selectedបន្ទប់.percent_promotion }}% 
               </span>
             </div>
 
@@ -243,7 +240,7 @@
                 <span class="text-muted small"> /ខែ</span>
               </div>
               <span class="status-pill pill-active">
-                <i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i>Active
+                <i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i>សកម្ម
               </span>
             </div>
 
@@ -259,52 +256,52 @@
               <div class="col-6">
                 <div class="info-card">
                   <i class="bi bi-person-fill text-orange mb-1 d-block"></i>
-                  <div class="info-label">Beds</div>
+                  <div class="info-label">គ្រែ</div>
                   <div class="info-value">{{ selectedបន្ទប់.bed || '–' }}</div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="info-card">
                   <i class="bi bi-aspect-ratio text-orange mb-1 d-block"></i>
-                  <div class="info-label">បន្ទប់ Size</div>
+                  <div class="info-label">ទំហំបន្ទប់</div>
                   <div class="info-value">{{ selectedបន្ទប់.size_room || '–' }}</div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="info-card">
                   <i class="bi bi-tag-fill text-orange mb-1 d-block"></i>
-                  <div class="info-label">Promotion</div>
+                  <div class="info-label">បញ្ចុះតម្លៃ</div>
                   <div class="info-value">
-                    {{ selectedបន្ទប់.percent_promotion > 0 ? `-${selectedបន្ទប់.percent_promotion}%` : 'None' }}
+                    {{ selectedបន្ទប់.percent_promotion > 0 ? `${selectedបន្ទប់.percent_promotion}%` : 'គ្មាន' }}
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- វិក្កយបត្រ -->
-            <div class="detail-section mb-4">
+            <!-- <div class="detail-section mb-4">
               <div class="section-title">
-                <i class="bi bi-receipt me-2 text-orange"></i>Monthly វិក្កយបត្រ
+                <i class="bi bi-receipt me-2 text-orange"></i>វិក្កយបត្រប្រចាំខែ
               </div>
               <div class="bills-card">
                 <div class="bill-row">
-                  <span><i class="bi bi-droplet-fill text-info me-2"></i>Water</span>
+                  <span><i class="bi bi-droplet-fill text-info me-2"></i>ទឹក</span>
                   <strong>${{ selectedបន្ទប់.pay_water || '0' }}</strong>
                 </div>
                 <div class="bill-row">
-                  <span><i class="bi bi-lightning-fill text-warning me-2"></i>Electric</span>
+                  <span><i class="bi bi-lightning-fill text-warning me-2"></i>អគ្គិសនី</span>
                   <strong>${{ selectedបន្ទប់.pay_electric || '0' }}</strong>
                 </div>
                 <div class="bill-row">
-                  <span><i class="bi bi-trash3-fill text-success me-2"></i>Trash</span>
+                  <span><i class="bi bi-trash3-fill text-success me-2"></i>សំរាម</span>
                   <strong>{{ selectedបន្ទប់.pay_trash ? '$' + selectedបន្ទប់.pay_trash : 'ឥតគិតថ្លៃ' }}</strong>
                 </div>
                 <div class="bill-row border-0">
-                  <span><i class="bi bi-car-front-fill text-secondary me-2"></i>Parking</span>
+                  <span><i class="bi bi-car-front-fill text-secondary me-2"></i>ចំណត</span>
                   <strong>{{ selectedបន្ទប់.pay_parking ? '$' + selectedបន្ទប់.pay_parking : 'ឥតគិតថ្លៃ' }}</strong>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <!-- បរិក្ខារ -->
             <div class="detail-section mb-4" v-if="selectedបន្ទប់.options?.length">
@@ -343,7 +340,7 @@
             <button class="btn btn-light rounded-3 px-4" @click="selectedបន្ទប់ = null">បិទ</button>
             <router-link :to="`/provider/edit-room/${selectedបន្ទប់.id}`"
               class="btn btn-orange px-4 fw-bold">
-              <i class="bi bi-pencil-fill me-2"></i>Edit This បន្ទប់
+              <i class="bi bi-pencil-fill me-2"></i>កែប្រែបន្ទប់នេះ
             </router-link>
           </div>
 
@@ -380,7 +377,7 @@
             </div>
           </div>
           <div class="modal-footer border-0 px-4 pb-4 pt-0 gap-2">
-            <button class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Cancel</button>
+            <button class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">បោះបង់</button>
             <button class="btn btn-danger rounded-3 px-4 fw-bold" @click="executeDelete"
               :disabled="deletingId !== null">
               <span v-if="deletingId !== null" class="spinner-border spinner-border-sm me-2"></span>

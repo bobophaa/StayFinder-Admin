@@ -10,12 +10,12 @@
       <div class="visual-side d-none d-lg-flex">
         <div class="visual-inner text-center">
           <div class="admin-logo-mark mb-4">
-            <img src="@/assets/images/image.png" alt="Logo" height="48" />
+            <img src="@/assets/images/image.png" alt="បដាផ្ទាល់ខ្លួន" height="48" />
           </div>
 
           <h2 class="text-white fw-bold fs-3 mb-2">StayFinder</h2>
           <p class="text-blue-muted mb-5 small px-3">
-            ផ្ទាំងគ្រប់គ្រងសម្រាប់អ្នកគ្រប់គ្រង និងម្ចាស់អចលនទ្រព្យ។
+            ផ្ទាំងគ្រប់គ្រងសម្រាប់អ្នកគ្រប់គ្រង និងម្ចាស់ផ្ទះ។
           </p>
 
           <!-- Role cards -->
@@ -23,22 +23,22 @@
             <div class="role-card">
               <i class="bi bi-speedometer2 role-icon" style="color: #ff5f00"></i>
               <div>
-                <div class="role-title">System Admin</div>
+                <div class="role-title">អ្នកគ្រប់គ្រងប្រព័ន្ធ</div>
                 <div class="role-desc">គ្រប់គ្រងអ្នកប្រើ ទីតាំង និងការកំណត់</div>
               </div>
             </div>
             <div class="role-card">
               <i class="bi bi-building role-icon" style="color: #2575fc"></i>
               <div>
-                <div class="role-title">Provider</div>
-                <div class="role-desc">គ្រប់គ្រងអចលនទ្រព្យ និងការកក់</div>
+                <div class="role-title">ម្ចាស់ផ្ទះ</div>
+                <div class="role-desc">គ្រប់គ្រងផ្ទះជួល និងការកក់</div>
               </div>
             </div>
           </div>
 
           <div class="security-note mt-5">
             <i class="bi bi-shield-lock-fill me-2"></i>
-            សុវត្ថិភាព · អ៊ិនគ្រីប · អនុញ្ញាតតែអ្នកមានសិទ្ធិ
+            សុវត្ថិភាព · អនុញ្ញាតតែអ្នកមានសិទ្ធិ
           </div>
         </div>
       </div>
@@ -50,7 +50,6 @@
           <div class="portal-badge">
             <i class="bi bi-shield-fill-check me-2"></i>ផ្ទាំងគ្រប់គ្រង
           </div>
-        
         </div>
 
         <div class="mb-4">
@@ -78,7 +77,7 @@
                 v-model="authStore.emailOrPhone"
                 type="text"
                 class="d-input"
-                placeholder="your@email.com"
+                placeholder="ឧទាហរណ៍៖ admin@example.com"
                 autocomplete="username"
               />
             </div>
@@ -117,7 +116,7 @@
               <i class="bi bi-arrow-right-circle-fill me-2"></i>
               អ្នកនឹងត្រូវបានបញ្ជូនទៅ៖
               <strong>{{
-                detectedRole === 'System Admin' ? 'ផ្ទាំងអ្នកគ្រប់គ្រង' : 'ផ្ទាំងម្ចាស់អចលនទ្រព្យ'
+                detectedRole === 'System Admin' ? 'ផ្ទាំងអ្នកគ្រប់គ្រង' : 'ផ្ទាំងម្ចាស់ផ្ទះជួល'
               }}</strong>
             </div>
           </transition>
@@ -133,12 +132,12 @@
             {{ authStore.loading ? 'កំពុងផ្ទៀងផ្ទាត់...' : 'ចូលគណនី' }}
           </button>
 
-          <div class="text-center mt-4">
+          <!-- <div class="text-center mt-4">
             <p class="small text-muted-dim mb-0">
               <i class="bi bi-info-circle me-1"></i>
               សម្រាប់តែអ្នកគ្រប់គ្រង និងម្ចាស់អចលនទ្រព្យដែលមានសិទ្ធិប៉ុណ្ណោះ។
             </p>
-          </div>
+          </div> -->
         </form>
       </div>
     </div>
