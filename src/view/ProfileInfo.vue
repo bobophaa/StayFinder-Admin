@@ -301,89 +301,71 @@
     </transition>
   </div>
 </template>
-
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import api from '@/api/http'
+import { useAuthStore } from '@/stores/auth'
 
-const user = ref(null)
-const loading = ref(false)
-const passLoading = ref(false)
+const authStore = useAuthStore()
+
+const user            = ref(null)
+const loading         = ref(false)
+const passLoading     = ref(false)
 const uploadingAvatar = ref(false)
-const fileInput = ref(null)
-const avatarPreview = ref(null)
-const isEditing = ref(false)
-const showPassForm = ref(false)
+const fileInput       = ref(null)
+const avatarPreview   = ref(null)
+const isEditing       = ref(false)
+const showPassForm    = ref(false)
 const showConfirmModal = ref(false)
 
-const form = reactive({ name: '', email: '', phone: '', gender: 1, current_job: '' })
-const errors = reactive({ name: '', email: '' })
+const form     = reactive({ name: '', email: '', phone: '', gender: 1, current_job: '' })
+const errors   = reactive({ name: '', email: '' })
 const passForm = reactive({ old_pass: '', new_pass: '', new_pass_confirmation: '' })
-const toast = reactive({ show: false, message: '', type: 'success' })
+const toast    = reactive({ show: false, message: '', type: 'success' })
+
+const todayDate = new Date().toLocaleDateString('km-KH', {
+  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+})
 
 const quickLinks = [
-  {
-    to: '/admin/users',
-    label: 'គ្រប់គ្រងអ្នកប្រើប្រាស់',
-    icon: 'bi-people-fill',
-    color: '#0d6efd',
-  },
-  {
-    to: '/admin/room-options',
-    label: 'ជម្រើសបន្ទប់',
-    icon: 'bi-ui-checks',
-    color: '#ff5f00',
-  },
-  {
-    to: '/admin/districts',
-    label: 'ស្រុក/ខណ្ឌ',
-    icon: 'bi-geo-alt-fill',
-    color: '#198754',
-  },
-  {
-    to: '/admin',
-    label: 'ផ្ទាំងគ្រប់គ្រង',
-    icon: 'bi-speedometer2',
-    color: '#031c36',
-  },
+  { to: '/admin/manage',       label: 'គ្រប់គ្រងអ្នកប្រើ',  sub: 'មើល និងកំណត់តួនាទី',       icon: 'bi-people-fill',      bg: 'bg-primary-light', color: '#0d6efd' },
+  { to: '/admin/room-options', label: 'ជម្រើសបន្ទប់',       sub: 'គ្រឿងសម្ភារៈ និងសេវាកម្ម',  icon: 'bi-ui-checks',        bg: 'bg-orange-light',  color: '#ff5f00' },
+  { to: '/admin/locations',    label: 'ខណ្ឌ',               sub: 'គ្រប់គ្រងទីតាំង',            icon: 'bi-geo-alt-fill',     bg: 'bg-success-light', color: '#198754' },
+  { to: '/admin/dashboard',    label: 'ផ្ទាំងគ្រប់គ្រង',    sub: 'ទិដ្ឋភាពទូទៅ',               icon: 'bi-speedometer2',     bg: 'bg-purple-light',  color: '#8b5cf6' },
 ]
 
 const showToast = (msg, type = 'success') => {
-  toast.message = msg
-  toast.type = type
-  toast.show = true
+  toast.message = msg; toast.type = type; toast.show = true
   setTimeout(() => (toast.show = false), 3000)
 }
 
-// ── ទាញយកទិន្នន័យអ្នកប្រើប្រាស់ ────────────────────────────────────────────
+// ── Fetch user ─────────────────────────────────────────────
 const fetchUser = async () => {
   try {
     const res = await api.get('/me')
     user.value = res.data?.data || res.data
+    // ✅ Sync to auth store so navbar updates immediately
+    authStore.user = { ...authStore.user, ...user.value }
     Object.assign(form, {
-      name: user.value.name || '',
-      email: user.value.email || '',
-      phone: user.value.phone || '',
-      gender: user.value.gender || 1,
+      name:        user.value.name        || '',
+      email:       user.value.email       || '',
+      phone:       user.value.phone       || '',
+      gender:      user.value.gender      || 1,
       current_job: user.value.current_job || '',
     })
-  } catch (err) {
-    console.error('fetchUser error:', err)
-  }
+  } catch (err) { console.error('fetchUser error:', err) }
 }
 
-// ── កែសម្រួល profile ──────────────────────────────────────────
-const enableEdit = () => {
-  isEditing.value = true
-}
+// ── Edit profile ───────────────────────────────────────────
+const enableEdit = () => { isEditing.value = true }
 const cancelEdit = () => {
   isEditing.value = false
   errors.name = errors.email = ''
   Object.assign(form, {
-    name: user.value.name || '',
-    email: user.value.email || '',
-    phone: user.value.phone || '',
-    gender: user.value.gender || 1,
+    name:        user.value.name        || '',
+    email:       user.value.email       || '',
+    phone:       user.value.phone       || '',
+    gender:      user.value.gender      || 1,
     current_job: user.value.current_job || '',
   })
 }
@@ -391,24 +373,13 @@ const cancelEdit = () => {
 const validate = () => {
   errors.name = errors.email = ''
   let ok = true
-  if (!form.name?.trim()) {
-    errors.name = 'ត្រូវការឈ្មោះពេញ'
-    ok = false
-  }
-  if (!form.email) {
-    errors.email = 'ត្រូវការអ៊ីមែល'
-    ok = false
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.email = 'អ៊ីមែលមិនត្រឹមត្រូវ'
-    ok = false
-  }
+  if (!form.name?.trim())  { errors.name  = 'ត្រូវការឈ្មោះពេញ'; ok = false }
+  if (!form.email)          { errors.email = 'ត្រូវការអ៊ីមែល'; ok = false }
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { errors.email = 'អ៊ីមែលមិនត្រឹមត្រូវ'; ok = false }
   return ok
 }
 
-const updateProfile = () => {
-  if (!validate()) return
-  showConfirmModal.value = true
-}
+const updateProfile = () => { if (!validate()) return; showConfirmModal.value = true }
 
 const confirmUpdate = async () => {
   showConfirmModal.value = false
@@ -416,24 +387,21 @@ const confirmUpdate = async () => {
   try {
     await api.post('/profile/info', form)
     Object.assign(user.value, form)
+    authStore.user = { ...authStore.user, ...form }
     isEditing.value = false
     showToast('បានកែប្រែប្រវត្តិរូបជោគជ័យ!')
   } catch (err) {
     showToast(err.response?.data?.message || 'កែប្រែបរាជ័យ', 'error')
-  } finally {
-    loading.value = false
-  }
+  } finally { loading.value = false }
 }
 
-// ── ប្តូរពាក្យសម្ងាត់ ────────────────────────────────────────
+// ── Change password ────────────────────────────────────────
 const changePassword = async () => {
   if (!passForm.old_pass || !passForm.new_pass || !passForm.new_pass_confirmation) {
-    showToast('សូមបំពេញវាលពាក្យសម្ងាត់ទាំងអស់', 'error')
-    return
+    showToast('សូមបំពេញវាលពាក្យសម្ងាត់ទាំងអស់', 'error'); return
   }
   if (passForm.new_pass !== passForm.new_pass_confirmation) {
-    showToast('ពាក្យសម្ងាត់មិនដូចគ្នា', 'error')
-    return
+    showToast('ពាក្យសម្ងាត់មិនដូចគ្នា', 'error'); return
   }
   passLoading.value = true
   try {
@@ -443,26 +411,19 @@ const changePassword = async () => {
     showPassForm.value = false
   } catch (err) {
     showToast(err.response?.data?.message || 'ប្តូរពាក្យសម្ងាត់បរាជ័យ', 'error')
-  } finally {
-    passLoading.value = false
-  }
+  } finally { passLoading.value = false }
 }
 
-// ── Avatar ────────────────────────────────────────────────
+// ── Avatar ─────────────────────────────────────────────────
 const triggerFileUpload = () => fileInput.value?.click()
 
 const handleFileUpload = async (e) => {
   const file = e.target.files[0]
   if (!file) return
-  if (file.size > 2 * 1024 * 1024) {
-    showToast('ឯកសារធំពេក (អតិបរមា ២MB)', 'error')
-    return
-  }
+  if (file.size > 2 * 1024 * 1024) { showToast('ឯកសារធំពេក (អតិបរមា ២MB)', 'error'); return }
   avatarPreview.value = URL.createObjectURL(file)
-  const fd = new FormData()
-  fd.append('image', file)
-  loading.value = true
-  uploadingAvatar.value = true
+  const fd = new FormData(); fd.append('image', file)
+  loading.value = true; uploadingAvatar.value = true
   try {
     await api.post('/profile/image', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
     await fetchUser()
@@ -470,12 +431,8 @@ const handleFileUpload = async (e) => {
     showToast('បានធ្វើបច្ចុប្បន្នភាពរូបថតប្រវត្តិរូប!')
   } catch (err) {
     avatarPreview.value = null
-    showToast(err.response?.data?.message || 'បញ្ចូលឯកសារបរាជ័យ', 'error')
-  } finally {
-    loading.value = false
-    uploadingAvatar.value = false
-    e.target.value = ''
-  }
+    showToast(err.response?.data?.message || 'ផ្ទុកឡើងបរាជ័យ', 'error')
+  } finally { loading.value = false; uploadingAvatar.value = false; e.target.value = '' }
 }
 
 const removeAvatar = async () => {
@@ -485,17 +442,15 @@ const removeAvatar = async () => {
     await api.delete('/profile/image')
     user.value.avatar = null
     avatarPreview.value = null
+    authStore.user = { ...authStore.user, avatar: null }
     showToast('បានលុបរូបថតប្រវត្តិរូប')
   } catch (err) {
     showToast(err.response?.data?.message || 'លុបរូបថតបរាជ័យ', 'error')
-  } finally {
-    loading.value = false
-  }
+  } finally { loading.value = false }
 }
 
 onMounted(fetchUser)
 </script>
-
 <style scoped>
 /* ── Layout ── */
 .profile-container {
