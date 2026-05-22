@@ -94,7 +94,7 @@
                 Room Details
               </div>
               <div class="room-hero" v-if="item.room?.image">
-                <img :src="item.room.image" class="room-image" alt="room" />
+                <img :src="item.room.image" class="room-image" alt="រូបភាពបន្ទប់" />
                 <div class="room-overlay">
                   <h4 class="room-title-overlay">{{ item.room?.title || '—' }}</h4>
                   <span class="room-district">{{ item.room?.district?.name || '—' }}</span>
@@ -206,7 +206,7 @@
                   <line x1="8" y1="2" x2="8" y2="6" />
                   <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
-                {{ title }} Info
+                ព័ត៌មាន {{ title }}
               </div>
               <div class="info-grid">
                 <div class="info-item">
@@ -271,7 +271,7 @@
                 <img
                   :src="item.seller?.avatar || 'https://via.placeholder.com/48'"
                   class="profile-avatar small"
-                  alt="seller avatar"
+                  alt="រូបភាពម្ចាស់"
                 />
                 <div class="profile-info">
                   <h4 class="profile-name small">{{ item.seller?.name || '—' }}</h4>
@@ -321,7 +321,7 @@ const statusLabel = computed(() => {
   if (statusKey.value === 'approved') return 'បានអនុម័ត'
   if (statusKey.value === 'rejected') return 'បានបដិសេធ'
   return 'កំពុងរង់ចាំ'
-}) 
+})
 
 const genderText = (g) => {
   if (g === 1 || g === '1') return 'ប្រុស'
@@ -468,14 +468,14 @@ const estimatedTotal = computed(() => {
 .status-pill {
   display: inline-flex;
   align-items: center;
-  padding: 2px 10px; 
-  font-size: 0.7rem; 
+  padding: 2px 10px;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 .status-pill.small {
-  padding: 1px 8px; 
-  font-size: 0.65rem; 
+  padding: 1px 8px;
+  font-size: 0.65rem;
 }
 .pill-pending {
   background: #fffbeb;
