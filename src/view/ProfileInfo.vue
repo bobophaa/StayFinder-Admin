@@ -53,7 +53,7 @@
             <div class="info-row">
               <span class="info-label">ភេទ</span>
               <span class="info-value">
-                {{ user.gender == 1 ? 'ប្រុស' : user.gender == 2 ? 'ស្រី' : 'ស្រី' }}
+                {{ user.gender == 1 ? 'ប្រុស' : user.gender == 2 ? 'ស្រី' : 'មិនបានកំណត់' }}
               </span>
             </div>
             <div class="info-row">
@@ -76,7 +76,8 @@
                   <button @click="cancelEdit" class="btn-ghost">បោះបង់</button>
                   <button @click="updateProfile" class="btn-primary" :disabled="loading">
                     <span v-if="loading" class="spinner-border spinner-border-sm"></span>
-                    <span v-else>រក្សាទុក</span>
+                    <i v-else class="bi bi-check-circle"></i>
+                    រក្សាទុក
                   </button>
                 </template>
               </div>
@@ -104,7 +105,7 @@
               </div>
               <div class="form-group">
                 <label>ភេទ</label>
-                <select v-model="form.gender" :disabled="!isEditing">
+                <select v-model.number="form.gender" :disabled="!isEditing">
                   <option :value="1">ប្រុស</option>
                   <option :value="2">ស្រី</option>
                 </select>
@@ -127,10 +128,10 @@
 
             <div v-if="!showPassForm" class="pass-hint-text">
               <i class="bi bi-shield-check"></i>
-              Use a strong password — at least 8 characters with letters and numbers.
+              ប្រើពាក្យសម្ងាត់ខ្លាំងដែលមានយ៉ាងតិច ៨ តួអក្សរ រួមមានអក្សរធំ លេខ និងនិមិត្តសញ្ញា។
             </div>
 
-            <div v-show="showPassForm" class="password-form">
+            <div v-if="showPassForm" class="password-form">
               <div class="form-group full-width">
                 <label>ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
                 <input v-model="passForm.old_pass" type="password" placeholder="បញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្ន" />
@@ -253,7 +254,7 @@ const fetchUser = async () => {
       name:        user.value.name        || '',
       email:       user.value.email       || '',
       phone:       user.value.phone       || '',
-      gender:      user.value.gender      || 1,
+      gender:      user.value.gender      ?? 1,
       current_job: user.value.current_job || '',
     })
   } catch (err) { console.error('fetchUser error:', err) }
@@ -267,7 +268,7 @@ const cancelEdit = () => {
     name:        user.value.name        || '',
     email:       user.value.email       || '',
     phone:       user.value.phone       || '',
-    gender:      user.value.gender      || 1,
+    gender:      user.value.gender      ?? 1,
     current_job: user.value.current_job || '',
   })
 }
@@ -281,20 +282,26 @@ const validate = () => {
   return ok
 }
 
-const updateProfile = () => { if (!validate()) return; showConfirmModal.value = true }
-
-const confirmUpdate = async () => {
-  showConfirmModal.value = false
+const updateProfile = async () => {
+  if (!validate()) return
   loading.value = true
   try {
     await api.post('/profile/info', form)
-    Object.assign(user.value, form)
+    Object.assign(user.value, { ...form })
     authStore.user = { ...authStore.user, ...form }
     isEditing.value = false
     showToast('បានកែប្រែប្រវត្តិរូបជោគជ័យ!')
   } catch (err) {
     showToast(err.response?.data?.message || 'កែប្រែបរាជ័យ', 'error')
-  } finally { loading.value = false }
+  } finally {
+    loading.value = false
+  }
+}
+
+// kept for modal confirm button (still used in modal footer)
+const confirmUpdate = async () => {
+  showConfirmModal.value = false
+  await updateProfile()
 }
 
 const changePassword = async () => {
@@ -692,10 +699,12 @@ onMounted(fetchUser)
 }
 
 .form-group input[readonly],
+.form-group input:read-only,
 .form-group select:disabled {
   background: #fafafa;
   color: #777;
   cursor: default;
+  border-color: #efefef;
 }
 
 .form-group input:not([readonly]):focus,
