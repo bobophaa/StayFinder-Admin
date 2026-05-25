@@ -1,262 +1,183 @@
 <template>
   <div class="profile-container">
-    <!-- ស្គេឡេតនៃការផ្ទុក -->
+    <!-- skeleton -->
     <div v-if="!user" class="skeleton-wrapper">
-      <div class="skeleton-header"></div>
-      <div class="skeleton-card"></div>
-      <div class="skeleton-card"></div>
+      <div class="skeleton-sidebar"></div>
+      <div class="skeleton-main">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
     </div>
 
-    <!-- មាតិកាចម្បង -->
+    <!-- main content -->
     <div v-else class="content-wrapper">
-      <!-- ផ្នែកបឋម (Hero) -->
-      <div class="hero-section">
-        <div class="hero-bg"></div>
-        <div class="profile-header">
-          <div class="avatar-section">
-            <div
-              class="avatar-large"
-              @click="triggerFileUpload"
-              :class="{ uploading: loading && uploadingAvatar }"
-            >
-              <img
-                v-if="avatarPreview || user.avatar"
-                :src="avatarPreview || user.avatar"
-                alt="រូបថត"
-              />
-              <span v-else>{{ user.name?.charAt(0)?.toUpperCase() || 'A' }}</span>
-              <div v-if="loading && uploadingAvatar" class="avatar-loading">
-                <div class="spinner-border spinner-border-sm"></div>
+      <h1 class="page-title">តំកិមានប្រវត្តិ</h1>
+
+      <div class="layout-grid">
+        <!-- ── LEFT SIDEBAR CARD ── -->
+        <div class="sidebar-card">
+          <!-- dark header with avatar -->
+          <div class="card-header-dark">
+            <div class="avatar-wrap" @click="triggerFileUpload">
+              <div class="avatar" :class="{ uploading: loading && uploadingAvatar }">
+                <img v-if="avatarPreview || user.avatar" :src="avatarPreview || user.avatar" alt="avatar" />
+                <span v-else>{{ user.name?.charAt(0)?.toUpperCase() || 'A' }}</span>
+                <div v-if="loading && uploadingAvatar" class="avatar-loading">
+                  <div class="spinner-border spinner-border-sm"></div>
+                </div>
               </div>
-              <div class="avatar-overlay">
+              <button class="camera-btn" @click.stop="triggerFileUpload">
                 <i class="bi bi-camera-fill"></i>
-              </div>
+              </button>
             </div>
             <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
           </div>
-          <div class="header-info">
-            <h1 class="user-name">{{ user.name }}</h1>
-            <p class="user-email">{{ user.email }}</p>
-            <div class="badges">
-              <span class="badge-role"><i class="bi bi-shield-check"></i> អ្នកគ្រប់គ្រង</span>
-              <span class="badge-id">#{{ user.id }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- ក្រឡាចត្រង្គចម្បង -->
-      <div class="main-grid">
-        <!-- របារនៅខាងឆ្វេង -->
-        <div class="sidebar">
-          <!-- កាតព័ត៌មានគណនី -->
-          <div class="info-card">
-            <h3 class="card-title">ព័ត៌មានគណនី</h3>
-            <div class="info-items">
-              <div class="info-row">
-                <span class="info-label">អ៊ីមែល</span>
-                <span class="info-value">{{ user.email }}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">លេខទូរស័ព្ទ</span>
-                <span class="info-value">{{ user.phone || 'មិនបានកំណត់' }}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">ភេទ</span>
-                <span class="info-value">{{
-                  user.gender == 1 ? 'ប្រុស' : user.gender == 2 ? 'ស្រី' : 'មិនបានកំណត់'
-                }}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">មុខរបរ</span>
-                <span class="info-value">{{ user.current_job || 'មិនបានកំណត់' }}</span>
-              </div>
-            </div>
+          <!-- name / email / badge -->
+          <div class="card-body-center">
+            <p class="sidebar-name">{{ user.name }}</p>
+            <p class="sidebar-email">{{ user.email }}</p>
+            <span class="badge-provider">អ្នកផ្ដល់សេវាកម្ម</span>
           </div>
 
-          <!-- ចូលប្រើរហ័ស -->
-          <div class="quick-access">
-            <h3 class="card-title">ចូលប្រើរហ័ស</h3>
-            <div class="quick-links">
-              <router-link
-                v-for="link in quickLinks"
-                :key="link.to"
-                :to="link.to"
-                class="quick-link"
-              >
-                <div
-                  class="quick-icon"
-                  :style="{ background: link.color + '15', color: link.color }"
-                >
-                  <i :class="['bi', link.icon]"></i>
-                </div>
-                <span>{{ link.label }}</span>
-                <i class="bi bi-chevron-right"></i>
-              </router-link>
+          <!-- info rows -->
+          <div class="sidebar-info">
+            <div class="info-row">
+              <span class="info-label">អ៊ីមែល</span>
+              <span class="info-value">{{ user.email }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">ទូរស័ព្ទ</span>
+              <span class="info-value">{{ user.phone || '—' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">ភេទ</span>
+              <span class="info-value">
+                {{ user.gender == 1 ? 'ប្រុស' : user.gender == 2 ? 'ស្រី' : 'ស្រី' }}
+              </span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">កាតាលច្បាប់</span>
+              <span class="info-value">{{ user.current_job || 'Provider' }}</span>
             </div>
           </div>
         </div>
 
-        <!-- មាតិកាចម្បង -->
-        <div class="main-content">
-          <!-- ផ្នែកកែសម្រួលប្រវត្តិរូប -->
+        <!-- ── RIGHT CONTENT ── -->
+        <div class="right-content">
+
+          <!-- Account Info Card -->
           <div class="section-card">
             <div class="section-header">
-              <h2>កែសម្រួលប្រវត្តិរូប</h2>
-              <div class="section-actions">
-                <button v-if="!isEditing" @click="enableEdit" class="btn-edit">
-                  <i class="bi bi-pencil"></i> កែសម្រួល
-                </button>
-                <button v-else @click="cancelEdit" class="btn-cancel">
-                  <i class="bi bi-x"></i> បោះបង់
-                </button>
+              <h2>គតិមានគណនី</h2>
+              <div class="header-actions">
+                <button v-if="!isEditing" @click="enableEdit" class="btn-outline">កែប្រែ</button>
+                <template v-else>
+                  <button @click="cancelEdit" class="btn-ghost">បោះបង់</button>
+                  <button @click="updateProfile" class="btn-primary" :disabled="loading">
+                    <span v-if="loading" class="spinner-border spinner-border-sm"></span>
+                    <span v-else>រក្សាទុក</span>
+                  </button>
+                </template>
               </div>
             </div>
 
-            <form @submit.prevent="updateProfile" class="edit-form">
-              <div v-if="isEditing" class="edit-notice">
-                <i class="bi bi-info-circle"></i>
-                <span>អ្នកនៅក្នុងរបៀបកែសម្រួល។ រក្សាទុកការផ្លាស់ប្តូររបស់អ្នកនៅពេលបញ្ចប់។</span>
-              </div>
+            <div v-if="isEditing" class="edit-notice">
+              <i class="bi bi-info-circle"></i>
+              <span>អ្នកនៅក្នុងរបៀបកែសម្រួល។ រក្សាទុកការផ្លាស់ប្តូររបស់អ្នកនៅពេលបញ្ចប់។</span>
+            </div>
 
+            <div class="form-grid">
               <div class="form-group">
                 <label>ឈ្មោះពេញ</label>
-                <input
-                  v-model="form.name"
-                  type="text"
-                  :readonly="!isEditing"
-                  :class="{ 'is-error': errors.name }"
-                />
+                <input v-model="form.name" type="text" :readonly="!isEditing" :class="{ 'is-error': errors.name }" />
                 <span v-if="errors.name" class="error-text">{{ errors.name }}</span>
               </div>
-
               <div class="form-group">
-                <label>អាសយដ្ឋានអ៊ីមែល</label>
-                <input
-                  v-model="form.email"
-                  type="email"
-                  :readonly="!isEditing"
-                  :class="{ 'is-error': errors.email }"
-                />
+                <label>អ៊ីមែល</label>
+                <input v-model="form.email" type="email" :readonly="!isEditing" :class="{ 'is-error': errors.email }" />
                 <span v-if="errors.email" class="error-text">{{ errors.email }}</span>
               </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label>លេខទូរស័ព្ទ</label>
-                  <input v-model="form.phone" type="tel" :readonly="!isEditing" />
-                </div>
-                <div class="form-group">
-                  <label>ភេទ</label>
-                  <select v-model="form.gender" :disabled="!isEditing">
-                    <option :value="1">ប្រុស</option>
-                    <option :value="2">ស្រី</option>
-                  </select>
-                </div>
-              </div>
-
               <div class="form-group">
-                <label>មុខរបរ</label>
+                <label>ទូរស័ព្ទ</label>
+                <input v-model="form.phone" type="tel" :readonly="!isEditing" placeholder="បញ្ចូលទូរស័ព្ទរបស់អ្នក" />
+              </div>
+              <div class="form-group">
+                <label>ភេទ</label>
+                <select v-model="form.gender" :disabled="!isEditing">
+                  <option :value="1">ប្រុស</option>
+                  <option :value="2">ស្រី</option>
+                </select>
+              </div>
+              <div class="form-group full-width">
+                <label>កាតាលច្បាប់</label>
                 <input v-model="form.current_job" type="text" :readonly="!isEditing" />
               </div>
-
-              <div v-if="isEditing" class="form-actions">
-                <button type="submit" class="btn-save" :disabled="loading">
-                  <span v-if="loading" class="spinner-border spinner-border-sm"></span>
-                  <i v-else class="bi bi-check-circle"></i>
-                  រក្សាទុកការផ្លាស់ប្តូរ
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
 
-          <!-- ផ្នែកសន្តិសុខ -->
+          <!-- Change Password Card -->
           <div class="section-card">
             <div class="section-header">
-              <h2>សន្តិសុខ</h2>
-              <button @click="showPassForm = !showPassForm" class="btn-toggle">
-                {{ showPassForm ? 'លាក់' : 'បង្ហាញ' }}
+              <h2>ផ្លាស់ប្រការសម្ងាត់កាតសសម្ងាត់</h2>
+              <button @click="showPassForm = !showPassForm" class="btn-outline">
+                {{ showPassForm ? 'លាក់' : 'ផ្លាស់ប្តូរ' }}
               </button>
+            </div>
+
+            <div v-if="!showPassForm" class="pass-hint-text">
+              <i class="bi bi-shield-check"></i>
+              Use a strong password — at least 8 characters with letters and numbers.
             </div>
 
             <div v-show="showPassForm" class="password-form">
-              <div class="form-group">
+              <div class="form-group full-width">
                 <label>ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
-                <input
-                  v-model="passForm.old_pass"
-                  type="password"
-                  placeholder="បញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្នរបស់អ្នក"
-                />
+                <input v-model="passForm.old_pass" type="password" placeholder="បញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្ន" />
               </div>
-
-              <div class="form-row">
+              <div class="form-grid">
                 <div class="form-group">
                   <label>ពាក្យសម្ងាត់ថ្មី</label>
-                  <input
-                    v-model="passForm.new_pass"
-                    type="password"
-                    placeholder="បញ្ចូលពាក្យសម្ងាត់ថ្មី"
-                  />
+                  <input v-model="passForm.new_pass" type="password" placeholder="បញ្ចូលពាក្យសម្ងាត់ថ្មី" />
                 </div>
                 <div class="form-group">
                   <label>បញ្ជាក់ពាក្យសម្ងាត់</label>
-                  <input
-                    v-model="passForm.new_pass_confirmation"
-                    type="password"
-                    placeholder="បញ្ជាក់ពាក្យសម្ងាត់ថ្មី"
-                  />
+                  <input v-model="passForm.new_pass_confirmation" type="password" placeholder="បញ្ជាក់ពាក្យសម្ងាត់ថ្មី" />
                 </div>
               </div>
-
-              <button @click="changePassword" class="btn-save" :disabled="passLoading">
-                <span v-if="passLoading" class="spinner-border spinner-border-sm"></span>
-                <i v-else class="bi bi-check-circle"></i>
-                ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់
-              </button>
-
+              <div class="pass-actions">
+                <button @click="changePassword" class="btn-primary" :disabled="passLoading">
+                  <span v-if="passLoading" class="spinner-border spinner-border-sm"></span>
+                  <i v-else class="bi bi-check-circle"></i>
+                  ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់
+                </button>
+              </div>
               <p class="password-hint">
                 <i class="bi bi-shield-check"></i>
                 ប្រើពាក្យសម្ងាត់ខ្លាំងដែលមានយ៉ាងតិច ៨ តួអក្សរ រួមមានអក្សរធំ លេខ និងនិមិត្តសញ្ញា។
               </p>
             </div>
-
-            <div v-show="!showPassForm" class="empty-state">
-              <i class="bi bi-lock"></i>
-              <p>ចុច "បង្ហាញ" ដើម្បីផ្លាស់ប្តូរពាក្យសម្ងាត់របស់អ្នក</p>
-            </div>
           </div>
 
-          <!-- ផ្នែករូបថតប្រវត្តិរូប -->
+          <!-- Profile Photo Card -->
           <div class="section-card">
             <div class="section-header">
               <h2>រូបថតប្រវត្តិរូប</h2>
             </div>
-
-            <div class="photo-section">
-              <div class="photo-preview">
-                <div class="avatar-medium">
-                  <img
-                    v-if="avatarPreview || user.avatar"
-                    :src="avatarPreview || user.avatar"
-                    alt="រូបថត"
-                  />
-                  <span v-else>{{ user.name?.charAt(0)?.toUpperCase() || 'A' }}</span>
-                </div>
-                <div class="photo-info">
-                  <p class="photo-title">ធ្វើបច្ចុប្បន្នភាពរូបថតប្រវត្តិរូបរបស់អ្នក</p>
-                  <p class="photo-hint">ទ្រង់ទ្រាយ JPG ឬ PNG អតិបរមា ២MB</p>
-                </div>
+            <div class="photo-row">
+              <div class="avatar-sm">
+                <img v-if="avatarPreview || user.avatar" :src="avatarPreview || user.avatar" alt="avatar" />
+                <span v-else>{{ user.name?.charAt(0)?.toUpperCase() || 'A' }}</span>
               </div>
-              <div class="photo-actions">
-                <button @click="triggerFileUpload" class="btn-upload" :disabled="loading">
+              <div class="photo-info">
+                <p class="photo-title">ធ្វើបច្ចុប្បន្នភាពរូបថតប្រវត្តិរូបរបស់អ្នក</p>
+                <p class="photo-sub">ទ្រង់ទ្រាយ JPG ឬ PNG អតិបរមា ២MB</p>
+              </div>
+              <div class="photo-btns">
+                <button @click="triggerFileUpload" class="btn-primary" :disabled="loading">
                   <i class="bi bi-cloud-upload"></i> បញ្ចូល
                 </button>
-                <button
-                  v-if="user.avatar"
-                  @click="removeAvatar"
-                  class="btn-delete"
-                  :disabled="loading"
-                >
+                <button v-if="user.avatar" @click="removeAvatar" class="btn-danger" :disabled="loading">
                   <i class="bi bi-trash3"></i> លុបចេញ
                 </button>
               </div>
@@ -266,20 +187,18 @@
       </div>
     </div>
 
-    <!-- Modal បញ្ជាក់ -->
+    <!-- Confirm Modal -->
     <div v-if="showConfirmModal" class="modal-backdrop">
       <div class="modal-dialog">
         <div class="modal-header">
           <h3>បញ្ជាក់ការផ្លាស់ប្តូរ</h3>
-          <button @click="showConfirmModal = false" class="btn-close">
-            <i class="bi bi-x"></i>
-          </button>
+          <button @click="showConfirmModal = false" class="btn-close"><i class="bi bi-x"></i></button>
         </div>
         <div class="modal-body">
           <p>តើអ្នកប្រាកដថាចង់រក្សាទុកការផ្លាស់ប្តូរប្រវត្តិរូបទាំងនេះទេ?</p>
         </div>
         <div class="modal-footer">
-          <button @click="showConfirmModal = false" class="btn-secondary">បោះបង់</button>
+          <button @click="showConfirmModal = false" class="btn-ghost">បោះបង់</button>
           <button @click="confirmUpdate" class="btn-primary" :disabled="loading">
             <span v-if="loading" class="spinner-border spinner-border-sm"></span>
             <i v-else class="bi bi-check"></i> បញ្ជាក់
@@ -288,19 +207,16 @@
       </div>
     </div>
 
-    <!-- ការជូនដំណឹង Toast -->
+    <!-- Toast -->
     <transition name="toast-fade">
       <div v-if="toast.show" class="toast-notification" :class="toast.type">
-        <i
-          :class="
-            toast.type === 'success' ? 'bi bi-check-circle-fill' : 'bi bi-exclamation-circle-fill'
-          "
-        ></i>
+        <i :class="toast.type === 'success' ? 'bi bi-check-circle-fill' : 'bi bi-exclamation-circle-fill'"></i>
         {{ toast.message }}
       </div>
     </transition>
   </div>
 </template>
+
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import api from '@/api/http'
@@ -308,14 +224,14 @@ import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
 
-const user            = ref(null)
-const loading         = ref(false)
-const passLoading     = ref(false)
-const uploadingAvatar = ref(false)
-const fileInput       = ref(null)
-const avatarPreview   = ref(null)
-const isEditing       = ref(false)
-const showPassForm    = ref(false)
+const user             = ref(null)
+const loading          = ref(false)
+const passLoading      = ref(false)
+const uploadingAvatar  = ref(false)
+const fileInput        = ref(null)
+const avatarPreview    = ref(null)
+const isEditing        = ref(false)
+const showPassForm     = ref(false)
 const showConfirmModal = ref(false)
 
 const form     = reactive({ name: '', email: '', phone: '', gender: 1, current_job: '' })
@@ -323,28 +239,15 @@ const errors   = reactive({ name: '', email: '' })
 const passForm = reactive({ old_pass: '', new_pass: '', new_pass_confirmation: '' })
 const toast    = reactive({ show: false, message: '', type: 'success' })
 
-const todayDate = new Date().toLocaleDateString('km-KH', {
-  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-})
-
-const quickLinks = [
-  { to: '/admin/manage',       label: 'គ្រប់គ្រងអ្នកប្រើ',  sub: 'មើល និងកំណត់តួនាទី',       icon: 'bi-people-fill',      bg: 'bg-primary-light', color: '#0d6efd' },
-  { to: '/admin/room-options', label: 'ជម្រើសបន្ទប់',       sub: 'គ្រឿងសម្ភារៈ និងសេវាកម្ម',  icon: 'bi-ui-checks',        bg: 'bg-orange-light',  color: '#ff5f00' },
-  { to: '/admin/locations',    label: 'ខណ្ឌ',               sub: 'គ្រប់គ្រងទីតាំង',            icon: 'bi-geo-alt-fill',     bg: 'bg-success-light', color: '#198754' },
-  { to: '/admin/dashboard',    label: 'ផ្ទាំងគ្រប់គ្រង',    sub: 'ទិដ្ឋភាពទូទៅ',               icon: 'bi-speedometer2',     bg: 'bg-purple-light',  color: '#8b5cf6' },
-]
-
 const showToast = (msg, type = 'success') => {
   toast.message = msg; toast.type = type; toast.show = true
   setTimeout(() => (toast.show = false), 3000)
 }
 
-// ── Fetch user ─────────────────────────────────────────────
 const fetchUser = async () => {
   try {
     const res = await api.get('/me')
     user.value = res.data?.data || res.data
-    // ✅ Sync to auth store so navbar updates immediately
     authStore.user = { ...authStore.user, ...user.value }
     Object.assign(form, {
       name:        user.value.name        || '',
@@ -356,7 +259,6 @@ const fetchUser = async () => {
   } catch (err) { console.error('fetchUser error:', err) }
 }
 
-// ── Edit profile ───────────────────────────────────────────
 const enableEdit = () => { isEditing.value = true }
 const cancelEdit = () => {
   isEditing.value = false
@@ -395,7 +297,6 @@ const confirmUpdate = async () => {
   } finally { loading.value = false }
 }
 
-// ── Change password ────────────────────────────────────────
 const changePassword = async () => {
   if (!passForm.old_pass || !passForm.new_pass || !passForm.new_pass_confirmation) {
     showToast('សូមបំពេញវាលពាក្យសម្ងាត់ទាំងអស់', 'error'); return
@@ -414,7 +315,6 @@ const changePassword = async () => {
   } finally { passLoading.value = false }
 }
 
-// ── Avatar ─────────────────────────────────────────────────
 const triggerFileUpload = () => fileInput.value?.click()
 
 const handleFileUpload = async (e) => {
@@ -451,133 +351,111 @@ const removeAvatar = async () => {
 
 onMounted(fetchUser)
 </script>
+
 <style scoped>
-/* ── Layout ── */
+/* ── Base ── */
 .profile-container {
-  background: #f5f7fa;
+  background: #f0f2f5;
   min-height: 100vh;
-  padding: 24px 16px;
+  padding: 28px 24px;
+  font-family: inherit;
 }
 
+.page-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 24px;
+}
+
+/* ── Skeleton ── */
 .skeleton-wrapper {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
   gap: 20px;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
 }
-
-.skeleton-header,
-.skeleton-card {
+.skeleton-sidebar {
+  width: 260px;
+  min-width: 260px;
+  height: 420px;
   background: #fff;
   border-radius: 12px;
-  height: 200px;
-  animation: pulse 2s infinite;
+  animation: pulse 1.5s infinite;
 }
+.skeleton-main { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+.skeleton-card { background: #fff; border-radius: 12px; height: 200px; animation: pulse 1.5s infinite; }
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50% { opacity: 0.4; }
 }
 
-.content-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
+/* ── Layout ── */
+.content-wrapper { max-width: 1100px; margin: 0 auto; }
+
+.layout-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 20px;
+  align-items: start;
 }
 
-/* ── Hero Section ── */
-.hero-section {
-  position: relative;
-  margin-bottom: 40px;
+@media (max-width: 768px) {
+  .layout-grid { grid-template-columns: 1fr; }
 }
 
-.hero-bg {
-  background: linear-gradient(135deg, #031c36 0%, #0d3a6e 100%);
-  height: 200px;
-  border-radius: 16px 16px 0 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-bg::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: -50px;
-  width: 300px;
-  height: 300px;
-  background: rgba(255, 95, 0, 0.1);
-  border-radius: 50%;
-}
-
-.profile-header {
+/* ── Sidebar Card ── */
+.sidebar-card {
   background: #fff;
-  border-radius: 0 0 16px 16px;
-  padding: 0 32px 32px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.card-header-dark {
+  background: linear-gradient(135deg, #1a2744 0%, #0d2452 100%);
+  height: 110px;
   display: flex;
-  gap: 32px;
-  align-items: flex-start;
-  transform: translateY(-80px);
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 0;
   position: relative;
-  z-index: 1;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.avatar-section {
-  flex-shrink: 0;
+.avatar-wrap {
+  position: relative;
+  cursor: pointer;
+  margin-bottom: -36px;
 }
 
-.avatar-large {
-  width: 140px;
-  height: 140px;
+.avatar {
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #031c36, #0d3a6e);
+  border: 4px solid #fff;
+  background: linear-gradient(135deg, #1a2744, #0d3a8e);
   color: #fff;
-  font-size: 3rem;
-  font-weight: 800;
+  font-size: 1.8rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 6px solid #fff;
-  box-shadow: 0 8px 24px rgba(3, 28, 54, 0.2);
-  cursor: pointer;
   position: relative;
-  transition: transform 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.avatar-large:hover {
-  transform: scale(1.05);
-}
-
-.avatar-large img {
+.avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.avatar-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  color: #fff;
-  transition: all 0.3s;
-  opacity: 0;
-}
-
-.avatar-large:hover .avatar-overlay {
-  background: rgba(0, 0, 0, 0.4);
-  opacity: 1;
-}
-
 .avatar-loading {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0,0,0,0.5);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -585,102 +463,58 @@ onMounted(fetchUser)
   color: #fff;
 }
 
-.header-info {
-  flex: 1;
-  padding-top: 24px;
-}
-
-.user-name {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #031c36;
-  margin-bottom: 4px;
-}
-
-.user-email {
-  font-size: 0.95rem;
-  color: #666;
-  margin-bottom: 12px;
-}
-
-.badges {
+.camera-btn {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ff5f00;
+  color: #fff;
+  border: 2px solid #fff;
+  font-size: 0.65rem;
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.badge-role,
-.badge-id {
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 20px;
-  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.badge-role {
+.camera-btn:hover { background: #e65600; }
+
+.card-body-center {
+  text-align: center;
+  padding: 48px 20px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.sidebar-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 4px;
+}
+
+.sidebar-email {
+  font-size: 0.8rem;
+  color: #888;
+  margin: 0 0 12px;
+}
+
+.badge-provider {
+  display: inline-block;
   background: rgba(255, 95, 0, 0.1);
   color: #ff5f00;
-  border: 1px solid rgba(255, 95, 0, 0.2);
+  border: 1px solid rgba(255, 95, 0, 0.25);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 20px;
 }
 
-.badge-id {
-  background: rgba(3, 28, 54, 0.08);
-  color: #031c36;
-}
-
-/* ── Main Grid ── */
-.main-grid {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 24px;
-  margin-top: 20px;
-}
-
-@media (max-width: 768px) {
-  .main-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 24px;
-  }
-}
-
-/* ── Sidebar ── */
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.info-card,
-.quick-access {
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.card-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #031c36;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.info-items {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.sidebar-info {
+  padding: 8px 20px 16px;
 }
 
 .info-row {
@@ -688,81 +522,39 @@ onMounted(fetchUser)
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.info-row:last-child {
-  border-bottom: none;
-}
-
-.info-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.info-value {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #031c36;
-}
-
-.quick-links {
-  display: flex;
-  flex-direction: column;
+  border-bottom: 1px solid #f5f5f5;
   gap: 8px;
 }
 
-.quick-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 10px;
-  text-decoration: none;
-  color: #031c36;
-  transition: all 0.2s;
-  font-size: 0.9rem;
+.info-row:last-child { border-bottom: none; }
+
+.info-label {
+  font-size: 0.78rem;
+  color: #aaa;
   font-weight: 500;
+  white-space: nowrap;
 }
 
-.quick-link:hover {
-  background: #f0f4f8;
-  transform: translateX(4px);
-  color: #031c36;
+.info-value {
+  font-size: 0.82rem;
+  color: #333;
+  font-weight: 600;
+  text-align: right;
+  word-break: break-all;
 }
 
-.quick-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-
-.quick-link i:last-child {
-  margin-left: auto;
-  font-size: 0.75rem;
-  color: #ccc;
-}
-
-/* ── Main Content ── */
-.main-content {
+/* ── Right Content ── */
+.right-content {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .section-card {
   background: #fff;
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
 }
 
 .section-header {
@@ -770,141 +562,107 @@ onMounted(fetchUser)
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f0f0f0;
 }
 
 .section-header h2 {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #031c36;
+  color: #1a1a2e;
   margin: 0;
 }
 
-.section-actions,
-.section-header button {
-  display: flex;
-  gap: 8px;
-}
+.header-actions { display: flex; gap: 8px; }
 
-.btn-edit,
-.btn-cancel,
-.btn-toggle,
-.btn-save,
-.btn-delete,
-.btn-upload {
+/* ── Buttons ── */
+.btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 8px 18px;
+  background: #ff5f00;
+  color: #fff;
   border: none;
+  border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
 }
+.btn-primary:hover:not(:disabled) { background: #e65600; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.btn-edit {
-  background: #031c36;
-  color: #fff;
-}
-
-.btn-edit:hover {
-  background: #052d5a;
-}
-
-.btn-cancel {
-  background: #f0f0f0;
-  color: #031c36;
-}
-
-.btn-cancel:hover {
-  background: #e0e0e0;
-}
-
-.btn-toggle {
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
   background: transparent;
-  color: #ff5f00;
-  font-weight: 600;
-}
-
-.btn-toggle:hover {
-  background: rgba(255, 95, 0, 0.1);
-}
-
-.btn-save {
-  background: #ff5f00;
-  color: #fff;
-}
-
-.btn-save:hover:not(:disabled) {
-  background: #e65600;
-  transform: translateY(-1px);
-}
-
-.btn-save:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-upload {
-  background: #ff5f00;
-  color: #fff;
-}
-
-.btn-upload:hover:not(:disabled) {
-  background: #e65600;
-}
-
-.btn-delete {
-  background: #f5f5f5;
-  color: #dc3545;
-}
-
-.btn-delete:hover:not(:disabled) {
-  background: #ffe0e0;
-}
-
-.btn-close {
-  background: none;
-  border: none;
-  color: #031c36;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0;
-}
-
-/* ── Forms ── */
-.edit-notice {
-  background: rgba(255, 95, 0, 0.1);
-  border-left: 4px solid #ff5f00;
-  padding: 12px 16px;
+  color: #1a1a2e;
+  border: 1.5px solid #ddd;
   border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-outline:hover { border-color: #aaa; background: #f5f5f5; }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  background: #f0f0f0;
+  color: #555;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-ghost:hover { background: #e0e0e0; }
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #fff0f0;
+  color: #dc3545;
+  border: 1.5px solid #f5c6cb;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-danger:hover:not(:disabled) { background: #ffe0e0; }
+.btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Edit Notice ── */
+.edit-notice {
+  background: rgba(255, 95, 0, 0.08);
+  border-left: 3px solid #ff5f00;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.85rem;
   color: #ff5f00;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.form-row {
+/* ── Form Grid ── */
+.form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
-@media (max-width: 640px) {
-  .form-row {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
 }
 
 .form-group {
@@ -912,170 +670,113 @@ onMounted(fetchUser)
   flex-direction: column;
 }
 
+.form-group.full-width { grid-column: 1 / -1; }
+
 .form-group label {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: #031c36;
-  margin-bottom: 8px;
+  color: #555;
+  margin-bottom: 6px;
 }
 
 .form-group input,
 .form-group select {
-  padding: 10px 12px;
-  border: 1px solid #ddd;
+  padding: 9px 12px;
+  border: 1.5px solid #e8e8e8;
   border-radius: 8px;
   font-size: 0.9rem;
   font-family: inherit;
-  transition: all 0.2s;
+  color: #333;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.form-group input:focus,
-.form-group select:focus {
+.form-group input[readonly],
+.form-group select:disabled {
+  background: #fafafa;
+  color: #777;
+  cursor: default;
+}
+
+.form-group input:not([readonly]):focus,
+.form-group select:not(:disabled):focus {
   outline: none;
   border-color: #ff5f00;
   box-shadow: 0 0 0 3px rgba(255, 95, 0, 0.1);
 }
 
-.form-group input:readonly {
-  background: #f8f8f8;
-  color: #666;
-}
+.form-group input.is-error { border-color: #dc3545; }
+.error-text { font-size: 0.75rem; color: #dc3545; margin-top: 4px; }
 
-.form-group input.is-error {
-  border-color: #dc3545;
-}
-
-.error-text {
-  font-size: 0.8rem;
-  color: #dc3545;
-  margin-top: 4px;
-}
-
-.form-actions {
+/* ── Password ── */
+.pass-hint-text {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 12px;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #888;
+  padding: 4px 0;
 }
 
-/* ── Password Form ── */
 .password-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding-top: 20px;
+  padding-top: 4px;
 }
 
+.pass-actions { display: flex; justify-content: flex-end; }
+
 .password-hint {
-  font-size: 0.85rem;
-  color: #666;
+  font-size: 0.8rem;
+  color: #888;
   background: #f8f9fa;
-  padding: 12px;
+  padding: 10px 14px;
   border-radius: 8px;
-  margin-top: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #999;
-}
-
-.empty-state i {
-  font-size: 2rem;
-  margin-bottom: 12px;
-  opacity: 0.5;
-}
-
-.empty-state p {
-  font-size: 0.9rem;
+  margin: 0;
 }
 
 /* ── Photo Section ── */
-.photo-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding-top: 12px;
-}
-
-.photo-preview {
+.photo-row {
   display: flex;
   align-items: center;
   gap: 16px;
-  flex: 1;
+  flex-wrap: wrap;
 }
 
-.avatar-medium {
-  width: 80px;
-  height: 80px;
+.avatar-sm {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #031c36, #0d3a6e);
+  background: linear-gradient(135deg, #1a2744, #0d3a8e);
   color: #fff;
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: 1.4rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 3px solid #fff;
-  box-shadow: 0 2px 8px rgba(3, 28, 54, 0.2);
   flex-shrink: 0;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
-.avatar-medium img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.avatar-sm img { width: 100%; height: 100%; object-fit: cover; }
 
-.photo-info {
-  flex: 1;
-}
+.photo-info { flex: 1; }
+.photo-title { font-size: 0.9rem; font-weight: 600; color: #1a1a2e; margin: 0 0 4px; }
+.photo-sub { font-size: 0.78rem; color: #aaa; margin: 0; }
 
-.photo-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #031c36;
-  margin: 0 0 4px;
-}
-
-.photo-hint {
-  font-size: 0.8rem;
-  color: #999;
-  margin: 0;
-}
-
-.photo-actions {
-  display: flex;
-  gap: 10px;
-}
-
-@media (max-width: 640px) {
-  .photo-section {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .photo-actions {
-    width: 100%;
-  }
-
-  .btn-upload,
-  .btn-delete {
-    flex: 1;
-    justify-content: center;
-  }
-}
+.photo-btns { display: flex; gap: 10px; flex-wrap: wrap; }
 
 /* ── Modal ── */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0,0,0,0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1085,90 +786,49 @@ onMounted(fetchUser)
 
 .modal-dialog {
   background: #fff;
-  border-radius: 12px;
+  border-radius: 14px;
   width: 100%;
   max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  animation: slideUp 0.25s ease-out;
   overflow: hidden;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
-  animation: modalSlideUp 0.3s ease-out;
 }
 
-@keyframes modalSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .modal-header {
-  background: #031c36;
+  background: #1a2744;
   color: #fff;
-  padding: 20px 24px;
+  padding: 18px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.modal-header h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin: 0;
-}
+.modal-header h3 { font-size: 1rem; font-weight: 700; margin: 0; }
 
-.modal-body {
-  padding: 24px;
-  color: #666;
-  font-size: 0.95rem;
+.btn-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.8;
 }
+.btn-close:hover { opacity: 1; }
 
+.modal-body { padding: 24px; color: #555; font-size: 0.9rem; }
 .modal-footer {
-  padding: 16px 24px;
+  padding: 14px 24px;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   border-top: 1px solid #f0f0f0;
-}
-
-.btn-secondary {
-  background: #f0f0f0;
-  color: #031c36;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-secondary:hover {
-  background: #e0e0e0;
-}
-
-.btn-primary {
-  background: #ff5f00;
-  color: #fff;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: #e65600;
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
 }
 
 /* ── Toast ── */
@@ -1180,70 +840,19 @@ onMounted(fetchUser)
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 20px;
+  padding: 13px 20px;
   border-radius: 10px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
 }
 
-.toast-notification.success {
-  background: linear-gradient(135deg, #031c36, #0d3a6e);
-}
-
-.toast-notification.error {
-  background: linear-gradient(135deg, #dc3545, #ff6b6b);
-}
+.toast-notification.success { background: linear-gradient(135deg, #1a2744, #0d3a8e); }
+.toast-notification.error   { background: linear-gradient(135deg, #dc3545, #ff6b6b); }
 
 .toast-fade-enter-active,
-.toast-fade-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
+.toast-fade-leave-active { transition: all 0.3s ease; }
 .toast-fade-enter-from,
-.toast-fade-leave-to {
-  opacity: 0;
-  transform: translateY(12px);
-}
-
-/* ── Responsive ── */
-@media (max-width: 1024px) {
-  .hero-section {
-    margin-bottom: 32px;
-  }
-
-  .profile-header {
-    gap: 24px;
-    padding: 0 24px 24px;
-  }
-}
-
-@media (max-width: 640px) {
-  .profile-container {
-    padding: 16px 12px;
-  }
-
-  .hero-bg {
-    height: 120px;
-  }
-
-  .avatar-large {
-    width: 100px;
-    height: 100px;
-    font-size: 2.5rem;
-  }
-
-  .user-name {
-    font-size: 1.5rem;
-  }
-
-  .section-card {
-    padding: 16px;
-  }
-
-  .main-grid {
-    margin-top: 16px;
-  }
-}
+.toast-fade-leave-to { opacity: 0; transform: translateY(10px); }
 </style>
