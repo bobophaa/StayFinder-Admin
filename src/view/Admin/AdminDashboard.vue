@@ -293,7 +293,6 @@
             <h5 class="fw-bold text-navy mb-0">
               <i class="bi bi-tag-fill me-2 text-orange"></i>បញ្ចុះតម្លៃកំពុងសកម្ម
             </h5>
-            <!-- FIX: was promoបន្ទប់.length (Khmer computed name) → promoRooms.length -->
             <span class="badge-count">{{ promoRooms.length }}</span>
           </div>
           <div v-if="loading">
@@ -514,7 +513,7 @@ const statCards = computed(() => [
 // ── Quick actions ──────────────────────────────────────────
 const quickActions = [
   {
-    to: '/admin/users',
+    to: '/admin/Manage',
     title: 'គ្រប់គ្រងអ្នកប្រើ',
     sub: 'មើល និងកំណត់តួនាទី',
     icon: 'bi-people-fill',
@@ -530,29 +529,29 @@ const quickActions = [
     color: '#ff5f00',
   },
   {
-    to: '/admin/districts',
+    to: '/admin/locations',
     title: 'ខណ្ឌ',
     sub: 'គ្រប់គ្រងទីតាំង',
     icon: 'bi-geo-alt-fill',
     bg: 'bg-success-light',
     color: '#198754',
   },
-  {
-    to: '/provider/add-room',
-    title: 'បង្ហោះបន្ទប់ថ្មី',
-    sub: 'បន្ថែមបញ្ជី',
-    icon: 'bi-plus-circle-fill',
-    bg: 'bg-purple-light',
-    color: '#8b5cf6',
-  },
-  {
-    to: '/admin/bookings',
-    title: 'ការកក់ទាំងអស់',
-    sub: 'អនុម័ត ឬ បដិសេធ',
-    icon: 'bi-calendar-check',
-    bg: 'bg-orange-light',
-    color: '#ff5f00',
-  },
+  // {
+  //   to: '/provider/add-room',
+  //   title: 'បង្ហោះបន្ទប់ថ្មី',
+  //   sub: 'បន្ថែមបញ្ជី',
+  //   icon: 'bi-plus-circle-fill',
+  //   bg: 'bg-purple-light',
+  //   color: '#8b5cf6',
+  // },
+  // {
+  //   to: '/admin/bookings',
+  //   title: 'ការកក់ទាំងអស់',
+  //   sub: 'អនុម័ត ឬ បដិសេធ',
+  //   icon: 'bi-calendar-check',
+  //   bg: 'bg-orange-light',
+  //   color: '#ff5f00',
+  // },
 ]
 
 // ── Activity feed ──────────────────────────────────────────

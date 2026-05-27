@@ -11,7 +11,7 @@
 
     <!-- main content -->
     <div v-else class="content-wrapper">
-      <h1 class="page-title">តំកិមានប្រវត្តិ</h1>
+      <h1 class="page-title">ព័ត៌មានគណនី</h1>
 
       <div class="layout-grid">
         <!-- ── LEFT SIDEBAR CARD ── -->
@@ -305,21 +305,61 @@ const confirmUpdate = async () => {
 }
 
 const changePassword = async () => {
-  if (!passForm.old_pass || !passForm.new_pass || !passForm.new_pass_confirmation) {
-    showToast('សូមបំពេញវាលពាក្យសម្ងាត់ទាំងអស់', 'error'); return
+
+  if (!passForm.old_pass) {
+    return showToast('សូមបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្ន', 'error')
   }
+
+  if (!passForm.new_pass) {
+    return showToast('សូមបញ្ចូលពាក្យសម្ងាត់ថ្មី', 'error')
+  }
+
   if (passForm.new_pass !== passForm.new_pass_confirmation) {
-    showToast('ពាក្យសម្ងាត់មិនដូចគ្នា', 'error'); return
+    return showToast('ការបញ្ជាក់ពាក្យសម្ងាត់មិនត្រូវគ្នា', 'error')
   }
+
   passLoading.value = true
+
   try {
-    await api.put('/profile/pass', passForm)
+
+    const res = await api.put('/profile/pass', passForm)
+
+   if (res.data.result === false) {
+
+  let msg = 'ប្តូរពាក្យសម្ងាត់បរាជ័យ'
+
+  
+  if (res.data.message === 'Wrong old password.') {
+    msg = 'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ'
+  }
+
+  showToast(msg, 'error')
+
+  return
+}
+
     showToast('បានប្តូរពាក្យសម្ងាត់ជោគជ័យ!')
-    Object.assign(passForm, { old_pass: '', new_pass: '', new_pass_confirmation: '' })
+
+    Object.assign(passForm, {
+      old_pass: '',
+      new_pass: '',
+      new_pass_confirmation: ''
+    })
+
     showPassForm.value = false
+
   } catch (err) {
-    showToast(err.response?.data?.message || 'ប្តូរពាក្យសម្ងាត់បរាជ័យ', 'error')
-  } finally { passLoading.value = false }
+
+    showToast(
+      err.response?.data?.message || 'Server Error',
+      'error'
+    )
+
+  } finally {
+
+    passLoading.value = false
+
+  }
 }
 
 const triggerFileUpload = () => fileInput.value?.click()
