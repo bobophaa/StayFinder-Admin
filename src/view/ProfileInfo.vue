@@ -196,7 +196,46 @@
                     v-model="passForm.new_pass"
                     type="password"
                     placeholder="បញ្ចូលពាក្យសម្ងាត់ថ្មី"
+                    @input="validatePassword"
                   />
+                  <div v-if="passForm.new_pass" class="password-requirements mt-2">
+                    <div :class="['requirement', { met: passwordValidation.minLength }]">
+                      <i
+                        :class="
+                          passwordValidation.minLength ? 'bi bi-check-circle-fill' : 'bi bi-circle'
+                        "
+                      ></i>
+                      យ៉ាងតិច ៨ តួអក្សរ
+                    </div>
+                    <div :class="['requirement', { met: passwordValidation.hasUppercase }]">
+                      <i
+                        :class="
+                          passwordValidation.hasUppercase
+                            ? 'bi bi-check-circle-fill'
+                            : 'bi bi-circle'
+                        "
+                      ></i>
+                      មានអក្សរធំ (A-Z)
+                    </div>
+                    <div :class="['requirement', { met: passwordValidation.hasLowercase }]">
+                      <i
+                        :class="
+                          passwordValidation.hasLowercase
+                            ? 'bi bi-check-circle-fill'
+                            : 'bi bi-circle'
+                        "
+                      ></i>
+                      មានអក្សរតូច (a-z)
+                    </div>
+                    <div :class="['requirement', { met: passwordValidation.hasNumber }]">
+                      <i
+                        :class="
+                          passwordValidation.hasNumber ? 'bi bi-check-circle-fill' : 'bi bi-circle'
+                        "
+                      ></i>
+                      មានលេខ (0-9)
+                    </div>
+                  </div>
                 </div>
                 <div class="form-group">
                   <label>បញ្ជាក់ពាក្យសម្ងាត់</label>
@@ -204,11 +243,34 @@
                     v-model="passForm.new_pass_confirmation"
                     type="password"
                     placeholder="បញ្ជាក់ពាក្យសម្ងាត់ថ្មី"
+                    :class="{
+                      'input-error':
+                        passForm.new_pass_confirmation &&
+                        passForm.new_pass !== passForm.new_pass_confirmation,
+                    }"
                   />
+                  <span
+                    v-if="
+                      passForm.new_pass_confirmation &&
+                      passForm.new_pass !== passForm.new_pass_confirmation
+                    "
+                    class="error-text mt-2"
+                  >
+                    <i class="bi bi-exclamation-circle-fill me-1"></i>
+                    ពាក្យសម្ងាត់មិនដូចគ្នា
+                  </span>
                 </div>
               </div>
 
-              <button @click="changePassword" class="btn-save" :disabled="passLoading">
+              <button
+                @click="changePassword"
+                class="btn-save"
+                :disabled="
+                  passLoading ||
+                  !isPasswordValid ||
+                  passForm.new_pass !== passForm.new_pass_confirmation
+                "
+              >
                 <span v-if="passLoading" class="spinner-border spinner-border-sm"></span>
                 <i v-else class="bi bi-check-circle"></i>
                 ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់
@@ -302,40 +364,98 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import api from '@/api/http'
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
 
-const user            = ref(null)
-const loading         = ref(false)
-const passLoading     = ref(false)
+const user = ref(null)
+const loading = ref(false)
+const passLoading = ref(false)
 const uploadingAvatar = ref(false)
-const fileInput       = ref(null)
-const avatarPreview   = ref(null)
-const isEditing       = ref(false)
-const showPassForm    = ref(false)
+const fileInput = ref(null)
+const avatarPreview = ref(null)
+const isEditing = ref(false)
+const showPassForm = ref(false)
 const showConfirmModal = ref(false)
 
-const form     = reactive({ name: '', email: '', phone: '', gender: 1, current_job: '' })
-const errors   = reactive({ name: '', email: '' })
+const form = reactive({ name: '', email: '', phone: '', gender: 1, current_job: '' })
+const errors = reactive({ name: '', email: '' })
 const passForm = reactive({ old_pass: '', new_pass: '', new_pass_confirmation: '' })
-const toast    = reactive({ show: false, message: '', type: 'success' })
+const toast = reactive({ show: false, message: '', type: 'success' })
 
 const todayDate = new Date().toLocaleDateString('km-KH', {
-  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+})
+
+// Password validation
+const passwordValidation = reactive({
+  minLength: false,
+  hasUppercase: false,
+  hasLowercase: false,
+  hasNumber: false,
+})
+
+const validatePassword = () => {
+  const pass = passForm.new_pass
+  passwordValidation.minLength = pass.length >= 8
+  passwordValidation.hasUppercase = /[A-Z]/.test(pass)
+  passwordValidation.hasLowercase = /[a-z]/.test(pass)
+  passwordValidation.hasNumber = /[0-9]/.test(pass)
+}
+
+const isPasswordValid = computed(() => {
+  return (
+    passwordValidation.minLength &&
+    passwordValidation.hasUppercase &&
+    passwordValidation.hasLowercase &&
+    passwordValidation.hasNumber
+  )
 })
 
 const quickLinks = [
-  { to: '/admin/manage',       label: 'គ្រប់គ្រងអ្នកប្រើ',  sub: 'មើល និងកំណត់តួនាទី',       icon: 'bi-people-fill',      bg: 'bg-primary-light', color: '#0d6efd' },
-  { to: '/admin/room-options', label: 'ជម្រើសបន្ទប់',       sub: 'គ្រឿងសម្ភារៈ និងសេវាកម្ម',  icon: 'bi-ui-checks',        bg: 'bg-orange-light',  color: '#ff5f00' },
-  { to: '/admin/locations',    label: 'ខណ្ឌ',               sub: 'គ្រប់គ្រងទីតាំង',            icon: 'bi-geo-alt-fill',     bg: 'bg-success-light', color: '#198754' },
-  { to: '/admin/dashboard',    label: 'ផ្ទាំងគ្រប់គ្រង',    sub: 'ទិដ្ឋភាពទូទៅ',               icon: 'bi-speedometer2',     bg: 'bg-purple-light',  color: '#8b5cf6' },
+  {
+    to: '/admin/manage',
+    label: 'គ្រប់គ្រងអ្នកប្រើ',
+    sub: 'មើល និងកំណត់តួនាទី',
+    icon: 'bi-people-fill',
+    bg: 'bg-primary-light',
+    color: '#0d6efd',
+  },
+  {
+    to: '/admin/room-options',
+    label: 'ជម្រើសបន្ទប់',
+    sub: 'គ្រឿងសម្ភារៈ និងសេវាកម្ម',
+    icon: 'bi-ui-checks',
+    bg: 'bg-orange-light',
+    color: '#ff5f00',
+  },
+  {
+    to: '/admin/locations',
+    label: 'ខណ្ឌ',
+    sub: 'គ្រប់គ្រងទីតាំង',
+    icon: 'bi-geo-alt-fill',
+    bg: 'bg-success-light',
+    color: '#198754',
+  },
+  {
+    to: '/admin/dashboard',
+    label: 'ផ្ទាំងគ្រប់គ្រង',
+    sub: 'ទិដ្ឋភាពទូទៅ',
+    icon: 'bi-speedometer2',
+    bg: 'bg-purple-light',
+    color: '#8b5cf6',
+  },
 ]
 
 const showToast = (msg, type = 'success') => {
-  toast.message = msg; toast.type = type; toast.show = true
+  toast.message = msg
+  toast.type = type
+  toast.show = true
   setTimeout(() => (toast.show = false), 3000)
 }
 
@@ -347,25 +467,29 @@ const fetchUser = async () => {
     // ✅ Sync to auth store so navbar updates immediately
     authStore.user = { ...authStore.user, ...user.value }
     Object.assign(form, {
-      name:        user.value.name        || '',
-      email:       user.value.email       || '',
-      phone:       user.value.phone       || '',
-      gender:      user.value.gender      || 1,
+      name: user.value.name || '',
+      email: user.value.email || '',
+      phone: user.value.phone || '',
+      gender: user.value.gender || 1,
       current_job: user.value.current_job || '',
     })
-  } catch (err) { console.error('fetchUser error:', err) }
+  } catch (err) {
+    console.error('fetchUser error:', err)
+  }
 }
 
 // ── Edit profile ───────────────────────────────────────────
-const enableEdit = () => { isEditing.value = true }
+const enableEdit = () => {
+  isEditing.value = true
+}
 const cancelEdit = () => {
   isEditing.value = false
   errors.name = errors.email = ''
   Object.assign(form, {
-    name:        user.value.name        || '',
-    email:       user.value.email       || '',
-    phone:       user.value.phone       || '',
-    gender:      user.value.gender      || 1,
+    name: user.value.name || '',
+    email: user.value.email || '',
+    phone: user.value.phone || '',
+    gender: user.value.gender || 1,
     current_job: user.value.current_job || '',
   })
 }
@@ -373,13 +497,24 @@ const cancelEdit = () => {
 const validate = () => {
   errors.name = errors.email = ''
   let ok = true
-  if (!form.name?.trim())  { errors.name  = 'ត្រូវការឈ្មោះពេញ'; ok = false }
-  if (!form.email)          { errors.email = 'ត្រូវការអ៊ីមែល'; ok = false }
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { errors.email = 'អ៊ីមែលមិនត្រឹមត្រូវ'; ok = false }
+  if (!form.name?.trim()) {
+    errors.name = 'ត្រូវការឈ្មោះពេញ'
+    ok = false
+  }
+  if (!form.email) {
+    errors.email = 'ត្រូវការអ៊ីមែល'
+    ok = false
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    errors.email = 'អ៊ីមែលមិនត្រឹមត្រូវ'
+    ok = false
+  }
   return ok
 }
 
-const updateProfile = () => { if (!validate()) return; showConfirmModal.value = true }
+const updateProfile = () => {
+  if (!validate()) return
+  showConfirmModal.value = true
+}
 
 const confirmUpdate = async () => {
   showConfirmModal.value = false
@@ -392,26 +527,46 @@ const confirmUpdate = async () => {
     showToast('បានកែប្រែប្រវត្តិរូបជោគជ័យ!')
   } catch (err) {
     showToast(err.response?.data?.message || 'កែប្រែបរាជ័យ', 'error')
-  } finally { loading.value = false }
+  } finally {
+    loading.value = false
+  }
 }
 
 // ── Change password ────────────────────────────────────────
 const changePassword = async () => {
   if (!passForm.old_pass || !passForm.new_pass || !passForm.new_pass_confirmation) {
-    showToast('សូមបំពេញវាលពាក្យសម្ងាត់ទាំងអស់', 'error'); return
+    showToast('សូមបំពេញវាលពាក្យសម្ងាត់ទាំងអស់', 'error')
+    return
   }
+
+  // Validate password strength
+  if (!isPasswordValid.value) {
+    showToast('ពាក្យសម្ងាត់មិនបានឆ្លងកាត់តម្រូវការលម្អិត', 'error')
+    return
+  }
+
   if (passForm.new_pass !== passForm.new_pass_confirmation) {
-    showToast('ពាក្យសម្ងាត់មិនដូចគ្នា', 'error'); return
+    showToast('ពាក្យសម្ងាត់មិនដូចគ្នា', 'error')
+    return
   }
+
   passLoading.value = true
   try {
     await api.put('/profile/pass', passForm)
     showToast('បានប្តូរពាក្យសម្ងាត់ជោគជ័យ!')
     Object.assign(passForm, { old_pass: '', new_pass: '', new_pass_confirmation: '' })
+    Object.assign(passwordValidation, {
+      minLength: false,
+      hasUppercase: false,
+      hasLowercase: false,
+      hasNumber: false,
+    })
     showPassForm.value = false
   } catch (err) {
     showToast(err.response?.data?.message || 'ប្តូរពាក្យសម្ងាត់បរាជ័យ', 'error')
-  } finally { passLoading.value = false }
+  } finally {
+    passLoading.value = false
+  }
 }
 
 // ── Avatar ─────────────────────────────────────────────────
@@ -420,10 +575,15 @@ const triggerFileUpload = () => fileInput.value?.click()
 const handleFileUpload = async (e) => {
   const file = e.target.files[0]
   if (!file) return
-  if (file.size > 2 * 1024 * 1024) { showToast('ឯកសារធំពេក (អតិបរមា ២MB)', 'error'); return }
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('ឯកសារធំពេក (អតិបរមា ២MB)', 'error')
+    return
+  }
   avatarPreview.value = URL.createObjectURL(file)
-  const fd = new FormData(); fd.append('image', file)
-  loading.value = true; uploadingAvatar.value = true
+  const fd = new FormData()
+  fd.append('image', file)
+  loading.value = true
+  uploadingAvatar.value = true
   try {
     await api.post('/profile/image', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
     await fetchUser()
@@ -432,7 +592,11 @@ const handleFileUpload = async (e) => {
   } catch (err) {
     avatarPreview.value = null
     showToast(err.response?.data?.message || 'ផ្ទុកឡើងបរាជ័យ', 'error')
-  } finally { loading.value = false; uploadingAvatar.value = false; e.target.value = '' }
+  } finally {
+    loading.value = false
+    uploadingAvatar.value = false
+    e.target.value = ''
+  }
 }
 
 const removeAvatar = async () => {
@@ -446,7 +610,9 @@ const removeAvatar = async () => {
     showToast('បានលុបរូបថតប្រវត្តិរូប')
   } catch (err) {
     showToast(err.response?.data?.message || 'លុបរូបថតបរាជ័យ', 'error')
-  } finally { loading.value = false }
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(fetchUser)
@@ -476,8 +642,13 @@ onMounted(fetchUser)
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .content-wrapper {
@@ -975,6 +1146,39 @@ onMounted(fetchUser)
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.password-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.requirement {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #999;
+  transition: all 0.2s;
+}
+
+.requirement.met {
+  color: #198754;
+  font-weight: 600;
+}
+
+.requirement i {
+  font-size: 1rem;
+}
+
+.input-error {
+  border-color: #dc3545 !important;
+  background-color: rgba(220, 53, 69, 0.05) !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
 }
 
 .empty-state {

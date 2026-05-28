@@ -82,10 +82,15 @@
             v-model="districtName"
             type="text"
             class="form-control form-control-lg rounded-3"
+            :class="{ 'input-error': isDuplicateDistrict }"
             placeholder="ឧទាហរណ៍៖ ចំការមន"
             @keyup.enter="handleSubmit"
             autofocus
           />
+          <div v-if="isDuplicateDistrict" class="error-message mt-2">
+            <i class="bi bi-exclamation-circle-fill me-2"></i>
+            ឈ្មោះខណ្ឌនេះមានរួចហើយ សូមបញ្ចូលឈ្មោះថ្មី
+          </div>
         </div>
 
         <div class="d-flex gap-2">
@@ -94,7 +99,7 @@
           </button>
           <button
             @click="handleSubmit"
-            :disabled="isSaving"
+            :disabled="isSaving || isDuplicateDistrict"
             class="btn btn-orange flex-grow-1 py-2 rounded-3"
           >
             <span v-if="isSaving" class="spinner-border spinner-border-sm me-2"></span>
@@ -107,7 +112,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useDistrictStore } from '@/stores/DistrictStore'
 import { alertSuccess, alertError } from '@/Utils/alert'
 import Swal from 'sweetalert2'
@@ -123,6 +128,16 @@ const selectedId = ref(null)
 
 onMounted(() => {
   districtStore.fetchDistricts()
+})
+
+// Check if district name already exists (only for adding new, not for editing)
+const isDuplicateDistrict = computed(() => {
+  if (isEditing.value) return false // Don't check for duplicates when editing
+  if (!districtName.value.trim()) return false
+
+  return districtStore.districts.some(
+    (dist) => dist.name.toLowerCase().trim() === districtName.value.toLowerCase().trim(),
+  )
 })
 
 const openModal = (dist = null) => {
@@ -141,6 +156,12 @@ const openModal = (dist = null) => {
 const handleSubmit = async () => {
   if (!districtName.value.trim()) {
     alertError('សូមបញ្ចូលឈ្មោះខណ្ឌ')
+    return
+  }
+
+  // Prevent saving if duplicate district name (only for adding)
+  if (!isEditing.value && isDuplicateDistrict.value) {
+    alertError('ឈ្មោះខណ្ឌនេះមានរួចហើយ សូមបញ្ចូលឈ្មោះថ្មី')
     return
   }
 
@@ -283,6 +304,31 @@ const handleDelete = async (id, name) => {
 }
 .shadow-orange {
   box-shadow: 0 4px 15px rgba(255, 95, 0, 0.25);
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  animation: slideDown 0.2s ease-out;
+}
+
+.input-error {
+  border-color: #dc3545 !important;
+  background-color: rgba(220, 53, 69, 0.05) !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
 
