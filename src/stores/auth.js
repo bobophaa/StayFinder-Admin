@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
     const user = data
 
     if (!token) {
-      this.error = 'រកមិនឃើញថូខិន។'
+      this.error = 'អុីមែលឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ។'
       return { success: false }
     }
 

@@ -70,7 +70,10 @@
             <label class="field-label">អ៊ីមែល</label>
             <div
               class="dark-group"
-              :class="{ 'dark-group-error': submitted && !authStore.emailOrPhone }"
+              :class="{
+                'dark-group-error': submitted && (!authStore.emailOrPhone || !isValidEmail),
+                'dark-group-success': isEmailFilled && isValidEmail,
+              }"
             >
               <span class="d-icon"><i class="bi bi-person-badge"></i></span>
               <input
@@ -81,7 +84,11 @@
                 autocomplete="username"
               />
             </div>
-            <small v-if="submitted && !authStore.emailOrPhone" class="err-text"
+            <div v-if="isEmailFilled && !isValidEmail" class="validation-error">
+              <i class="bi bi-exclamation-circle-fill me-2"></i>
+              ទម្រង់អ៊ីមែលមិនត្រឹមត្រូវ (ឧទាហរណ៍៖ lika@example.com)
+            </div>
+            <small v-else-if="submitted && !authStore.emailOrPhone" class="err-text"
               >ត្រូវការអ៊ីមែល។</small
             >
           </div>
@@ -105,7 +112,15 @@
                 <i :class="showPass ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </span>
             </div>
-            <small v-if="submitted && !authStore.password" class="err-text"
+            <div
+              v-if="authStore.password"
+              class="password-info"
+              :class="{ 'password-success': authStore.password.length >= 8 }"
+            >
+              <span v-if="authStore.password.length >= 8"></span>
+              <span v-else>ពាក្យសម្ងាត់គួតែ8ខ្ទង់ឡើងទៅ។</span>
+            </div>
+            <small v-else-if="submitted && !authStore.password" class="err-text"
               >ត្រូវការពាក្យសម្ងាត់។</small
             >
           </div>
@@ -155,6 +170,17 @@ const router = useRouter()
 const submitted = ref(false)
 const showPass = ref(false)
 
+// Email validation regex
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+// Computed properties for validation
+const isEmailFilled = computed(() => authStore.emailOrPhone && authStore.emailOrPhone.trim() !== '')
+
+const isValidEmail = computed(() => {
+  if (!authStore.emailOrPhone) return false
+  return emailRegex.test(authStore.emailOrPhone)
+})
+
 const detectedRole = computed(() => {
   if (authStore.isLoggedIn) return authStore.userRole
   return null
@@ -162,6 +188,11 @@ const detectedRole = computed(() => {
 
 const handleLogin = async () => {
   submitted.value = true
+
+  // Prevent login if email is invalid
+  if (!isValidEmail.value) {
+    return
+  }
 
   const { success, role } = await authStore.login()
 
@@ -422,6 +453,11 @@ const handleLogin = async () => {
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
 }
 
+.dark-group-success {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
 .d-icon {
   padding: 0 14px;
   color: #2575fc;
@@ -457,6 +493,44 @@ const handleLogin = async () => {
 .err-text {
   color: #fca5a5;
   font-size: 0.78rem;
+}
+
+.validation-error {
+  color: #fca5a5;
+  font-size: 0.78rem;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  animation: slideDown 0.2s ease-out;
+}
+
+.password-info {
+  color: #93c5fd;
+  font-size: 0.78rem;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  animation: slideDown 0.2s ease-out;
+}
+
+.password-info.password-success {
+  color: #10b981;
+}
+
+.password-info strong {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ─── ERROR BOX ───────────────────────────────────────────── */

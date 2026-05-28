@@ -20,7 +20,7 @@
 
       <!-- Skeleton -->
       <div v-if="loading" class="p-4">
-        <div v-for="i in perPage" :key="i" class="d-flex align-items-center gap-3 mb-3 py-2">
+        <div v-for="i in 10" :key="i" class="d-flex align-items-center gap-3 mb-3 py-2">
           <div class="skeleton-circle" style="width: 45px; height: 45px; flex-shrink: 0"></div>
           <div class="flex-fill">
             <div
@@ -153,11 +153,15 @@
           <label class="field-label">តួនាទីថ្មី</label>
           <div class="field-wrap">
             <i class="bi bi-shield-check field-ico"></i>
-            <select v-model="newRoleId">
-              <option value="1">អ្នកប្រើប្រាស់</option>
-              <option value="2">ម្ចាស់ផ្ទះជួល</option>
+            <select v-model="newRoleId" :disabled="isCurrentUserAdmin">
+              <option value="1" :disabled="isCurrentUserAdmin">អ្នកប្រើប្រាស់</option>
+              <option value="2" :disabled="isCurrentUserAdmin">ម្ចាស់ផ្ទះជួល</option>
               <option value="3">អ្នកគ្រប់គ្រង</option>
             </select>
+          </div>
+          <div v-if="isCurrentUserAdmin" class="alert-warning mt-3">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            មិនអាចផ្លាស់ប្ដូរអ្នកគ្រប់គ្រងទេ។ 
           </div>
         </div>
         <div class="confirm-box-footer">
@@ -199,7 +203,7 @@ const showModal = ref(false)
 const isUpdating = ref(false)
 const selectedUser = ref(null)
 const newRoleId = ref('')
-const perPage = 50
+const perPage = 10
 
 const pagination = ref({ currentPage: 1, lastPage: 1, total: 0, perPage })
 const toast = ref({ show: false, message: '', type: 'success' })
@@ -209,6 +213,14 @@ const rangeStart = computed(() => (pagination.value.currentPage - 1) * perPage +
 const rangeEnd = computed(() =>
   Math.min(pagination.value.currentPage * perPage, pagination.value.total),
 )
+
+const isCurrentUserAdmin = computed(() => {
+  if (!selectedUser.value || !selectedUser.value.roles) return false
+  return (
+    selectedUser.value.roles[0]?.id === 3 ||
+    selectedUser.value.roles[0]?.name?.toLowerCase().includes('admin')
+  )
+})
 
 const pageNumbers = computed(() => {
   const total = pagination.value.lastPage
@@ -244,19 +256,25 @@ const fetchUsers = async (page = 1) => {
   loading.value = true
   try {
     const res = await api.get(`/users?page=${page}&per_page=${perPage}`)
-    // Check if response has data, handle both result-based and direct data responses
-    if (res.data?.data || res.data?.result) {
-      users.value = res.data.data || []
-      pagination.value = {
-        currentPage: res.data.current_page ?? page,
-        lastPage: res.data.last_page ?? 1,
-        total: res.data.total ?? res.data.data?.length ?? 0,
-        perPage,
-      }
-    } else {
-      console.warn('Unexpected API response structure:', res.data)
-      showToast('រចនាសម្ព័ន្ធឆ្លើយមិនរំពឹងទុក', 'error')
+    console.log('API Response:', res.data)
+
+    // Handle response data
+    const responseData = res.data?.data || res.data?.result || res.data
+    const dataArray = Array.isArray(responseData) ? responseData : res.data?.data || []
+
+    users.value = dataArray
+
+    // Calculate pagination
+    const total = res.data?.total || res.data?.pagination?.total || dataArray.length
+    const lastPage = res.data?.last_page || Math.ceil(total / perPage) || 1
+
+    pagination.value = {
+      currentPage: res.data?.current_page || page,
+      lastPage: lastPage,
+      total: total,
+      perPage,
     }
+    console.log('Pagination:', pagination.value)
   } catch (err) {
     console.error('fetchUsers error:', err)
     showToast('មានបញ្ហាក្នុងការទាញទិន្នន័យ', 'error')
@@ -277,6 +295,15 @@ const openRoleModal = (user) => {
 }
 
 const handleSetRole = async () => {
+  // Prevent changing admin to user or provider
+  if (isCurrentUserAdmin.value && (newRoleId.value === '1' || newRoleId.value === '2')) {
+    showToast(
+      'មិនអាចផ្លាស់ប្ដូរអ្នកគ្រប់គ្រងបានទេ។ អ្នកគ្រប់គ្រងត្រូវតែរស់នៅថា admin ដូចគ្នា។',
+      'error',
+    )
+    return
+  }
+
   isUpdating.value = true
   try {
     const res = await api.put(`/users/set-role/${selectedUser.value.id}`, {
@@ -581,5 +608,17 @@ onMounted(() => fetchUsers())
 .toast-slide-leave-to {
   opacity: 0;
   transform: translateY(20px);
+}
+
+/* Alert warning */
+.alert-warning {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.78rem;
+  color: #856404;
+  display: flex;
+  align-items: center;
 }
 </style>

@@ -219,7 +219,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import api from '@/api/http'
 import { useAuthStore } from '@/stores/auth'
 
@@ -235,13 +235,15 @@ const isEditing        = ref(false)
 const showPassForm     = ref(false)
 const showConfirmModal = ref(false)
 
-const form     = reactive({ name: '', email: '', phone: '', gender: 1, current_job: '' })
-const errors   = reactive({ name: '', email: '' })
+const form = reactive({ name: '', email: '', phone: '', gender: 1, current_job: '' })
+const errors = reactive({ name: '', email: '' })
 const passForm = reactive({ old_pass: '', new_pass: '', new_pass_confirmation: '' })
-const toast    = reactive({ show: false, message: '', type: 'success' })
+const toast = reactive({ show: false, message: '', type: 'success' })
 
 const showToast = (msg, type = 'success') => {
-  toast.message = msg; toast.type = type; toast.show = true
+  toast.message = msg
+  toast.type = type
+  toast.show = true
   setTimeout(() => (toast.show = false), 3000)
 }
 
@@ -257,7 +259,9 @@ const fetchUser = async () => {
       gender:      user.value.gender      ?? 1,
       current_job: user.value.current_job || '',
     })
-  } catch (err) { console.error('fetchUser error:', err) }
+  } catch (err) {
+    console.error('fetchUser error:', err)
+  }
 }
 
 const enableEdit = () => { isEditing.value = true }
@@ -276,9 +280,17 @@ const cancelEdit = () => {
 const validate = () => {
   errors.name = errors.email = ''
   let ok = true
-  if (!form.name?.trim())  { errors.name  = 'ត្រូវការឈ្មោះពេញ'; ok = false }
-  if (!form.email)          { errors.email = 'ត្រូវការអ៊ីមែល'; ok = false }
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { errors.email = 'អ៊ីមែលមិនត្រឹមត្រូវ'; ok = false }
+  if (!form.name?.trim()) {
+    errors.name = 'ត្រូវការឈ្មោះពេញ'
+    ok = false
+  }
+  if (!form.email) {
+    errors.email = 'ត្រូវការអ៊ីមែល'
+    ok = false
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    errors.email = 'អ៊ីមែលមិនត្រឹមត្រូវ'
+    ok = false
+  }
   return ok
 }
 
@@ -367,10 +379,15 @@ const triggerFileUpload = () => fileInput.value?.click()
 const handleFileUpload = async (e) => {
   const file = e.target.files[0]
   if (!file) return
-  if (file.size > 2 * 1024 * 1024) { showToast('ឯកសារធំពេក (អតិបរមា ២MB)', 'error'); return }
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('ឯកសារធំពេក (អតិបរមា ២MB)', 'error')
+    return
+  }
   avatarPreview.value = URL.createObjectURL(file)
-  const fd = new FormData(); fd.append('image', file)
-  loading.value = true; uploadingAvatar.value = true
+  const fd = new FormData()
+  fd.append('image', file)
+  loading.value = true
+  uploadingAvatar.value = true
   try {
     await api.post('/profile/image', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
     await fetchUser()
@@ -379,7 +396,11 @@ const handleFileUpload = async (e) => {
   } catch (err) {
     avatarPreview.value = null
     showToast(err.response?.data?.message || 'ផ្ទុកឡើងបរាជ័យ', 'error')
-  } finally { loading.value = false; uploadingAvatar.value = false; e.target.value = '' }
+  } finally {
+    loading.value = false
+    uploadingAvatar.value = false
+    e.target.value = ''
+  }
 }
 
 const removeAvatar = async () => {
@@ -393,7 +414,9 @@ const removeAvatar = async () => {
     showToast('បានលុបរូបថតប្រវត្តិរូប')
   } catch (err) {
     showToast(err.response?.data?.message || 'លុបរូបថតបរាជ័យ', 'error')
-  } finally { loading.value = false }
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(fetchUser)
