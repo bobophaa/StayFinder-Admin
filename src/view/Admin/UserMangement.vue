@@ -13,20 +13,13 @@
 
     <!-- Main Card -->
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-      <!-- <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
-        <span class="fw-bold text-white"><i class="bi bi-people-fill me-2"></i>បញ្ជីអ្នកប្រើប្រាស់</span>
-        <span class="badge bg-orange rounded-pill px-3">ទំព័រ {{ pagination.currentPage }}/{{ pagination.lastPage }}</span>
-      </div> -->
 
       <!-- Skeleton -->
       <div v-if="loading" class="p-4">
-        <div v-for="i in 10" :key="i" class="d-flex align-items-center gap-3 mb-3 py-2">
+        <div v-for="i in perPage" :key="i" class="d-flex align-items-center gap-3 mb-3 py-2">
           <div class="skeleton-circle" style="width: 45px; height: 45px; flex-shrink: 0"></div>
           <div class="flex-fill">
-            <div
-              class="skeleton-line mb-2"
-              style="width: 40%; height: 14px; border-radius: 6px"
-            ></div>
+            <div class="skeleton-line mb-2" style="width: 40%; height: 14px; border-radius: 6px"></div>
             <div class="skeleton-line" style="width: 60%; height: 12px; border-radius: 6px"></div>
           </div>
           <div class="skeleton-line" style="width: 80px; height: 28px; border-radius: 20px"></div>
@@ -161,7 +154,7 @@
           </div>
           <div v-if="isCurrentUserAdmin" class="alert-warning mt-3">
             <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            មិនអាចផ្លាស់ប្ដូរអ្នកគ្រប់គ្រងទេ។ 
+            មិនអាចផ្លាស់ប្ដូរអ្នកគ្រប់គ្រងទេ។
           </div>
         </div>
         <div class="confirm-box-footer">
@@ -197,84 +190,85 @@
 import { ref, computed, onMounted } from 'vue'
 import api from '@/api/http'
 
-const users = ref([])
-const loading = ref(false)
-const showModal = ref(false)
+// ── Constants ──────────────────────────────────────────────
+const PER_PAGE = 10
+
+// ── State ──────────────────────────────────────────────────
+const users      = ref([])
+const loading    = ref(false)
+const showModal  = ref(false)
 const isUpdating = ref(false)
 const selectedUser = ref(null)
-const newRoleId = ref('')
-const perPage = 10
+const newRoleId    = ref('')
 
-const pagination = ref({ currentPage: 1, lastPage: 1, total: 0, perPage })
+const pagination = ref({
+  currentPage: 1,
+  lastPage: 1,
+  total: 0,
+  perPage: PER_PAGE,
+})
+
 const toast = ref({ show: false, message: '', type: 'success' })
 
 // ── Computed ───────────────────────────────────────────────
-const rangeStart = computed(() => (pagination.value.currentPage - 1) * perPage + 1)
+const perPage = computed(() => PER_PAGE)
+
+const rangeStart = computed(() =>
+  pagination.value.total === 0
+    ? 0
+    : (pagination.value.currentPage - 1) * PER_PAGE + 1,
+)
+
 const rangeEnd = computed(() =>
-  Math.min(pagination.value.currentPage * perPage, pagination.value.total),
+  Math.min(pagination.value.currentPage * PER_PAGE, pagination.value.total),
 )
 
 const isCurrentUserAdmin = computed(() => {
-  if (!selectedUser.value || !selectedUser.value.roles) return false
-  return (
-    selectedUser.value.roles[0]?.id === 3 ||
-    selectedUser.value.roles[0]?.name?.toLowerCase().includes('admin')
-  )
+  if (!selectedUser.value?.roles?.length) return false
+  const role = selectedUser.value.roles[0]
+  return role?.id === 3 || role?.name?.toLowerCase().includes('admin')
 })
 
 const pageNumbers = computed(() => {
-  const total = pagination.value.lastPage
+  const total   = pagination.value.lastPage
   const current = pagination.value.currentPage
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
-  const pages = []
-  if (current <= 4) {
-    pages.push(1, 2, 3, 4, 5, '…', total)
-  } else if (current >= total - 3) {
-    pages.push(1, '…', total - 4, total - 3, total - 2, total - 1, total)
-  } else {
-    pages.push(1, '…', current - 1, current, current + 1, '…', total)
-  }
-  return pages
+  if (current <= 4)        return [1, 2, 3, 4, 5, '…', total]
+  if (current >= total - 3) return [1, '…', total - 4, total - 3, total - 2, total - 1, total]
+  return [1, '…', current - 1, current, current + 1, '…', total]
 })
 
 // ── Helpers ────────────────────────────────────────────────
-const showToast = (msg, type = 'success') => {
-  toast.value = { show: true, message: msg, type }
+const showToast = (message, type = 'success') => {
+  toast.value = { show: true, message, type }
   setTimeout(() => (toast.value.show = false), 3000)
 }
 
 const getRoleBadge = (roleName) => {
   if (!roleName) return 'status-pill pill-default'
   const r = roleName.toLowerCase()
-  if (r.includes('admin')) return 'status-pill pill-admin'
+  if (r.includes('admin'))    return 'status-pill pill-admin'
   if (r.includes('provider')) return 'status-pill pill-provider'
   return 'status-pill pill-user'
 }
 
-// ── API ────────────────────────────────────────────────────
 const fetchUsers = async (page = 1) => {
   loading.value = true
   try {
-    const res = await api.get(`/users?page=${page}&per_page=${perPage}`)
-    console.log('API Response:', res.data)
+    const res = await api.get('/users', {
+      params: { page, per_page: PER_PAGE },
+    })
 
-    // Handle response data
-    const responseData = res.data?.data || res.data?.result || res.data
-    const dataArray = Array.isArray(responseData) ? responseData : res.data?.data || []
-
-    users.value = dataArray
-
-    // Calculate pagination
-    const total = res.data?.total || res.data?.pagination?.total || dataArray.length
-    const lastPage = res.data?.last_page || Math.ceil(total / perPage) || 1
+    // Support both { data: [...] } and { result: { data: [...] } } shapes
+    const payload   = res.data?.result ?? res.data
+    users.value     = Array.isArray(payload?.data) ? payload.data : []
 
     pagination.value = {
-      currentPage: res.data?.current_page || page,
-      lastPage: lastPage,
-      total: total,
-      perPage,
+      currentPage: payload?.current_page ?? page,
+      lastPage:    (payload?.last_page ?? Math.ceil((payload?.total ?? 0) / PER_PAGE)) || 1,
+      total:       payload?.total        ?? 0,
+      perPage:     PER_PAGE,
     }
-    console.log('Pagination:', pagination.value)
   } catch (err) {
     console.error('fetchUsers error:', err)
     showToast('មានបញ្ហាក្នុងការទាញទិន្នន័យ', 'error')
@@ -290,17 +284,13 @@ const goToPage = (page) => {
 
 const openRoleModal = (user) => {
   selectedUser.value = user
-  newRoleId.value = String(user.roles[0]?.id || '1')
-  showModal.value = true
+  newRoleId.value    = String(user.roles[0]?.id ?? '1')
+  showModal.value    = true
 }
 
 const handleSetRole = async () => {
-  // Prevent changing admin to user or provider
-  if (isCurrentUserAdmin.value && (newRoleId.value === '1' || newRoleId.value === '2')) {
-    showToast(
-      'មិនអាចផ្លាស់ប្ដូរអ្នកគ្រប់គ្រងបានទេ។ អ្នកគ្រប់គ្រងត្រូវតែរស់នៅថា admin ដូចគ្នា។',
-      'error',
-    )
+  if (isCurrentUserAdmin.value) {
+    showToast('មិនអាចផ្លាស់ប្ដូរអ្នកគ្រប់គ្រងបានទេ។', 'error')
     return
   }
 
@@ -309,7 +299,7 @@ const handleSetRole = async () => {
     const res = await api.put(`/users/set-role/${selectedUser.value.id}`, {
       role_id: newRoleId.value,
     })
-    if (res.data.result) {
+    if (res.data?.result) {
       showModal.value = false
       showToast('បានធ្វើបច្ចុប្បន្នភាពតួនាទីជោគជ័យ!')
       fetchUsers(pagination.value.currentPage)
@@ -326,19 +316,9 @@ onMounted(() => fetchUsers())
 </script>
 
 <style scoped>
-.text-navy {
-  color: #031c36;
-}
-.text-orange {
-  color: #ff5f00;
-}
-.card-header-navy {
-  background: #031c36;
-  border-bottom: 3px solid #ff5f00;
-}
-.bg-orange {
-  background: #ff5f00 !important;
-}
+.text-navy  { color: #031c36; }
+.text-orange { color: #ff5f00; }
+.bg-orange  { background: #ff5f00 !important; }
 
 /* Table head */
 .table thead th {
@@ -351,15 +331,8 @@ onMounted(() => fetchUsers())
   border: none;
   letter-spacing: 0.04em;
 }
-.table thead th:first-child {
-  border-top-left-radius: 0;
-}
-.table tbody tr {
-  transition: background 0.15s;
-}
-.table tbody tr:hover {
-  background: #fffaf7;
-}
+.table tbody tr { transition: background 0.15s; }
+.table tbody tr:hover { background: #fffaf7; }
 
 /* User avatar */
 .user-avatar {
@@ -376,11 +349,7 @@ onMounted(() => fetchUsers())
   overflow: hidden;
   flex-shrink: 0;
 }
-.user-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
 /* Role pills */
 .status-pill {
@@ -390,22 +359,10 @@ onMounted(() => fetchUsers())
   border-radius: 20px;
   white-space: nowrap;
 }
-.pill-admin {
-  background: #ffebee;
-  color: #e53935;
-}
-.pill-provider {
-  background: #e7f1ff;
-  color: #0d6efd;
-}
-.pill-user {
-  background: #e9faf1;
-  color: #198754;
-}
-.pill-default {
-  background: #f0f0f0;
-  color: #888;
-}
+.pill-admin    { background: #ffebee; color: #e53935; }
+.pill-provider { background: #e7f1ff; color: #0d6efd; }
+.pill-user     { background: #e9faf1; color: #198754; }
+.pill-default  { background: #f0f0f0; color: #888; }
 
 /* Outline navy button */
 .btn-outline-navy {
@@ -415,10 +372,7 @@ onMounted(() => fetchUsers())
   font-weight: 600;
   transition: all 0.2s;
 }
-.btn-outline-navy:hover {
-  background: #031c36;
-  color: #fff;
-}
+.btn-outline-navy:hover { background: #031c36; color: #fff; }
 
 /* Pagination */
 .page-btn {
@@ -437,28 +391,11 @@ onMounted(() => fetchUsers())
   transition: all 0.2s;
   padding: 0 6px;
 }
-.page-btn:hover:not(:disabled) {
-  border-color: #ff5f00;
-  color: #ff5f00;
-}
-.page-btn:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-.page-btn-active {
-  background: #031c36;
-  border-color: #031c36;
-  color: #fff;
-}
-.page-btn-active:hover {
-  color: #fff;
-  border-color: #031c36;
-}
-.page-btn-ellipsis {
-  border: none;
-  background: transparent;
-  cursor: default;
-}
+.page-btn:hover:not(:disabled) { border-color: #ff5f00; color: #ff5f00; }
+.page-btn:disabled { opacity: 0.4; cursor: default; }
+.page-btn-active { background: #031c36; border-color: #031c36; color: #fff; }
+.page-btn-active:hover { color: #fff; border-color: #031c36; }
+.page-btn-ellipsis { border: none; background: transparent; cursor: default; }
 
 /* Form fields (modal) */
 .field-label {
@@ -484,12 +421,7 @@ onMounted(() => fetchUsers())
   box-shadow: 0 0 0 3px rgba(255, 95, 0, 0.1);
   background: #fff;
 }
-.field-ico {
-  padding: 0 12px;
-  color: #bbb;
-  font-size: 0.95rem;
-  flex-shrink: 0;
-}
+.field-ico { padding: 0 12px; color: #bbb; font-size: 0.95rem; flex-shrink: 0; }
 .field-wrap select {
   flex: 1;
   border: none;
@@ -507,39 +439,23 @@ onMounted(() => fetchUsers())
   color: #fff;
   border: none;
   border-radius: 10px;
-  transition:
-    background 0.2s,
-    transform 0.15s;
+  transition: background 0.2s, transform 0.15s;
 }
-.btn-orange:hover:not(:disabled) {
-  background: #e65600;
-  transform: translateY(-1px);
-  color: #fff;
-}
-.btn-orange:disabled {
-  opacity: 0.7;
-}
+.btn-orange:hover:not(:disabled) { background: #e65600; transform: translateY(-1px); color: #fff; }
+.btn-orange:disabled { opacity: 0.7; }
 
 /* Skeleton */
-.skeleton-line {
+.skeleton-line,
+.skeleton-circle {
   display: block;
   background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }
-.skeleton-circle {
-  border-radius: 50%;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-}
+.skeleton-circle { border-radius: 50%; }
 @keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* Modal */
@@ -552,13 +468,7 @@ onMounted(() => fetchUsers())
   justify-content: center;
   z-index: 9000;
 }
-.confirm-box {
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-  width: 100%;
-  max-width: 420px;
-}
+.confirm-box { background: #fff; border-radius: 16px; overflow: hidden; width: 100%; max-width: 420px; }
 .confirm-box-header {
   background: #031c36;
   color: #f4a25a;
@@ -568,15 +478,8 @@ onMounted(() => fetchUsers())
   display: flex;
   align-items: center;
 }
-.confirm-box-body {
-  padding: 20px 24px;
-}
-.confirm-box-footer {
-  padding: 0 24px 20px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
+.confirm-box-body   { padding: 20px 24px; }
+.confirm-box-footer { padding: 0 24px 20px; display: flex; justify-content: flex-end; gap: 10px; }
 
 /* Toast */
 .admin-toast {
@@ -594,21 +497,12 @@ onMounted(() => fetchUsers())
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   border-left: 4px solid rgba(255, 255, 255, 0.3);
 }
-.admin-toast.success {
-  background: #031c36;
-}
-.admin-toast.error {
-  background: #dc3545;
-}
+.admin-toast.success { background: #031c36; }
+.admin-toast.error   { background: #dc3545; }
 .toast-slide-enter-active,
-.toast-slide-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+.toast-slide-leave-active { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 .toast-slide-enter-from,
-.toast-slide-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
-}
+.toast-slide-leave-to { opacity: 0; transform: translateY(20px); }
 
 /* Alert warning */
 .alert-warning {
