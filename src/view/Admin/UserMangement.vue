@@ -252,6 +252,7 @@ const getRoleBadge = (roleName) => {
   return 'status-pill pill-user'
 }
 
+// ── API ────────────────────────────────────────────────────
 const fetchUsers = async (page = 1) => {
   loading.value = true
   try {
@@ -259,7 +260,6 @@ const fetchUsers = async (page = 1) => {
       params: { page, per_page: PER_PAGE },
     })
 
-    // Support both { data: [...] } and { result: { data: [...] } } shapes
     const payload   = res.data?.result ?? res.data
     users.value     = Array.isArray(payload?.data) ? payload.data : []
 
