@@ -106,11 +106,11 @@
                   <span class="info-value fw">{{ item.room?.title || '—' }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">ទំហំ</span>
+                  <span class="info-label">Size</span>
                   <span class="info-value">{{ item.room?.size_room || '—' }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">គ្រែ</span>
+                  <span class="info-label">Beds</span>
                   <span class="info-value">{{ item.room?.bed || '—' }}</span>
                 </div>
               </div>
@@ -120,23 +120,23 @@
                 <div class="pricing-title">តម្លៃប្រចាំខែ</div>
                 <div class="pricing-rows">
                   <div class="pricing-row">
-                    <span>ថ្លៃបន្ទប់</span>
+                    <span>Room Rent</span>
                     <span class="pricing-amount main">${{ item.room?.price ?? '—' }}</span>
                   </div>
                   <div class="pricing-row">
-                    <span>ទឹក</span>
+                    <span>Water</span>
                     <span class="pricing-amount">${{ item.room?.pay_water ?? '—' }}</span>
                   </div>
                   <div class="pricing-row">
-                    <span>អគ្គិសនី</span>
+                    <span>Electric</span>
                     <span class="pricing-amount">${{ item.room?.pay_electric ?? '—' }}</span>
                   </div>
                   <div class="pricing-row">
-                    <span>ចំណត</span>
+                    <span>Parking</span>
                     <span class="pricing-amount">${{ item.room?.pay_parking ?? '—' }}</span>
                   </div>
                   <div class="pricing-row">
-                    <span>សំរាម</span>
+                    <span>Trash</span>
                     <span class="pricing-amount">${{ item.room?.pay_trash ?? '—' }}</span>
                   </div>
                   <div v-if="item.room?.percent_promotion > 0" class="pricing-row promo">
@@ -147,7 +147,7 @@
                   </div>
                   <div class="pricing-divider"></div>
                   <div class="pricing-row total">
-                    <span>សរុបប៉ាន់ស្មាន</span>
+                    <span>Estimated Total</span>
                     <span class="pricing-amount total-amount">${{ estimatedTotal }}</span>
                   </div>
                 </div>
@@ -155,7 +155,7 @@
 
               <!-- បរិក្ខារ -->
               <div v-if="item.room?.options?.length" class="amenities-row">
-                <span class="info-label" style="margin-bottom: 8px; display: block">បរិក្ខារ</span>
+                <span class="info-label" style="margin-bottom: 8px; display: block">Amenities</span>
                 <div class="amenities-list">
                   <span v-for="opt in item.room.options" :key="opt.id" class="amenity-tag">
                     {{ opt.name }}
@@ -165,7 +165,7 @@
 
               <!-- ពិពណ៌នា -->
               <div v-if="item.room?.description" class="room-description">
-                <span class="info-label">ពិពណ៌នា</span>
+                <span class="info-label">Description</span>
                 <p class="desc-text">{{ item.room.description }}</p>
               </div>
 
@@ -210,7 +210,7 @@
               </div>
               <div class="info-grid">
                 <div class="info-item">
-                  <span class="info-label">ថ្ងៃចូលស្នាក់នៅ</span>
+                  <span class="info-label">Check-in Date</span>
                   <span class="info-value fw">{{ formatDate(item.checkin_date) }}</span>
                 </div>
                 <div class="info-item">
@@ -218,7 +218,7 @@
                   <span class="info-value">{{ formatTime(item.checkin_date) }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">បានបង្កើតនៅ</span>
+                  <span class="info-label">Created At</span>
                   <span class="info-value">{{ formatDate(item.created_at) }}</span>
                 </div>
                 <div class="info-item">
@@ -247,7 +247,7 @@
                     <img :src="paymentUrl" class="payment-full-img" alt="Payment proof full" />
                   </div>
                 </Transition>
-                <p v-if="!paymentUrl" class="no-data-text">មិនមានភស្តុតាងការទូទាត់</p>
+                <p v-if="!paymentUrl" class="no-data-text">No payment proof uploaded</p>
               </div>
             </div>
 
